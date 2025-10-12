@@ -46,7 +46,8 @@ public static class CustomExceptionHandler
                     else
                     {
                         result.Error = "UnknownError";
-                        result.Description = genericProductionError; // پیام عمومی برای کاربر
+                       // result.Description = genericProductionError; // پیام عمومی برای کاربر
+                        result.Description = exception.Message; // پیام عمومی برای کاربر
                     }
                 }
 
