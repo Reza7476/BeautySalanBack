@@ -17,7 +17,7 @@ public class _202510111952_CreateUserTable : Migration
             .WithColumn("Email").AsString().Nullable()
             .WithColumn("IsActive").AsBoolean()
             .WithColumn("CreationDate").AsDateTime2().NotNullable()
-            .WithColumn("BirthDate").AsString().Nullable()
+            .WithColumn("BirthDate").AsDateTime2().Nullable()
             .WithColumn("UniqueName").AsString().Nullable()
             .WithColumn("ImageName").AsString().Nullable()
             .WithColumn("Extension").AsString().Nullable()
