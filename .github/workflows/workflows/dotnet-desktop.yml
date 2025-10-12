@@ -1,0 +1,56 @@
+﻿name: Build and Deploy to Plesk
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # Environment Variables from GitHub Secrets
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup .NET SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Build the project
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      # Publish the project
+      - name: Publish project
+        run: dotnet publish src/03.RestApi/BeautySalon.RestApi/BeautySalon.RestApi.csproj \
+          --configuration Release \
+          --no-restore \
+          --output ./publish \
+          --self-contained false
+
+      # List published files (optional, for debugging)
+      - name: List published files
+        run: ls -laR ./publish
+
+      # Deploy to Production via FTP
+      - name: Deploy to Production via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish/
+          server-dir: /httpdocs/   
