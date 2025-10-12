@@ -1,0 +1,5 @@
+{
+  "PersistenceConfig": {
+    "ConnectionString": "server=.;Database=BeautySalonTest;Trusted_Connection=True;Encrypt=false;TrustServerCertificate=true;"
+  }
+}

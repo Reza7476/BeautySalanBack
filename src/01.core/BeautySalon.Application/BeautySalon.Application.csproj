@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\00.commons\BeautySalon.Common\BeautySalon.Common.csproj" />
+    <ProjectReference Include="..\BeautySalon.Entities\BeautySalon.Entities.csproj" />
+    <ProjectReference Include="..\BeautySalon.Services\BeautySalon.Services.csproj" />
+  </ItemGroup>
+
+</Project>
