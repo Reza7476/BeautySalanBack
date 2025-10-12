@@ -33,13 +33,14 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release --no-restore
 
-      # Publish the project
+      # Publish the project (multiline for readability)
       - name: Publish project
-        run: dotnet publish src/03.RestApi/BeautySalon.RestApi/BeautySalon.RestApi.csproj \
-          --configuration Release \
-          --no-restore \
-          --output ./publish \
-          --self-contained false
+        run: |
+          dotnet publish src/03.RestApi/BeautySalon.RestApi/BeautySalon.RestApi.csproj \
+            --configuration Release \
+            --no-restore \
+            --output ./publish \
+            --self-contained false
 
       # List published files (optional, for debugging)
       - name: List published files
@@ -53,4 +54,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./publish/
-          server-dir: /httpdocs/   
+          server-dir: /httpdocs/
