@@ -1,40 +1,19 @@
 using Autofac.Extensions.DependencyInjection;
 using BeautySalon.infrastructure;
 using BeautySalon.RestApi.Configurations.Autofacs;
+using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration
-    .AddJsonFile("appsettings.Json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-    .AddEnvironmentVariables();
+var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConnectionString(builder.Environment.EnvironmentName, builder.Environment.ContentRootPath);
 
-var privateConfigPath = Path.Combine(builder.Environment.ContentRootPath, "Private", "secrets.json");
-
-if (File.Exists(privateConfigPath))
-{
-    builder.Configuration.AddEnvironmentVariables();
-    Console.WriteLine($" Secrets file  found at:  !!!");
-}
-
-else
-{
-    Console.WriteLine($" Secrets file not found at: {privateConfigPath}");
-}
+builder.Configuration.AddConfiguration(configuration);
 
 // Add services to the container.
 builder.Host.AddAutofac();
-
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-connectionString = connectionString
-    .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER") ?? "")
-    .Replace("${DB_PASS}", Environment.GetEnvironmentVariable("DB_PASS") ?? "");
-
 
 builder.Services.AddDbContext<EFDataContext>(options =>
     options.UseSqlServer(connectionString));
