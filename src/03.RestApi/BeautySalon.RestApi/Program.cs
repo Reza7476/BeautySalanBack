@@ -17,7 +17,9 @@ var privateConfigPath = Path.Combine(builder.Environment.ContentRootPath, "Priva
 if (File.Exists(privateConfigPath))
 {
     builder.Configuration.AddEnvironmentVariables();
+    Console.WriteLine($" Secrets file  found at:  !!!");
 }
+
 else
 {
     Console.WriteLine($" Secrets file not found at: {privateConfigPath}");
