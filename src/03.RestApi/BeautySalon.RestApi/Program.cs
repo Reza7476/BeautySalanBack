@@ -12,6 +12,13 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
+var privateConfigPath = Path.Combine(builder.Environment.ContentRootPath, "Private", "secrets.json");
+
+if (File.Exists(privateConfigPath))
+{
+    builder.Configuration.AddEnvironmentVariables();
+}
+
 // Add services to the container.
 builder.Host.AddAutofac();
 
