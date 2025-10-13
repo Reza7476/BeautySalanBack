@@ -11,11 +11,11 @@ public class _202510111952_CreateUserTable : Migration
         AddRoleTable();
         AddUserRoleTable();
 
-        Delete.Table("Roles");
     }
     public override void Down()
     {
         Delete.Table("UserRoles");
+        Delete.Table("Roles");
         Delete.Table("Users");
     }
 
