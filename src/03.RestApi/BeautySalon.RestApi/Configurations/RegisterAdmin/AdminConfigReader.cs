@@ -14,7 +14,7 @@ public static class AdminConfigReader
         }
         else if (environmentName.Equals("Production", StringComparison.OrdinalIgnoreCase))
         {
-            var secretsPath = Path.Combine(contentRootPath, "Private", "Secret.json");
+            var secretsPath = Path.Combine(contentRootPath, "Private", "Secrets.json");
             if (!File.Exists(secretsPath))
             {
                 throw new FileNotFoundException($" Secrets file not found: ");
