@@ -46,8 +46,8 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
-//var admin = app.Services.GetRequiredService<AdminInitializer>();
-//admin.Initialize();
+var admin = app.Services.GetRequiredService<AdminInitializer>();
+admin.Initialize();
 
 app.UseStaticFiles();
 
