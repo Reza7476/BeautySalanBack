@@ -22,22 +22,22 @@ public class UserAppService : IUserService
     public async Task<string> Add(AddUserDto dto)
     {
         dto.Mobile = PhoneNumberExtensions.NormalizePhoneNumber(dto.Mobile);
-        
+
         if (await _repository.IsExistByUserName(dto.UserName))
         {
             throw new UserNameIsDuplicateException();
         }
-        
+
         if (await _repository.IsExistByMobileNumber(dto.Mobile))
         {
             throw new MobileNumberIsDuplicateException();
         }
-        
+
         var hasPass = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-        
+
         var user = new User()
         {
-            Id=Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             HashPass = hasPass,
             Email = dto.Email,
             Mobile = dto.Mobile,
