@@ -3,6 +3,7 @@ using BeautySalon.infrastructure;
 using BeautySalon.RestApi.Configurations.Autofacs;
 using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
+using BeautySalon.RestApi.Configurations.RegisterAdmin;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,8 @@ builder.Services.AddSwaggerConfigGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<AdminInitializer>();
+
 var app = builder.Build();
 app.UseCustomExceptionHandler();
 
@@ -43,6 +46,8 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
+var admin = app.Services.GetRequiredService<AdminInitializer>();
+admin.Initialize();
 
 app.UseStaticFiles();
 
