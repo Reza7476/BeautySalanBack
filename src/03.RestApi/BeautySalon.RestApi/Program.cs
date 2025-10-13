@@ -1,4 +1,4 @@
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac.Extensions.DependencyInjection;
 using BeautySalon.infrastructure;
 using BeautySalon.RestApi.Configurations.Autofacs;
 using BeautySalon.RestApi.Configurations.ConnectionStrings;
@@ -9,35 +9,32 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConnectionString(builder.Environment.EnvironmentName, builder.Environment.ContentRootPath);
+var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConnectionString(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath);
 
 builder.Configuration.AddConfiguration(configuration);
-
-// Add services to the container.
 builder.Host.AddAutofac();
 
 builder.Services.AddDbContext<EFDataContext>(options =>
     options.UseSqlServer(connectionString));
 
-
 builder.Services.AddControllers();
-
 builder.Services.AddSwaggerConfigGen();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<AdminInitializer>();
+builder.Services.AddHostedService<AdminInitializerHostedService>(); // 👈 اضافه کن
 
 var app = builder.Build();
-app.UseCustomExceptionHandler();
 
+app.UseCustomExceptionHandler();
 app.UseSwagger();
-app.UseSwaggerUI(options =>
+app.UseSwaggerUI(c =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
-    options.RoutePrefix = "swagger";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+    c.RoutePrefix = "swagger";
 });
 
 app.MapGet("/", context =>
@@ -46,15 +43,9 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
-var admin = app.Services.GetRequiredService<AdminInitializer>();
-admin.Initialize();
-
 app.UseStaticFiles();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
