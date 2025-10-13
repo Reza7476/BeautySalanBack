@@ -18,6 +18,10 @@ if (File.Exists(privateConfigPath))
 {
     builder.Configuration.AddEnvironmentVariables();
 }
+else
+{
+    Console.WriteLine($" Secrets file not found at: {privateConfigPath}");
+}
 
 // Add services to the container.
 builder.Host.AddAutofac();
