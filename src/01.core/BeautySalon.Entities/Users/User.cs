@@ -14,4 +14,6 @@ public class User
     public DateTime? BirthDate { get; set; }
     public bool IsActive { get; set; }
     public MediaDocument? Avatar { get; set; }
+    public List<UserRole> Roles { get; set; } = default!;
+
 }
