@@ -26,6 +26,9 @@ public  static class ConnectionStringConfig
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
+        var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+        var dbPass = Environment.GetEnvironmentVariable("DB_PASS");
+
         connectionString = connectionString
                 .Replace("${DB_USER}", configuration["DB_USER"] ?? Environment.GetEnvironmentVariable("DB_USER") ?? "")
                 .Replace("${DB_PASS}", configuration["DB_PASS"] ?? Environment.GetEnvironmentVariable("DB_PASS") ?? "");
