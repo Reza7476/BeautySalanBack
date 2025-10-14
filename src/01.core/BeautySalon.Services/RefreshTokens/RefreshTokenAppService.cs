@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.RefreshTokens;
 using BeautySalon.Services.RefreshTokens.Contacts;
+using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
 
 namespace BeautySalon.Services.RefreshTokens;
 public class RefreshTokenAppService : IRefreshTokenService
@@ -32,5 +33,10 @@ public class RefreshTokenAppService : IRefreshTokenService
         await _unitOfWork.Complete();
         return token;
 
+    }
+
+    public async Task<GetRefreshTokenDto?> GetTokenInfo(string refreshToken)
+    {
+        return await _repository.GetTokenInfo(refreshToken);
     }
 }

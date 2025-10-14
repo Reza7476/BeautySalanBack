@@ -1,7 +1,9 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Dtos;
+using BeautySalon.Entities.Users;
 using BeautySalon.Services.JWTTokenService;
 using BeautySalon.Services.RefreshTokens.Contacts;
+using BeautySalon.Services.RefreshTokens.Exceptions;
 using BeautySalon.Services.Roles.Contracts;
 using BeautySalon.Services.Roles.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
@@ -60,6 +62,24 @@ public class UserCommandHandler : IUserHandle
             JwtToken = token,
             RefreshToken = refreshToken,
         };
+    }
+
+    public async Task<string> RefreshToken(string refreshToken)
+    {
+        var oldToken = await _refreshTokenService.GetTokenInfo(refreshToken);
+        if (oldToken == null)
+        {
+            throw new TokenIsExpiredException();
+        }
+
+        if (oldToken.IsRevoked)
+        {
+            throw new TokenIsExpiredException();
+        }
+        var user = await _userService.GetByUserIdForRefreshToken(oldToken.UserId);
+
+        var token = await _jwtTokenService.GenerateToken(user!);
+        return token;
     }
 
     private async Task AssignRoleToUser(
