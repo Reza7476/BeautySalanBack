@@ -4,7 +4,6 @@ using BeautySalon.Services.Users.Exceptions;
 using BeautySalon.Test.Tool.Entities.Users;
 using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
-using System.Net.Sockets;
 using Xunit;
 
 namespace BeautySalon.Service.UnitTest.Users;

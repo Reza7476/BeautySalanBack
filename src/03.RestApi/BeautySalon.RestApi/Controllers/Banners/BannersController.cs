@@ -2,6 +2,7 @@
 using BeautySalon.Application.Banners.Contracts.Dtos;
 using BeautySalon.Services.Banners.Contracts;
 using BeautySalon.Services.Banners.Contracts.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalon.RestApi.Controllers.Banners;
@@ -26,6 +27,7 @@ public class BannersController : ControllerBase
         return await _bannerHandler.Add(dto);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<GetBannerDto?> GetBanner()
     {

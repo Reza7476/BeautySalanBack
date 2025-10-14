@@ -3,6 +3,7 @@ using BeautySalon.infrastructure;
 using BeautySalon.RestApi.Configurations.Autofacs;
 using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
+using BeautySalon.RestApi.Configurations.JwtConfigs;
 using BeautySalon.RestApi.Configurations.RegisterAdmin;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConnectionString(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath);
+
+builder.Services.AddJwtAuthentication(
     builder.Environment.EnvironmentName,
     builder.Environment.ContentRootPath);
 
@@ -22,10 +27,9 @@ builder.Services.AddDbContext<EFDataContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddSwaggerConfigGen();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<AdminInitializer>();
-builder.Services.AddHostedService<AdminInitializerHostedService>(); // 👈 اضافه کن
+builder.Services.AddHostedService<AdminInitializerHostedService>(); 
 
 var app = builder.Build();
 
@@ -45,6 +49,7 @@ app.MapGet("/", context =>
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -2,6 +2,7 @@
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Extensions;
 using BeautySalon.Services.Users.Contracts;
+using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Dtos;
 using BeautySalon.Services.Users.Exceptions;
 
@@ -51,6 +52,11 @@ public class UserAppService : IUserService
         await _repository.Add(user);
         await _unitOfWork.Complete();
         return user.Id;
+    }
+
+    public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
+    {
+        return await _repository.GetByUserNameForLogin(userName);
     }
 
     public async Task<bool> IsExistByUserName(string userName)

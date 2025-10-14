@@ -1,19 +1,32 @@
 ﻿using BeautySalon.Application.Users.Contracts;
+using BeautySalon.Application.Users.Dtos;
+using BeautySalon.Services.JWTTokenService;
+using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.Roles.Contracts;
 using BeautySalon.Services.Roles.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
+using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Dtos;
+using BeautySalon.Services.Users.Exceptions;
 
 namespace BeautySalon.Application.Users;
 public class UserCommandHandler : IUserHandle
 {
     private readonly IUserService _userService;
     private readonly IRoleService _roleService;
+    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
+
+
     public UserCommandHandler(IUserService userService,
-        IRoleService roleService)
+        IRoleService roleService,
+        IJwtTokenService jwtTokenService,
+        IRefreshTokenService refreshTokenService)
     {
         _userService = userService;
         _roleService = roleService;
+        _jwtTokenService = jwtTokenService;
+        _refreshTokenService = refreshTokenService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)
@@ -21,10 +34,32 @@ public class UserCommandHandler : IUserHandle
 
         if (!await _userService.IsExistByUserName(adminUser))
         {
-           var adminId= await CreateAdmin(adminUser,adminPass);
-            var roleId =await CreateAdministratorAsRole();
+            var adminId = await CreateAdmin(adminUser, adminPass);
+            var roleId = await CreateAdministratorAsRole();
             await AssignRoleToUser(adminId, roleId);
         }
+    }
+
+    public async Task<GetTokenDto> Login(LoginDto dto)
+    {
+        var user = await _userService.GetByUserNameForLogin(dto.UserName);
+
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+        if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.HashPass))
+        {
+            throw new UserNotFoundException();
+        }
+        var token = await _jwtTokenService.GenerateToken(user);
+        var refreshToken = await _refreshTokenService.GenerateToken(user.Id!);
+
+        return new GetTokenDto()
+        {
+            JwtToken = token,
+            RefreshToken = refreshToken,
+        };
     }
 
     private async Task AssignRoleToUser(
@@ -34,7 +69,7 @@ public class UserCommandHandler : IUserHandle
         await _roleService.AssignRoleToUser(adminId, roleId);
     }
 
-    private async Task<string> CreateAdmin(string adminUser,string adminPass)
+    private async Task<string> CreateAdmin(string adminUser, string adminPass)
     {
         var userId = await _userService.Add(new AddUserDto()
         {

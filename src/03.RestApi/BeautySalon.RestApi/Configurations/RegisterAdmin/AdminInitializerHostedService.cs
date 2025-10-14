@@ -20,11 +20,11 @@ public class AdminInitializerHostedService : IHostedService
         {
             await Task.Delay(2000, cancellationToken); // 👈 کمی تأخیر برای اطمینان از آماده بودن context
             adminInitializer.Initialize();
-            Console.WriteLine("✅ Admin initialization done.");
+            Console.WriteLine(" Admin initialization done.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"⚠️ Failed to initialize admin: {ex.Message}");
+            Console.WriteLine($" Failed to initialize admin: {ex.Message}");
         }
     }
 

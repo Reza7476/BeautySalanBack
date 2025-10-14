@@ -15,4 +15,9 @@
     <ProjectReference Include="..\BeautySalon.Entities\BeautySalon.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="RefreshTokens\Contacts\Dtos\" />
+    <Folder Include="RefreshTokens\Exceptions\" />
+  </ItemGroup>
+
 </Project>
