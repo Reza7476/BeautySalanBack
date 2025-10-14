@@ -1,20 +1,48 @@
-﻿using BeautySalon.Entities.Users;
+﻿using BeautySalon.Entities.Roles;
+using BeautySalon.Entities.Users;
 using BeautySalon.Services.Users.Contracts;
+using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautySalon.infrastructure.Persistence.Users;
 public class EFUserRepository : IUserRepository
 {
     private readonly DbSet<User> _users;
+    private readonly DbSet<UserRole> _userRoles;
+    private readonly DbSet<Role> _roles;
 
     public EFUserRepository(EFDataContext context)
     {
         _users = context.Set<User>();
+        _userRoles = context.Set<UserRole>();
+        _roles = context.Set<Role>();
+
     }
 
     public async Task Add(User user)
     {
         await _users.AddAsync(user);
+    }
+
+    public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
+    {
+        return await (from user in _users
+                      join userRole in _userRoles
+                      on user.Id equals userRole.UserId
+                      join role in _roles
+                      on userRole.RoleId equals role.Id
+                      where user.UserName == userName
+                      select new GetUserForLoginDto()
+                      {
+                          UserName = user.UserName,
+                          HashPass = user.HashPass,
+                          Email = user.Email,
+                          LastName = user.LastName,
+                          Id = user.Id,
+                          Mobile = user.Mobile,
+                          Name = user.Name,
+                          UserRoles = new List<string>() { role.RoleName }
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<bool> IsExistByMobileNumber(string mobile)
