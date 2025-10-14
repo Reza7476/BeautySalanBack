@@ -8,33 +8,37 @@ namespace BeautySalon.RestApi.Configurations.JwtConfigs;
 public static class JwtConfiguration
 {
 
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
-        string environment, string contentRootPath)
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
     {
-        var jwtSettings = JwtSettingLoader.Load(environment, contentRootPath);
-        services.AddSingleton(jwtSettings);
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-       .AddJwtBearer(options =>
-       {
-           options.TokenValidationParameters = new TokenValidationParameters
-           {
-               ValidateIssuer = true,
-               ValidIssuer = jwtSettings.Issuer,
+        .AddJwtBearer(options =>
+        {
+            // Lazy: سرویس را resolve می‌کنیم
+            using var sp = services.BuildServiceProvider();
+            var jwtService = sp.GetRequiredService<IJwtSettingService>();
+            var jwtSettings = jwtService.JwtSetting;
 
-               ValidateAudience = true,
-               ValidAudience = jwtSettings.Audience,
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtSettings.Issuer,
 
-               ValidateIssuerSigningKey = true,
-               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                ValidateAudience = true,
+                ValidAudience = jwtSettings.Audience,
 
-               ValidateLifetime = true,
-               ClockSkew = TimeSpan.Zero
-           };
-       });
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+
         return services;
     }
 }
+
