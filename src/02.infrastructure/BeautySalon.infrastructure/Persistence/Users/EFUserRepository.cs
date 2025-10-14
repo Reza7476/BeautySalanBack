@@ -24,6 +24,31 @@ public class EFUserRepository : IUserRepository
         await _users.AddAsync(user);
     }
 
+    public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
+    {
+        var a = await (from user in _users
+                       join useRole in _userRoles
+                       on user.Id equals useRole.UserId
+                       join role in _roles
+                       on useRole.RoleId equals role.Id
+                       where user.Id == userId
+                       select new GetUserForLoginDto()
+                       {
+                           UserName = user.UserName,
+                           HashPass = user.HashPass,
+                           Email = user.Email,
+                           LastName = user.LastName,
+                           Id = user.Id,
+                           Mobile = user.Mobile,
+                           Name = user.Name,
+                           UserRoles = new List<string>() { role.RoleName }
+                       }
+                      ).FirstOrDefaultAsync();
+
+
+        return a;
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
     {
         return await (from user in _users

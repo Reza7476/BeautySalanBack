@@ -7,4 +7,5 @@ public interface IUserHandle : IScope
 {
     Task EnsureAdminIsExist(string adminUser, string adminPass);
     Task<GetTokenDto> Login(LoginDto dto);
+    Task<string> RefreshToken(string refreshToken);
 }

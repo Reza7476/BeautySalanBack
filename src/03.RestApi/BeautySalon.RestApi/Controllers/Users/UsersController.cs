@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Services.Users.Contracts.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalon.RestApi.Controllers.Users;
@@ -19,5 +20,13 @@ public class UsersController : ControllerBase
     public async Task<GetTokenDto> Login([FromForm]LoginDto dto)
     {
         return await _handle.Login(dto);
+    }
+
+
+    [HttpPost("{refreshToken}/refresh-token")]
+    [Authorize]
+    public async Task <string> RefreshToken(string refreshToken)
+    {
+        return await _handle.RefreshToken(refreshToken);
     }
 }

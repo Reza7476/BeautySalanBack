@@ -54,6 +54,11 @@ public class UserAppService : IUserService
         return user.Id;
     }
 
+    public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
+    {
+        return await _repository.GetByUserIdForRefreshToken(userId);
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
     {
         return await _repository.GetByUserNameForLogin(userName);
