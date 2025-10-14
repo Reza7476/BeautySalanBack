@@ -18,6 +18,8 @@ var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConn
 //    builder.Environment.EnvironmentName,
 //    builder.Environment.ContentRootPath);
 
+
+
 builder.Configuration.AddConfiguration(configuration);
 builder.Host.AddAutofac();
 
