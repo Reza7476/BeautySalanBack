@@ -41,7 +41,7 @@ public class JwtSettingImplementation : IJwtSettingService
             Issuer = config["JwtConfig:Issuer"]!,
             Audience = config["JwtConfig:Audience"]!,
             AccessTokenExpirationMinutes = int.Parse(config["JwtConfig:AccessTokenExpirationMinutes"]! ),
-            RefreshTokenExpirationDays = int.Parse(config["Jwt:RefreshTokenExpirationDays"]!)
+            RefreshTokenExpirationDays = int.Parse(config["JwtConfig:RefreshTokenExpirationDays"]!)
         };
     }
 }
