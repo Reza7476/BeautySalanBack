@@ -23,6 +23,9 @@ public class JwtTokenImplementation : IJwtTokenService
         {
             new Claim (JwtRegisteredClaimNames.Sub,dto.Id!),
             new Claim(JwtRegisteredClaimNames.UniqueName,dto.UserName!),
+            new Claim("FirstName",dto.Name??" "),
+            new Claim("LastName",dto.LastName ??" "),
+            new Claim("Mobile",dto.Mobile?? " ")
         };
 
         claims.AddRange(dto.UserRoles.Select(r => new Claim(ClaimTypes.Role, r)));
