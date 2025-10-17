@@ -68,8 +68,8 @@ public AutofacModule(string env, string contentRootPath)
            .InstancePerLifetimeScope();
 
         builder.RegisterType<JwtSettingImplementation>()
-            .As<IJwtSettingService>()
-            .SingleInstance()
+           .As<IJwtSettingService>()
+           .SingleInstance()
            .WithParameter("environmentName", _env)
            .WithParameter("contentRootPath", _contentRootPath);
 
