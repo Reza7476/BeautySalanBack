@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Banners.Contracts;
 using BeautySalon.Application.Banners.Contracts.Dtos;
+using BeautySalon.Services;
 using BeautySalon.Services.Banners.Contracts;
 using BeautySalon.Services.Banners.Contracts.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -21,19 +22,20 @@ public class BannersController : ControllerBase
         _bannerHandler = bannerHandler;
     }
 
+    [Authorize(Roles=SystemRole.Admin)]
     [HttpPost("add")]
     public async Task<long> Add([FromForm] AddBannerHandlerDto dto)
     {
         return await _bannerHandler.Add(dto);
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<GetBannerDto?> GetBanner()
     {
         return await _service.Get();
     }
 
+    [Authorize(Roles=SystemRole.Admin)]
     [HttpPatch("{id}")]
     public async Task UpdateT(long id,[FromForm] UpdateBannerHandlerDto dto)
     {
