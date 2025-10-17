@@ -64,7 +64,7 @@ public class UserCommandHandler : IUserHandle
         };
     }
 
-    public async Task<string> RefreshToken(string refreshToken)
+    public async Task<GetTokenDto> RefreshToken(string refreshToken)
     {
         var oldToken = await _refreshTokenService.GetTokenInfo(refreshToken);
         if (oldToken == null)
@@ -79,7 +79,11 @@ public class UserCommandHandler : IUserHandle
         var user = await _userService.GetByUserIdForRefreshToken(oldToken.UserId);
 
         var token = await _jwtTokenService.GenerateToken(user!);
-        return token;
+        return new GetTokenDto()
+        {
+            JwtToken=token,
+            RefreshToken = refreshToken,
+        };
     }
 
     private async Task AssignRoleToUser(

@@ -23,9 +23,9 @@ public class UsersController : ControllerBase
     }
 
 
-    [HttpPost("{refreshToken}/refresh-token")]
     [Authorize]
-    public async Task <string> RefreshToken(string refreshToken)
+    [HttpPost("{refreshToken}/refresh-token")]
+    public async Task <GetTokenDto> RefreshToken(string refreshToken)
     {
         return await _handle.RefreshToken(refreshToken);
     }
