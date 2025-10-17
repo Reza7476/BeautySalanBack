@@ -14,7 +14,6 @@ public class JwtSettingImplementation : IJwtSettingService
             : LoadFromSecrets(contentRootPath);
     }
 
-
     private JwtSettingDto LoadFromEnvironmentVariable()
     {
         return new JwtSettingDto
@@ -32,7 +31,7 @@ public class JwtSettingImplementation : IJwtSettingService
             throw new FileNotFoundException($"Secrets file not found at {secretsPath}");
 
         var config = new ConfigurationBuilder()
-            .AddJsonFile(secretsPath, optional: false, reloadOnChange: false)
+            .AddJsonFile(secretsPath, optional: false, reloadOnChange: true)
             .Build();
 
         return new JwtSettingDto
