@@ -1,7 +1,9 @@
 ﻿using BeautySalon.Application.ContactUs.Contacts;
 using BeautySalon.Application.ContactUs.Contacts.Dtos;
+using BeautySalon.Services;
 using BeautySalon.Services.ContactUs.Contracts;
 using BeautySalon.Services.ContactUs.Contracts.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalon.RestApi.Controllers.ContactUs;
@@ -19,6 +21,7 @@ public class ContactUsController : ControllerBase
         _handler = handler;
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPost("add")]
     public async Task<long> Add([FromForm] AddAboutUsHandlerDto dto)
     {
@@ -31,6 +34,7 @@ public class ContactUsController : ControllerBase
         return await _service.Get();
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPut("{id}")]
     public async Task Update([FromRoute] long id, [FromBody] UpdateAboutUsDto dto )
     {
@@ -43,6 +47,7 @@ public class ContactUsController : ControllerBase
         return await _service.GetById(id);
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPatch("{id}/logo")]
     public async Task EditLogo([FromRoute] long id, [FromForm]EditLogoDto dto)
     {
