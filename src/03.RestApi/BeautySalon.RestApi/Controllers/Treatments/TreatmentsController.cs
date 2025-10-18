@@ -3,8 +3,10 @@ using BeautySalon.Application.Treatments.Contracts.Dto;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
+using BeautySalon.Services;
 using BeautySalon.Services.Treatments.Contracts;
 using BeautySalon.Services.Treatments.Contracts.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalon.RestApi.Controllers.Treatments;
@@ -24,6 +26,7 @@ public class TreatmentsController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPost("add")]
     public async Task<long> Add([FromForm] AddTreatmentHandlerDto dto)
     {
@@ -42,20 +45,21 @@ public class TreatmentsController : ControllerBase
     {
         return await _service.GetDetails(id);
     }
-
+    [Authorize(Roles = SystemRole.Admin)]
     [HttpPost("{id}/add-image")]
     public async Task<long> AddImage([FromRoute] long id, [FromForm] AddMediaDto dto)
     {
         return await _handler.AddImage(id, dto);
     }
 
+    [Authorize(Roles = SystemRole.Admin)]
     [HttpDelete("{id}/{imageId}/image")]
     public async Task DeleteImage(long imageId, long id)
     {
         await _handler.DeleteImage(imageId, id);
     }
 
-
+    [Authorize(Roles = SystemRole.Admin)]
     [HttpPut("{id}")]
     public async Task Update([FromRoute] long id, [FromBody]UpdateTreatmentDto dto)
     {
