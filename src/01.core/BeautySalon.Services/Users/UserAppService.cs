@@ -64,6 +64,11 @@ public class UserAppService : IUserService
         return await _repository.GetByUserNameForLogin(userName);
     }
 
+    public async Task<bool> IsExistByMobileNumber(string mobileNumber)
+    {
+        return await _repository.IsExistByMobileNumber(mobileNumber);
+    }
+
     public async Task<bool> IsExistByUserName(string userName)
     {
         return await _repository.IsExistByUserName(userName);

@@ -6,6 +6,7 @@ using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
 using BeautySalon.RestApi.Configurations.JwtConfigs;
 using BeautySalon.RestApi.Configurations.RegisterAdmin;
+using BeautySalon.RestApi.Configurations.SMS;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using BeautySalon.RestApi.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,14 @@ builder.Services.AddSingleton<AdminInitializer>();
 builder.Services.AddHostedService<AdminInitializerHostedService>();
 
 builder.Services.AddSingleton<IJwtSettingService>(sp =>
-    new JwtSettingImplementation(builder.Environment.EnvironmentName, builder.Environment.ContentRootPath));
+    new JwtSettingImplementation(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath));
+
+builder.Services.AddSingleton<ISMSSetting>(sm =>
+   new SMSSettingsImplementation(
+       builder.Environment.EnvironmentName,
+       builder.Environment.ContentRootPath));
 
 builder.Services.AddJwtAuthentication();
 

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\BeautySalon.Entities\BeautySalon.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SMSLogs\Exceptions\" />
+  </ItemGroup>
+
 </Project>

@@ -1,11 +1,19 @@
 ﻿using BeautySalon.Application.Users.Contracts;
+using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Application.Users.Dtos;
+using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Extensions;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.JWTTokenService;
+using BeautySalon.Services.OTPRequests.Contacts;
+using BeautySalon.Services.OTPRequests.Contacts.Dtos;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Exceptions;
 using BeautySalon.Services.Roles.Contracts;
 using BeautySalon.Services.Roles.Contracts.Dtos;
+using BeautySalon.Services.SMSLogs.Contracts;
+using BeautySalon.Services.SMSLogs.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Dtos;
@@ -19,16 +27,29 @@ public class UserCommandHandler : IUserHandle
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IRefreshTokenService _refreshTokenService;
 
+    private readonly ISMSService _smsService;
+    private readonly ISMSLogService _smsLogService;
+    private readonly ISMSSetting _smsSetting;
+    private readonly IOtpRequestService _otpService;
+
 
     public UserCommandHandler(IUserService userService,
         IRoleService roleService,
         IJwtTokenService jwtTokenService,
-        IRefreshTokenService refreshTokenService)
+        IRefreshTokenService refreshTokenService,
+        ISMSService smsService,
+        ISMSLogService smsLogService,
+        ISMSSetting smsSetting,
+        IOtpRequestService otpService)
     {
         _userService = userService;
         _roleService = roleService;
         _jwtTokenService = jwtTokenService;
         _refreshTokenService = refreshTokenService;
+        _smsService = smsService;
+        _smsLogService = smsLogService;
+        _smsSetting = smsSetting;
+        _otpService = otpService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)
@@ -40,6 +61,53 @@ public class UserCommandHandler : IUserHandle
             var roleId = await CreateAdministratorAsRole();
             await AssignRoleToUser(adminId, roleId);
         }
+    }
+
+    public async Task<ResponseInitializeRegisterUserDto> InitializeRegister(InitializeRegisterUserDto dto)
+    {
+        string otpRequest = string.Empty;
+        if (await _userService.IsExistByMobileNumber(dto.MobileNumber))
+        {
+            throw new MobileNumberHasBeenRegisteredException();
+        }
+        var otpCode = 6.GenerateOtpCode();
+        var message = $"کد ثبت نام در سایت سالن زیبایی{otpCode}";
+
+        var send = await _smsService.SendSMS(new SendSMSDto()
+        {
+            Message = message,
+            Number = dto.MobileNumber
+        });
+
+        await _smsLogService.Add(new AddSMSLogDto()
+        {
+            ErrorMessage = send.Status,
+            Message = message,
+            ProviderNumber = _smsSetting.SMSSettings.ProviderNumber,
+            ReceiverNumber = dto.MobileNumber,
+            RecId = send.RecId
+        });
+
+        var smsStatus = await _smsService.VerifySMS(send.RecId);
+
+        if (smsStatus.ResultsAsCode.Contains(1)|| smsStatus.Status== "عملیات موفق")
+        {
+            otpRequest = await _otpService.Add(new AddOTPRequestDto()
+            {
+                ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                IsUsed = false,
+                Mobile = dto.MobileNumber,
+                OtpCode = otpCode,
+                Purpose = OtpPurpose.Register,
+            });
+        }
+
+        return new ResponseInitializeRegisterUserDto()
+        {
+            OtpRequestId = otpRequest,
+            VerifyStatus = smsStatus.Status,
+            VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault()
+        };
     }
 
     public async Task<GetTokenDto> Login(LoginDto dto)
@@ -81,7 +149,7 @@ public class UserCommandHandler : IUserHandle
         var token = await _jwtTokenService.GenerateToken(user!);
         return new GetTokenDto()
         {
-            JwtToken=token,
+            JwtToken = token,
             RefreshToken = refreshToken,
         };
     }
@@ -100,7 +168,7 @@ public class UserCommandHandler : IUserHandle
             Name = "Sahar",
             LastName = "Dehghani",
             Email = "example@Gmail.com",
-            Mobile = "09174367476",
+            Mobile = "+989038049565",
             UserName = adminUser,
             Password = adminPass
         });
