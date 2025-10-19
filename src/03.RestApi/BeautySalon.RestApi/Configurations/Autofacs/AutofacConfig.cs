@@ -4,6 +4,7 @@ using BeautySalon.Application.Banners;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Banners;
+using BeautySalon.RestApi.Configurations.SMS;
 using BeautySalon.RestApi.Implementations;
 using BeautySalon.Services.Banners;
 using static System.Net.Mime.MediaTypeNames;
@@ -18,18 +19,13 @@ public static class AutofacConfig
 
         builder.ConfigureContainer<ContainerBuilder>((context, containerBuilder) =>
         {
-            // از context اطلاعات محیط را بگیر
             var env = context.HostingEnvironment.EnvironmentName;
             var contentRoot = context.HostingEnvironment.ContentRootPath;
 
             containerBuilder.RegisterModule(new AutofacModule(env, contentRoot));
         });
 
-        //builder.ConfigureContainer<ContainerBuilder>(builder =>
-        //{
-
-        //    builder.RegisterModule(new AutofacModule());
-        //});
+   
         return builder;
     }
 }
@@ -54,8 +50,8 @@ public AutofacModule(string env, string contentRootPath)
 
 
         builder.RegisterType<HttpContextAccessor>()
-          .As<IHttpContextAccessor>()
-          .SingleInstance();
+           .As<IHttpContextAccessor>()
+           .SingleInstance();
 
         builder.RegisterAssemblyTypes(
             serviceAssembly,
@@ -73,6 +69,19 @@ public AutofacModule(string env, string contentRootPath)
            .WithParameter("environmentName", _env)
            .WithParameter("contentRootPath", _contentRootPath);
 
+        builder.RegisterType<SMSSettingsImplementation>()
+           .As<ISMSSetting>()
+           .SingleInstance()
+           .WithParameter("environment", _env)
+           .WithParameter("contentRootPath", _contentRootPath);
+
+
+        builder.Register(c =>
+        {
+            var HttpClientFactory = new HttpClient();
+            return HttpClientFactory;
+
+        }).As<HttpClient>().SingleInstance();
 
         base.Load(builder);
     }
