@@ -3,7 +3,6 @@ using BeautySalon.Entities.Roles;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Roles.Contracts;
 using BeautySalon.Services.Roles.Contracts.Dtos;
-using BeautySalon.Services.Roles.Exceptions;
 
 namespace BeautySalon.Services.Roles;
 public class RoleAppService : IRoleService
@@ -18,9 +17,11 @@ public class RoleAppService : IRoleService
 
     public async Task<long> Add(AddRoleDto dto)
     {
-        if(await _repository.IsExistByName(dto.RoleName))
+
+        var existRole = await _repository.GetRoleByName(dto.RoleName);
+        if (existRole != null)
         {
-            throw new RoleNameIsDuplicateException();
+            return existRole.Id;
         }
 
         var newRole = new Role()
@@ -34,7 +35,7 @@ public class RoleAppService : IRoleService
         return newRole.Id;
     }
 
-    public  async Task AssignRoleToUser(string userId, long roleId)
+    public async Task AssignRoleToUser(string userId, long roleId)
     {
 
 
@@ -43,7 +44,7 @@ public class RoleAppService : IRoleService
             RoleId = roleId,
             UserId = userId
         };
-     
+
         await _repository.AssignRoleToUser(newUserRole);
         await _unitOfWork.Complete();
 

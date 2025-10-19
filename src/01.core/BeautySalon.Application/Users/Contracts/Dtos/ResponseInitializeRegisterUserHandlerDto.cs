@@ -1,5 +1,5 @@
 ﻿namespace BeautySalon.Application.Users.Contracts.Dtos;
-public class ResponseInitializeRegisterUserDto
+public class ResponseInitializeRegisterUserHandlerDto
 {
     public string? OtpRequestId { get; set; }
     public int VerifyStatusCode { get; set; }

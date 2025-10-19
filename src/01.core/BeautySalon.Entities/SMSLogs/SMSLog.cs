@@ -6,16 +6,16 @@ public class SMSLog
     public string ReceiverNumber { get; set; } = default!;
     public string Message { get; set; } = default!;
     public SendSMSStatus Status { get; set; }
-    public string? ErrorMessage { get; set; } 
+    public string? ErrorMessage { get; set; }
     public DateTime CreatedAt { get; set; }
     public string ProviderNumber { get; set; } = default!;
 }
 
 
-public  enum SendSMSStatus
+public enum SendSMSStatus : byte
 {
-    Pending=1,
-    Sent=2,
-    Failed=3,
-    Delivered=4
+    Pending = 1,
+    Sent = 2,
+    Failed = 3,
+    Delivered = 4
 }

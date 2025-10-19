@@ -23,11 +23,18 @@ public class UsersController : ControllerBase
         return await _handle.Login(dto);
     }
 
-    [HttpPost("initialize-register-user")]
-    public async Task<ResponseInitializeRegisterUserDto> Initialize(
+    [HttpPost("initializing-register-user")]
+    public async Task<ResponseInitializeRegisterUserHandlerDto> InitializingRegister(
         [FromBody] InitializeRegisterUserDto dto)
     {
         return await _handle.InitializeRegister(dto);
+    }
+
+    [HttpPost("finalizing-register-user")]
+    public async Task<GetTokenDto> FinalizingRegister(
+        [FromBody] FinalizingRegisterUserHandlerDto dto)
+    {
+        return await _handle.FinalizingRegister(dto);
     }
 
     [Authorize]
