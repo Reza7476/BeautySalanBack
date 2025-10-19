@@ -168,7 +168,7 @@ public class UserCommandHandler : IUserHandle
             Name = "Sahar",
             LastName = "Dehghani",
             Email = "example@Gmail.com",
-            Mobile = "09174367476",
+            Mobile = "+989038049565",
             UserName = adminUser,
             Password = adminPass
         });
