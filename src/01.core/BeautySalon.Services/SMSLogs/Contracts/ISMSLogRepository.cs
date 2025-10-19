@@ -5,4 +5,5 @@ namespace BeautySalon.Services.SMSLogs.Contracts;
 public interface ISMSLogRepository : IRepository
 {
     Task Add(SMSLog newSMSLog);
+    Task<SMSLog?> FindById(string id);
 }

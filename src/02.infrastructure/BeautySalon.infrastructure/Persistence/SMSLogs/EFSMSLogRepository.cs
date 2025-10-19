@@ -17,4 +17,9 @@ public class EFSMSLogRepository : ISMSLogRepository
     {
         await _smsLogs.AddAsync(newSMSLog);
     }
+
+    public async Task<SMSLog?> FindById(string id)
+    {
+        return await _smsLogs.FindAsync(id);
+    }
 }

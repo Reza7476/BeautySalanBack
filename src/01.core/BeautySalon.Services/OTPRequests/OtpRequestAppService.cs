@@ -34,4 +34,21 @@ public class OtpRequestAppService : IOtpRequestService
         await _unitOfWork.Complete();
         return otpRequest.Id;
     }
+
+    public async Task ChangeIsUsedOtp(string id)
+    {
+        var otp = await _repository.FindById(id);
+        if(otp != null) 
+        {
+            otp.IsUsed = true;
+            await _unitOfWork.Complete();
+        }
+
+    }
+
+    public async Task<GetOtpRequestForRegisterDto?> GetByIdForRegister(string id)
+    {
+        return await _repository.GetByIdForRegister(id);
+
+    }
 }

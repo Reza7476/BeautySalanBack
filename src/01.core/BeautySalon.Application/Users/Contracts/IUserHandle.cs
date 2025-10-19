@@ -7,7 +7,11 @@ namespace BeautySalon.Application.Users.Contracts;
 public interface IUserHandle : IScope
 {
     Task EnsureAdminIsExist(string adminUser, string adminPass);
-    Task<ResponseInitializeRegisterUserDto> InitializeRegister(InitializeRegisterUserDto dto);
+
+    Task<GetTokenDto> FinalizingRegister(
+        FinalizingRegisterUserHandlerDto dto);
+
+    Task<ResponseInitializeRegisterUserHandlerDto> InitializeRegister(InitializeRegisterUserDto dto);
     Task<GetTokenDto> Login(LoginDto dto);
     Task<GetTokenDto> RefreshToken(string refreshToken);
 }

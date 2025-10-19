@@ -1,6 +1,6 @@
 ﻿using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.JWTTokenService;
-using BeautySalon.Services.Users.Contracts.Dtos;
+using BeautySalon.Services.JWTTokenService.Contracts.Dtos;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,7 +17,7 @@ public class JwtTokenImplementation : IJwtTokenService
         _jwtSettings = jwtSettings;
     }
 
-    public async Task<string> GenerateToken(GetUserForLoginDto dto)
+    public async Task<string> GenerateToken(AddGenerateTokenDto dto)
     {
         var claims = new List<Claim>()
         {
@@ -44,6 +44,5 @@ public class JwtTokenImplementation : IJwtTokenService
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
         await Task.CompletedTask;
         return tokenValue;
-
     }
 }

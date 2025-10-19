@@ -4,10 +4,15 @@ using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Extensions;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.SMSLogs;
 using BeautySalon.Entities.Users;
+using BeautySalon.Services;
+using BeautySalon.Services.Extensions;
 using BeautySalon.Services.JWTTokenService;
+using BeautySalon.Services.JWTTokenService.Contracts.Dtos;
 using BeautySalon.Services.OTPRequests.Contacts;
 using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+using BeautySalon.Services.OTPRequests.Exceptions;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Exceptions;
 using BeautySalon.Services.Roles.Contracts;
@@ -31,7 +36,7 @@ public class UserCommandHandler : IUserHandle
     private readonly ISMSLogService _smsLogService;
     private readonly ISMSSetting _smsSetting;
     private readonly IOtpRequestService _otpService;
-
+    private readonly IMediaService _mediaService;
 
     public UserCommandHandler(IUserService userService,
         IRoleService roleService,
@@ -40,7 +45,8 @@ public class UserCommandHandler : IUserHandle
         ISMSService smsService,
         ISMSLogService smsLogService,
         ISMSSetting smsSetting,
-        IOtpRequestService otpService)
+        IOtpRequestService otpService,
+        IMediaService mediaService)
     {
         _userService = userService;
         _roleService = roleService;
@@ -50,6 +56,7 @@ public class UserCommandHandler : IUserHandle
         _smsLogService = smsLogService;
         _smsSetting = smsSetting;
         _otpService = otpService;
+        _mediaService = mediaService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)
@@ -63,9 +70,72 @@ public class UserCommandHandler : IUserHandle
         }
     }
 
-    public async Task<ResponseInitializeRegisterUserDto> InitializeRegister(InitializeRegisterUserDto dto)
+    public async Task<GetTokenDto> FinalizingRegister(FinalizingRegisterUserHandlerDto dto)
+    {
+        var otpRequest = await _otpService.GetByIdForRegister(dto.OtpRequestId);
+        if (otpRequest == null)
+        {
+            throw new OtpCodeIsInvalidException();
+        }
+
+        if (otpRequest.OtpCode != dto.OtpCode)
+        {
+            throw new OtpCodeIsInvalidException();
+        }
+
+        if (DateTime.UtcNow > otpRequest.ExpireAt)
+        {
+            throw new OtpCodeExpiredException();
+        }
+
+        if (await _userService.IsExistByUserName(dto.UserName))
+        {
+            throw new UserNameIsDuplicateException();
+        }
+
+        await _otpService.ChangeIsUsedOtp(dto.OtpRequestId);
+        var userId = await _userService.Add(new AddUserDto()
+        {
+            Email = dto.Email,
+            LastName = dto.LastName,
+            Mobile = otpRequest.Mobile,
+            Name = dto.Name,
+            Password = dto.Password,
+            UserName = dto.UserName,
+        });
+
+        var roleId = await _roleService.Add(new AddRoleDto()
+        {
+            RoleName = SystemRole.Client
+        });
+
+        await _roleService.AssignRoleToUser(userId, roleId);
+
+        var token = await _jwtTokenService.GenerateToken(new AddGenerateTokenDto()
+        {
+            Email = dto.Email,
+            Id = userId,
+            LastName = dto.LastName,
+            Mobile = otpRequest.Mobile,
+            Name = dto.Name,
+            UserName = dto.UserName,
+            UserRoles = new List<string>() { SystemRole.Client },
+
+        });
+        
+        var refreshToken = await _refreshTokenService.GenerateToken(userId);
+        return new GetTokenDto()
+        {
+            JwtToken = token,
+            RefreshToken = refreshToken,
+        };
+    }
+
+    public async Task<ResponseInitializeRegisterUserHandlerDto>
+        InitializeRegister(InitializeRegisterUserDto dto)
     {
         string otpRequest = string.Empty;
+        dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
         if (await _userService.IsExistByMobileNumber(dto.MobileNumber))
         {
             throw new MobileNumberHasBeenRegisteredException();
@@ -79,7 +149,7 @@ public class UserCommandHandler : IUserHandle
             Number = dto.MobileNumber
         });
 
-        await _smsLogService.Add(new AddSMSLogDto()
+       var smsLogId= await _smsLogService.Add(new AddSMSLogDto()
         {
             ErrorMessage = send.Status,
             Message = message,
@@ -90,7 +160,7 @@ public class UserCommandHandler : IUserHandle
 
         var smsStatus = await _smsService.VerifySMS(send.RecId);
 
-        if (smsStatus.ResultsAsCode.Contains(1)|| smsStatus.Status== "عملیات موفق")
+        if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
         {
             otpRequest = await _otpService.Add(new AddOTPRequestDto()
             {
@@ -100,9 +170,11 @@ public class UserCommandHandler : IUserHandle
                 OtpCode = otpCode,
                 Purpose = OtpPurpose.Register,
             });
+
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
         }
 
-        return new ResponseInitializeRegisterUserDto()
+        return new ResponseInitializeRegisterUserHandlerDto()
         {
             OtpRequestId = otpRequest,
             VerifyStatus = smsStatus.Status,
@@ -122,7 +194,16 @@ public class UserCommandHandler : IUserHandle
         {
             throw new UserNotFoundException();
         }
-        var token = await _jwtTokenService.GenerateToken(user);
+        var token = await _jwtTokenService.GenerateToken(new AddGenerateTokenDto()
+        {
+            Email = user.Email,
+            Id = user.Id,
+            LastName = user.LastName,
+            Mobile = user.Mobile,
+            Name = user.Name,
+            UserRoles = user.UserRoles,
+            UserName=user.UserName
+        });
         var refreshToken = await _refreshTokenService.GenerateToken(user.Id!);
 
         return new GetTokenDto()
@@ -146,7 +227,20 @@ public class UserCommandHandler : IUserHandle
         }
         var user = await _userService.GetByUserIdForRefreshToken(oldToken.UserId);
 
-        var token = await _jwtTokenService.GenerateToken(user!);
+        if(user == null)
+        {
+            throw new UserNotFoundException();
+        }
+        var token = await _jwtTokenService.GenerateToken(new AddGenerateTokenDto()
+        {
+            UserName=user.UserName,
+            UserRoles=user.UserRoles,
+            Email= user.Email   ,
+            Id= user.Id,
+            Name=user.Name,
+            LastName= user.LastName,
+            Mobile = user.Mobile,   
+        });
         return new GetTokenDto()
         {
             JwtToken = token,

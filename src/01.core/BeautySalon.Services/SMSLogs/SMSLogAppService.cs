@@ -22,19 +22,30 @@ public class SMSLogAppService : ISMSLogService
     {
         var newSMSLog = new SMSLog()
         {
-            CreatedAt=DateTime.UtcNow,
-            ErrorMessage=dto.ErrorMessage,
-            Id=Guid.NewGuid().ToString(),
-            Message=dto.Message,
-            ProviderNumber= dto.ProviderNumber,
-            ReceiverNumber=dto.ReceiverNumber,
-            Status= SendSMSStatus.Pending,
-            RecId=dto.RecId
+            CreatedAt = DateTime.UtcNow,
+            ErrorMessage = dto.ErrorMessage,
+            Id = Guid.NewGuid().ToString(),
+            Message = dto.Message,
+            ProviderNumber = dto.ProviderNumber,
+            ReceiverNumber = dto.ReceiverNumber,
+            Status = SendSMSStatus.Pending,
+            RecId = dto.RecId
         };
-        
+
         await _repository.Add(newSMSLog);
         await _unitOfWork.Complete();
         return newSMSLog.Id;
-    
+
+    }
+
+    public async Task ChangeStatus(string id, SendSMSStatus status)
+    {
+        var smsLog = await _repository.FindById(id);
+        if (smsLog != null)
+        {
+            smsLog.Status = status;
+            await _unitOfWork.Complete();
+        }
+
     }
 }
