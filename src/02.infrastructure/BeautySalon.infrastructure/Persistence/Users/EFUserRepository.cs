@@ -24,6 +24,11 @@ public class EFUserRepository : IUserRepository
         await _users.AddAsync(user);
     }
 
+    public async Task<User?> FindByMobile(string mobile)
+    {
+        return await _users.FirstOrDefaultAsync(_=>_.Mobile == mobile);    
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
     {
         var a = await (from user in _users
@@ -68,6 +73,13 @@ public class EFUserRepository : IUserRepository
                           Name = user.Name,
                           UserRoles = new List<string>() { role.RoleName }
                       }).FirstOrDefaultAsync();
+    }
+
+    public async Task<string?> GetUserIdByMobileNumber(string mobileNumber)
+    {
+        return await _users
+            .Where(_ => _.Mobile == mobileNumber && _.IsActive)
+            .Select(_ => _.Id).FirstOrDefaultAsync();
     }
 
     public async Task<bool> IsExistByMobileNumber(string mobile)

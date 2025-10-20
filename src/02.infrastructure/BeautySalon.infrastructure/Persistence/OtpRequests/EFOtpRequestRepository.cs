@@ -25,8 +25,7 @@ public class EFOtpRequestRepository : IOtpRequestRepository
 
     public async Task<GetOtpRequestForRegisterDto?> GetByIdForRegister(string id)
     {
-        var b = _otpRequests.ToList();
-        var a= await _otpRequests
+        var a = await _otpRequests
             .Where(_ => _.Id == id && _.Purpose == OtpPurpose.Register && _.IsUsed == false)
             .Select(_ => new GetOtpRequestForRegisterDto()
             {
@@ -37,5 +36,19 @@ public class EFOtpRequestRepository : IOtpRequestRepository
                 OtpCode = _.OtpCode
             }).FirstOrDefaultAsync();
         return a;
+    }
+
+    public async Task<GetOtpRequestForRegisterDto?> GetByIdForResetPassword(string id)
+    {
+        return await _otpRequests
+            .Where(_ => _.Id == id && _.Purpose == OtpPurpose.ResetPassword && _.IsUsed == false)
+            .Select(_ => new GetOtpRequestForRegisterDto()
+            {
+                CreatedAt = _.CreatedAt,
+                ExpireAt = _.ExpireAt,
+                Purpose = _.Purpose,
+                Mobile = _.Mobile,
+                OtpCode = _.OtpCode
+            }).FirstOrDefaultAsync();
     }
 }

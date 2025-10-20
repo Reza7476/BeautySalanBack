@@ -8,4 +8,5 @@ public interface IOtpRequestRepository : IRepository
     Task Add(OtpRequest otpRequest);
     Task<OtpRequest?> FindById(string id);
     Task<GetOtpRequestForRegisterDto?> GetByIdForRegister(string id);
+    Task<GetOtpRequestForRegisterDto?> GetByIdForResetPassword(string id);
 }

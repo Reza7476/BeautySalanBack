@@ -51,4 +51,9 @@ public class OtpRequestAppService : IOtpRequestService
         return await _repository.GetByIdForRegister(id);
 
     }
+
+    public async Task<GetOtpRequestForRegisterDto?> GetByIdForResetPassword(string id)
+    {
+        return await _repository.GetByIdForResetPassword(id);
+    }
 }
