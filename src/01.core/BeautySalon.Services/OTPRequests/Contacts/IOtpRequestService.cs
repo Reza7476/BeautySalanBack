@@ -7,4 +7,5 @@ public interface IOtpRequestService : IService
     Task<string> Add(AddOTPRequestDto dto);
     Task ChangeIsUsedOtp(string otpRequestId);
     Task<GetOtpRequestForRegisterDto?> GetByIdForRegister(string id);
+    Task<GetOtpRequestForRegisterDto?> GetByIdForResetPassword(string id);
 }

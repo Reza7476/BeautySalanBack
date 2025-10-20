@@ -43,4 +43,19 @@ public class UsersController : ControllerBase
     {
         return await _handle.RefreshToken(refreshToken);
     }
+
+
+    [HttpPost("forget-pass-step-one")]
+    public async Task<ResponseInitializeRegisterUserHandlerDto>
+        ForgetPassword([FromBody] InitializeRegisterUserDto dto)
+    {
+        return await _handle.ForgetPasswordInitialize(dto);
+    }
+
+    [HttpPost("forget-password-step-two")]
+    public async Task ForgetPassStepTwo([FromBody]ForgetPassStepTwoDto dto)
+    {
+         await _handle.FinalizeResetPassword(dto);
+    }
+    
 }

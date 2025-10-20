@@ -70,6 +70,27 @@ public class UserCommandHandler : IUserHandle
         }
     }
 
+    public async Task FinalizeResetPassword(ForgetPassStepTwoDto dto)
+    {
+        var otpRequest = await _otpService.GetByIdForResetPassword(dto.OtpRequestId);
+        if (otpRequest == null)
+        {
+            throw new OtpCodeIsInvalidException();
+        }
+
+        if (otpRequest.OtpCode != dto.OtpCode)
+        {
+            throw new OtpCodeIsInvalidException();
+        }
+
+        if (DateTime.UtcNow > otpRequest.ExpireAt)
+        {
+            throw new OtpCodeExpiredException();
+        }
+        await _otpService.ChangeIsUsedOtp(dto.OtpRequestId);
+        await _userService.ChangePassword(dto.NewPassword, otpRequest.Mobile);
+    }
+
     public async Task<GetTokenDto> FinalizingRegister(FinalizingRegisterUserHandlerDto dto)
     {
         var otpRequest = await _otpService.GetByIdForRegister(dto.OtpRequestId);
@@ -131,57 +152,55 @@ public class UserCommandHandler : IUserHandle
         };
     }
 
-    //public async Task<ResponseInitializeRegisterUserHandlerDto>
-    //    InitializeRegister(InitializeRegisterUserDto dto)
-    //{
-    //    string otpRequest = string.Empty;
-    //    dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
-    //    if (await _userService.IsExistByMobileNumber(dto.MobileNumber))
-    //    {
-    //        throw new MobileNumberHasBeenRegisteredException();
-    //    }
-    //    var otpCode = 6.GenerateOtpCode();
-    //    var message = $"کد ثبت نام در سایت سالن زیبایی{otpCode}";
+    public async Task<ResponseInitializeRegisterUserHandlerDto>
+        ForgetPasswordInitialize(InitializeRegisterUserDto dto)
+    {
+        string otpRequest = string.Empty;
+        dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
+        var userId = await _userService.GetUserIdByMobileNumber(dto.MobileNumber);
+        if (userId == null)
+        {
+            throw new UserNotFoundException();
+        }
 
-    //    var send = await _smsService.SendSMS(new SendSMSDto()
-    //    {
-    //        Message = message,
-    //        Number = dto.MobileNumber
-    //    });
+        var otpCode = 6.GenerateOtpCode();
+        var message = $"کد تغییر رمز عبور در سایت سالن زیبایی{otpCode}";
+        var send = await _smsService.SendSMS(new SendSMSDto()
+        {
+            Message = message,
+            Number = dto.MobileNumber
+        });
+        var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
+        {
+            ErrorMessage = send.Status,
+            Message = message,
+            ProviderNumber = _smsSetting.SMSSettings.ProviderNumber,
+            ReceiverNumber = dto.MobileNumber,
+            RecId = send.RecId
+        });
+        var smsStatus = await _smsService.VerifySMS(send.RecId);
+        if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
+        {
+            otpRequest = await _otpService.Add(new AddOTPRequestDto()
+            {
+                ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                IsUsed = false,
+                Mobile = dto.MobileNumber,
+                OtpCode = otpCode,
+                Purpose = OtpPurpose.ResetPassword,
+            });
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+        }
+        var a =
+            new ResponseInitializeRegisterUserHandlerDto()
+            {
+                OtpRequestId = otpRequest,
+                VerifyStatus = smsStatus.Status,
+                VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault()
+            };
+        return a;
+    }
 
-    //    var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
-    //    {
-    //        ErrorMessage = send.Status,
-    //        Message = message,
-    //        ProviderNumber = _smsSetting.SMSSettings.ProviderNumber,
-    //        ReceiverNumber = dto.MobileNumber,
-    //        RecId = send.RecId
-    //    });
-
-    //    var smsStatus = await _smsService.VerifySMS(send.RecId);
-
-    //    if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
-    //    {
-    //        otpRequest = await _otpService.Add(new AddOTPRequestDto()
-    //        {
-    //            ExpireAt = DateTime.UtcNow.AddSeconds(120),
-    //            IsUsed = false,
-    //            Mobile = dto.MobileNumber,
-    //            OtpCode = otpCode,
-    //            Purpose = OtpPurpose.Register,
-    //        });
-
-    //        await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
-    //    }
-    //    var a =
-    //        new ResponseInitializeRegisterUserHandlerDto()
-    //        {
-    //            OtpRequestId = otpRequest,
-    //            VerifyStatus = smsStatus.Status,
-    //            VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault()
-    //        };
-    //    return a;
-    //}
 
 
     public async Task<ResponseInitializeRegisterUserHandlerDto> InitializeRegister(InitializeRegisterUserDto dto)

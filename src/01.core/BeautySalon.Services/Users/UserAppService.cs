@@ -54,6 +54,21 @@ public class UserAppService : IUserService
         return user.Id;
     }
 
+    public async Task ChangePassword(string newPassword, string mobile)
+    {
+        var user = await _repository.FindByMobile(mobile);
+       
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var hashPass = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+        user.HashPass = hashPass;
+        await _unitOfWork.Complete();   
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
     {
         return await _repository.GetByUserIdForRefreshToken(userId);
@@ -62,6 +77,11 @@ public class UserAppService : IUserService
     public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
     {
         return await _repository.GetByUserNameForLogin(userName);
+    }
+
+    public async Task<string?> GetUserIdByMobileNumber(string mobileNumber)
+    {
+        return await _repository.GetUserIdByMobileNumber(mobileNumber);
     }
 
     public async Task<bool> IsExistByMobileNumber(string mobileNumber)
