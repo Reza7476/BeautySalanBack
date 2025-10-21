@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Application.Users.Dtos;
+using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,13 @@ namespace BeautySalon.RestApi.Controllers.Users;
 public class UsersController : ControllerBase
 {
     private readonly IUserHandle _handle;
-
-    public UsersController(IUserHandle handle)
+    private readonly IRefreshTokenService _refreshTokenService;
+    public UsersController(
+        IUserHandle handle,
+        IRefreshTokenService refreshTokenService)
     {
         _handle = handle;
+        _refreshTokenService = refreshTokenService;
     }
 
     [HttpPost("login")]
@@ -53,9 +57,16 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("forget-password-step-two")]
-    public async Task ForgetPassStepTwo([FromBody]ForgetPassStepTwoDto dto)
+    public async Task ForgetPassStepTwo([FromBody] ForgetPassStepTwoDto dto)
     {
-         await _handle.FinalizeResetPassword(dto);
+        await _handle.FinalizeResetPassword(dto);
     }
-    
+
+
+    [Authorize]
+    [HttpPatch("{refreshToken}/log-out")]
+    public async Task Logout([FromBody]string refreshToken)
+    {
+        await _refreshTokenService.RevokedToken(refreshToken);
+    }
 }
