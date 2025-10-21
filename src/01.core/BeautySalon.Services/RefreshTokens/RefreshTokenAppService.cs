@@ -2,6 +2,7 @@
 using BeautySalon.Entities.RefreshTokens;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
+using BeautySalon.Services.RefreshTokens.Exceptions;
 
 namespace BeautySalon.Services.RefreshTokens;
 public class RefreshTokenAppService : IRefreshTokenService
@@ -38,5 +39,18 @@ public class RefreshTokenAppService : IRefreshTokenService
     public async Task<GetRefreshTokenDto?> GetTokenInfo(string refreshToken)
     {
         return await _repository.GetTokenInfo(refreshToken);
+    }
+
+    public async Task RevokedToken(string refreshToken)
+    {
+        var token = await _repository.FindByToken(refreshToken);
+
+        if(token == null)
+        {
+            throw new RefreshTokenNotFoundException();
+        }
+
+        token.IsRevoked = true;
+        await _unitOfWork.Complete();
     }
 }

@@ -6,4 +6,5 @@ public interface IRefreshTokenService : IService
 {
     Task<string> GenerateToken(string userId);
     Task<GetRefreshTokenDto?> GetTokenInfo(string refreshToken);
+    Task RevokedToken(string refreshToken);
 }
