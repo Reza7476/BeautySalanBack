@@ -41,9 +41,9 @@ public class RefreshTokenAppService : IRefreshTokenService
         return await _repository.GetTokenInfo(refreshToken);
     }
 
-    public async Task RevokedToken(string refreshToken)
+    public async Task RevokedToken(LogOutDto dto)
     {
-        var token = await _repository.FindByToken(refreshToken);
+        var token = await _repository.FindByToken(dto.RefreshToken);
 
         if(token == null)
         {

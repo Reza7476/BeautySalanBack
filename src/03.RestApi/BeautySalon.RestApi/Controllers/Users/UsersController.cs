@@ -2,6 +2,7 @@
 using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Services.RefreshTokens.Contacts;
+using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,8 +66,8 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpPatch("log-out")]
-    public async Task Logout([FromBody]string refreshToken)
+    public async Task Logout([FromBody]LogOutDto dto)
     {
-        await _refreshTokenService.RevokedToken(refreshToken);
+        await _refreshTokenService.RevokedToken(dto);
     }
 }
