@@ -65,7 +65,7 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpPatch("{refreshToken}/log-out")]
-    public async Task Logout(string refreshToken)
+    public async Task Logout([FromBody]string refreshToken)
     {
         await _refreshTokenService.RevokedToken(refreshToken);
     }
