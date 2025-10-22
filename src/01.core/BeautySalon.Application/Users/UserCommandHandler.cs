@@ -212,7 +212,7 @@ public class UserCommandHandler : IUserHandle
             throw new MobileNumberHasBeenRegisteredException();
         }
         var otpCode = 6.GenerateOtpCode();
-        var message = $"کد ثبت نام در سایت سالن زیبایی {otpCode}";
+        var message = otpCode;
         var send = await _smsService.SendSMS(new SendSMSDto()
         {
             Message = message,

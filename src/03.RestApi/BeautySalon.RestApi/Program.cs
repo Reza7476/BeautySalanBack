@@ -18,7 +18,7 @@ var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConn
     builder.Environment.ContentRootPath);
 
 builder.Configuration.AddConfiguration(configuration);
-
+builder.Services.AddHttpClient();
 builder.Host.AddAutofac();
 
 builder.Services.AddDbContext<EFDataContext>(options =>

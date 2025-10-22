@@ -24,10 +24,9 @@ public class SMSSettingsImplementation : ISMSSetting
         return new SMSInformationDto
         {
             SMSKey = Environment.GetEnvironmentVariable("SMSReza_Key")!,
-            CreditUrl = config["SMSSettings:CreditUrl"]!,
             ProviderNumber = config["SMSSettings:ProviderNumber"]!,
-            ReceiveUrl = config["SMSSettings:ReceiveUrl"]!,
-            SendApiUrl = config["SMSSettings:SendApiUrl"]!,
+            OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
+            BaseUrl = config["SMSSettings:BaseUrl"]!
         };
     }
 
@@ -45,11 +44,10 @@ public class SMSSettingsImplementation : ISMSSetting
             .Build();
         return new SMSInformationDto
         {
-            CreditUrl = config["SMSSettings:CreditUrl"]!,
             ProviderNumber = config["SMSSettings:ProviderNumber"]!,
-            ReceiveUrl = config["SMSSettings:ReceiveUrl"]!,
-            SendApiUrl = config["SMSSettings:SendApiUrl"]!,
-            SMSKey = config["SMSSettings:SMSKey"]!
+            SMSKey = config["SMSSettings:SMSKey"]!,
+            BaseUrl = config["SMSSettings:BaseUrl"]!,
+            OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
         };
 
     }

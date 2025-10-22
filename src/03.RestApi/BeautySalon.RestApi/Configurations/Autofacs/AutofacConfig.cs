@@ -25,7 +25,7 @@ public static class AutofacConfig
             containerBuilder.RegisterModule(new AutofacModule(env, contentRoot));
         });
 
-   
+
         return builder;
     }
 }
@@ -34,7 +34,7 @@ public class AutofacModule : Module
 {
     private readonly string _env;
     private readonly string _contentRootPath;
-public AutofacModule(string env, string contentRootPath)
+    public AutofacModule(string env, string contentRootPath)
     {
         _env = env;
         _contentRootPath = contentRootPath;
@@ -75,13 +75,20 @@ public AutofacModule(string env, string contentRootPath)
            .WithParameter("environment", _env)
            .WithParameter("contentRootPath", _contentRootPath);
 
+        //try
+        //{
 
-        builder.Register(c =>
-        {
-            var HttpClientFactory = new HttpClient();
-            return HttpClientFactory;
+        //    builder.Register(c =>
+        //    {
+        //        var sp = c.Resolve<IServiceProvider>();
+        //        return sp.GetRequiredService<IHttpClientFactory>();
+        //    }).As<IHttpClientFactory>().SingleInstance();
+        //}
+        //catch (Exception ex)
+        //{
 
-        }).As<HttpClient>().SingleInstance();
+        //    throw;
+        //}
 
         base.Load(builder);
     }
