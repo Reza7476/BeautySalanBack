@@ -26,4 +26,8 @@
     <ProjectReference Include="..\BeautySalon.Test.Tool\BeautySalon.Test.Tool.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WeeklySchedules\" />
+  </ItemGroup>
+
 </Project>
