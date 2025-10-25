@@ -21,4 +21,10 @@ public class WeeklyScheduleController : ControllerBase
     {
         await _service.Add(dto);
     }
+
+    [HttpGet]
+    public async Task<List<GetScheduleDto>> GetSchedule()
+    {
+        return await _service.GetSchedules();
+    }
 }

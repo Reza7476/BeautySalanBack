@@ -37,4 +37,9 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         await _repository.AddRange(schedules);
         await _unitOfWork.Complete();
     }
+
+    public async Task<List<GetScheduleDto>> GetSchedules()
+    {
+        return await _repository.GetSchedules();
+    }
 }
