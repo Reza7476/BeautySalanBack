@@ -8,6 +8,7 @@ public class Treatment
     }
 
     public long Id { get; set; }
+    public int Duration { get; set; } = 180;
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required DateTime CreateDate { get; set; }

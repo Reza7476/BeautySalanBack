@@ -30,6 +30,7 @@ public class TreatmentCommandHandler : TreatmentHandler
         {
             Description = dto.Description,
             Title = dto.Title,
+             Duration=dto.Duration,
             ImageName = media.ImageName,
             ImageUniqueName = media.UniqueName,
             URL = media.URL,

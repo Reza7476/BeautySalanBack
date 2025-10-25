@@ -16,5 +16,7 @@ public class TreatmentEntityMap : IEntityTypeConfiguration<Treatment>
         _.Property(_ => _.Description).IsRequired();
        
         _.Property(_=>_.CreateDate).IsRequired();
+
+        _.Property(_ => _.Duration).HasDefaultValue(180);
     }
 }

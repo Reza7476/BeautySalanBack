@@ -27,6 +27,7 @@ public class TreatmentAppService : ITreatmentService
             CreateDate = DateTime.UtcNow,
             Description = dto.Description,
             Title = dto.Title,
+            Duration = dto.Duration,
         };
 
         treatment.Images.Add(new TreatmentImage()
