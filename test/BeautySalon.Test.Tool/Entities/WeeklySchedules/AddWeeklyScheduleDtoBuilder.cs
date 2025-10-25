@@ -15,7 +15,7 @@ public class AddWeeklyScheduleDtoBuilder
 
     public AddWeeklyScheduleDtoBuilder WithSchedule()
     {
-        _dto.Schedules.Add(new Schedule()
+        _dto.Schedules.Add(new ScheduleDto()
         {
             DayOfWeek = DayWeek.Monday,
             EndTime = DateTime.UtcNow.AddHours(8),
