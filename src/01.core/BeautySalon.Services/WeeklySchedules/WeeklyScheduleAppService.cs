@@ -39,6 +39,22 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         return schedule.Id;
     }
 
+    public async Task EditSchedule(EditWeeklyScheduleDto dto)
+    {
+        var schedule = await _repository.FindById(dto.Id);
+
+        if(schedule==null)
+        {
+            throw new ScheduleNotFoundException();
+        }
+
+        schedule.StartTime = dto.StartTime;
+        schedule.EndTime = dto.EndTime;
+        schedule.IsActive = dto.IsActive;
+        schedule.DayOfWeek=dto.DayOfWeek;
+        await _unitOfWork.Complete();
+    }
+
     public async Task<List<GetScheduleDto>> GetSchedules()
     {
         return await _repository.GetSchedules();

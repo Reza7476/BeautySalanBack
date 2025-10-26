@@ -26,4 +26,10 @@ public class WeeklyScheduleController : ControllerBase
     {
         return await _service.GetSchedules();
     }
+
+    [HttpPut)]
+    public async Task Edit( [FromBody] EditWeeklyScheduleDto dto)
+    {
+        await _service.EditSchedule(dto);
+    }
 }

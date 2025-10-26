@@ -6,6 +6,7 @@ namespace BeautySalon.Services.WeeklySchedules.Contracts;
 public interface IWeeklyScheduleRepository : IRepository
 {
     Task Add(WeeklySchedule schedules);
+    Task<WeeklySchedule?> FindById(int id);
     Task<List<GetScheduleDto>> GetSchedules();
     Task<bool> IsExistByDayOfWeek(DayWeek dayOfWeek);
 }
