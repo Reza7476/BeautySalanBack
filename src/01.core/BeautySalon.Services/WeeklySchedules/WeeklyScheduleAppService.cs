@@ -18,14 +18,14 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Add(AddWeeklyScheduleDto dto)
+    public async Task<int> Add(AddWeeklyScheduleDto dto)
     {
         if(await _repository.IsExistByDayOfWeek(dto.DayOfWeek))
         {
             throw new DayOfWeekIsDuplicateException();
         }
 
-        var schedules = new WeeklySchedule()
+        var schedule = new WeeklySchedule()
         {
             DayOfWeek = dto.DayOfWeek,
             EndTime= dto.EndTime,
@@ -34,8 +34,9 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         };
         
 
-        await _repository.Add(schedules);
+        await _repository.Add(schedule);
         await _unitOfWork.Complete();
+        return schedule.Id;
     }
 
     public async Task<List<GetScheduleDto>> GetSchedules()
