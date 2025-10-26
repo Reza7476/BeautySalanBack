@@ -90,4 +90,35 @@ public class WeeklyScheduleServiceTests : BusinessUnitTest
 
         await expected.Should().ThrowExactlyAsync<ScheduleNotFoundException>();
     }
+
+    [Fact]
+    public async Task Add_should_throw_exception_when_end_time_is_less_than_start_time()
+    {
+        var dto=new AddWeeklyScheduleDtoBuilder()
+            .WithStartTime(DateTime.Now.AddHours(3))
+            .WithEndTime(DateTime.Now)
+            .Build();
+
+        Func<Task> expected=async()=>await _sut.Add(dto);
+
+        await expected.Should().ThrowAsync<EndTimeIsLessThanStartTimeException>();
+    }
+
+    [Fact]
+    public async Task Edit_should_throw_exception_when_end_time_is_less_than_start_time()
+    {
+        var schedule = new WeeklyScheduleBuilder()
+            .Build();
+        Save(schedule);
+
+        var dto = new EditWeeklyScheduleDtoBuilder()
+            .WithStartTime(DateTime.Now.AddHours(3))
+            .WithEndTime(DateTime.Now)
+            .WithId(schedule.Id)
+            .Build();
+
+        Func<Task> expected = async () => await _sut.EditSchedule(dto);
+
+        await expected.Should().ThrowAsync<EndTimeIsLessThanStartTimeException>();
+    }
 }

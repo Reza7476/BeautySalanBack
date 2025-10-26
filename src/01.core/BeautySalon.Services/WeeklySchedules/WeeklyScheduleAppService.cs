@@ -25,6 +25,11 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
             throw new DayOfWeekIsDuplicateException();
         }
 
+        if (dto.EndTime < dto.StartTime)
+        {
+            throw new EndTimeIsLessThanStartTimeException();
+        }
+
         var schedule = new WeeklySchedule()
         {
             DayOfWeek = dto.DayOfWeek,
@@ -32,7 +37,6 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
             IsActive = dto.IsActive,
             StartTime = dto.StartTime
         };
-
 
         await _repository.Add(schedule);
         await _unitOfWork.Complete();
@@ -46,6 +50,12 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         if (schedule == null)
         {
             throw new ScheduleNotFoundException();
+        }
+
+
+        if (dto.EndTime < dto.StartTime)
+        {
+            throw new EndTimeIsLessThanStartTimeException();
         }
 
         schedule.StartTime = dto.StartTime;
