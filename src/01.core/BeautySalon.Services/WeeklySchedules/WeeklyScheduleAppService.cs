@@ -2,6 +2,7 @@
 using BeautySalon.Entities.WeeklySchedules;
 using BeautySalon.Services.WeeklySchedules.Contracts;
 using BeautySalon.Services.WeeklySchedules.Contracts.Dtos;
+using BeautySalon.Services.WeeklySchedules.Exceptions;
 
 namespace BeautySalon.Services.WeeklySchedules;
 public class WeeklyScheduleAppService : IWeeklyScheduleService
@@ -17,25 +18,25 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Add(AddWeeklyScheduleDto dto)
+    public async Task<int> Add(AddWeeklyScheduleDto dto)
     {
-
-        var schedules = new List<WeeklySchedule>();
-
-        foreach (var item in dto.Schedules)
+        if(await _repository.IsExistByDayOfWeek(dto.DayOfWeek))
         {
-            var schudule = new WeeklySchedule()
-            {
-                DayOfWeek = item.DayOfWeek,
-                EndTime = item.EndTime,
-                IsActive = true,
-                StartTime = item.StartTime,
-            };
-            schedules.Add(schudule);
+            throw new DayOfWeekIsDuplicateException();
         }
 
-        await _repository.AddRange(schedules);
+        var schedule = new WeeklySchedule()
+        {
+            DayOfWeek = dto.DayOfWeek,
+            EndTime= dto.EndTime,
+            IsActive=dto.IsActive,
+            StartTime= dto.StartTime    
+        };
+        
+
+        await _repository.Add(schedule);
         await _unitOfWork.Complete();
+        return schedule.Id;
     }
 
     public async Task<List<GetScheduleDto>> GetSchedules()

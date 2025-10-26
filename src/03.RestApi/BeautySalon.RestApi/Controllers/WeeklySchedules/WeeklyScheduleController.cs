@@ -16,9 +16,9 @@ public class WeeklyScheduleController : ControllerBase
 
 
     [HttpPost]
-    public async Task Add([FromBody]AddWeeklyScheduleDto dto)
+    public async Task<int> Add([FromBody]AddWeeklyScheduleDto dto)
     {
-        await _service.Add(dto);
+       return  await _service.Add(dto);
     }
 
     [HttpGet]
