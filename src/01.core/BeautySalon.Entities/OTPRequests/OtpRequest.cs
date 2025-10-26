@@ -1,4 +1,4 @@
-﻿namespace BeautySalon.Entities.Users;
+﻿namespace BeautySalon.Entities.OTPRequests;
 public class OtpRequest
 {
     public string Id { get; set; } = default!;

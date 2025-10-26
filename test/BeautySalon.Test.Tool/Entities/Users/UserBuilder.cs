@@ -1,7 +1,7 @@
 ﻿using BeautySalon.Entities.Commons;
 using BeautySalon.Entities.Users;
 
-namespace BeautySalon.Service.UnitTest.Users;
+namespace BeautySalon.Test.Tool.Entities.Users;
 public class UserBuilder
 {
     private readonly User _user;

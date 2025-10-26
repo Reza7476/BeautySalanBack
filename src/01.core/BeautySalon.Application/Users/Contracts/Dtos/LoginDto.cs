@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BeautySalon.Application.Users.Dtos;
+namespace BeautySalon.Application.Users.Contracts.Dtos;
 public class LoginDto
 {
     [Required]

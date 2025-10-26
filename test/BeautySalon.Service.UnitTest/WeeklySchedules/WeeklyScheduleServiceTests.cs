@@ -6,7 +6,7 @@ using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
 using Xunit;
 
-namespace BeautySalon.Service.UnitTest.WhyUSSections;
+namespace BeautySalon.Service.UnitTest.WeeklySchedules;
 public class WeeklyScheduleServiceTests : BusinessUnitTest
 {
 

@@ -1,7 +1,7 @@
 ﻿using BeautySalon.Common.Interfaces;
-using BeautySalon.Entities.Users;
-using BeautySalon.Services.OTPRequests.Contacts;
-using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+using BeautySalon.Entities.OTPRequests;
+using BeautySalon.Services.OTPRequests.Contracts;
+using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 
 namespace BeautySalon.Services.OTPRequests;
 public class OtpRequestAppService : IOtpRequestService
@@ -38,7 +38,7 @@ public class OtpRequestAppService : IOtpRequestService
     public async Task ChangeIsUsedOtp(string id)
     {
         var otp = await _repository.FindById(id);
-        if(otp != null) 
+        if (otp != null)
         {
             otp.IsUsed = true;
             await _unitOfWork.Complete();

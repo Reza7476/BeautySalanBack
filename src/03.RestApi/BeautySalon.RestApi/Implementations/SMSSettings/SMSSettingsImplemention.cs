@@ -1,7 +1,7 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 
-namespace BeautySalon.RestApi.Configurations.SMS;
+namespace BeautySalon.RestApi.Implementations.SMSSettings;
 
 public class SMSSettingsImplementation : ISMSSetting
 {

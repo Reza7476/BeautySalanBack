@@ -6,9 +6,9 @@ using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
 using BeautySalon.RestApi.Configurations.JwtConfigs;
 using BeautySalon.RestApi.Configurations.RegisterAdmin;
-using BeautySalon.RestApi.Configurations.SMS;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using BeautySalon.RestApi.Implementations;
+using BeautySalon.RestApi.Implementations.SMSSettings;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

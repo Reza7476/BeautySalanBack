@@ -1,6 +1,6 @@
 ﻿using BeautySalon.Services.Treatments.Contracts.Dto;
 
-namespace BeautySalon.Service.UnitTest.Treatments;
+namespace BeautySalon.Test.Tool.Entities.Treatments;
 public class AddTreatmentDtoBuilder
 {
     private readonly AddTreatmentDto _dto;
@@ -14,14 +14,14 @@ public class AddTreatmentDtoBuilder
             ImageUniqueName = "imageUnique",
             Title = "title",
             URL = "url",
-            Extension="extension",
+            Extension = "extension",
         };
     }
 
 
     public AddTreatmentDtoBuilder WithExtension(string extension)
     {
-        _dto.Extension= extension;
+        _dto.Extension = extension;
         return this;
     }
 

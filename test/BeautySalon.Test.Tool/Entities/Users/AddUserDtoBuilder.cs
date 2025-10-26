@@ -1,4 +1,4 @@
-﻿using BeautySalon.Services.Users.Dtos;
+﻿using BeautySalon.Services.Users.Contracts.Dtos;
 
 namespace BeautySalon.Test.Tool.Entities.Users;
 public class AddUserDtoBuilder

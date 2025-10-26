@@ -1,5 +1,4 @@
 ﻿using BeautySalon.Application.Users.Contracts.Dtos;
-using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.Users.Contracts.Dtos;
 
