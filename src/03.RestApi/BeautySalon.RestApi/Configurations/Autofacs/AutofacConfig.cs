@@ -4,8 +4,8 @@ using BeautySalon.Application.Banners;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Banners;
-using BeautySalon.RestApi.Configurations.SMS;
 using BeautySalon.RestApi.Implementations;
+using BeautySalon.RestApi.Implementations.SMSSettings;
 using BeautySalon.Services.Banners;
 using static System.Net.Mime.MediaTypeNames;
 

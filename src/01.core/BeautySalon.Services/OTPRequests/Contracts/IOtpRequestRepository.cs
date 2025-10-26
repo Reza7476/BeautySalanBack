@@ -1,8 +1,8 @@
 ﻿using BeautySalon.Common.Interfaces;
-using BeautySalon.Entities.Users;
-using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+using BeautySalon.Entities.OTPRequests;
+using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 
-namespace BeautySalon.Services.OTPRequests.Contacts;
+namespace BeautySalon.Services.OTPRequests.Contracts;
 public interface IOtpRequestRepository : IRepository
 {
     Task Add(OtpRequest otpRequest);

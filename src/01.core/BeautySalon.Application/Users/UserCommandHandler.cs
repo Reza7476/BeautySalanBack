@@ -1,17 +1,16 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
-using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Extensions;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.OTPRequests;
 using BeautySalon.Entities.SMSLogs;
-using BeautySalon.Entities.Users;
 using BeautySalon.Services;
 using BeautySalon.Services.Extensions;
 using BeautySalon.Services.JWTTokenService;
 using BeautySalon.Services.JWTTokenService.Contracts.Dtos;
-using BeautySalon.Services.OTPRequests.Contacts;
-using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+using BeautySalon.Services.OTPRequests.Contracts;
+using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 using BeautySalon.Services.OTPRequests.Exceptions;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Exceptions;
@@ -21,7 +20,6 @@ using BeautySalon.Services.SMSLogs.Contracts;
 using BeautySalon.Services.SMSLogs.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
-using BeautySalon.Services.Users.Dtos;
 using BeautySalon.Services.Users.Exceptions;
 
 namespace BeautySalon.Application.Users;
@@ -275,9 +273,6 @@ public class UserCommandHandler : IUserHandle
 
         return response;
     }
-
-
-
 
     public async Task<GetTokenDto> Login(LoginDto dto)
     {

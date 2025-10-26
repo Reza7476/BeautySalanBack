@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BeautySalon.Services.Users.Dtos;
+namespace BeautySalon.Services.Users.Contracts.Dtos;
 public class AddUserDto
 {
     [Required]
     public string Name { get; set; } = default!;
-    
+
     [Required]
     public string LastName { get; set; } = default!;
 

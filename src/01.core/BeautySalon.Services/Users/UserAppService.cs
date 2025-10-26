@@ -3,7 +3,6 @@ using BeautySalon.Entities.Users;
 using BeautySalon.Services.Extensions;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
-using BeautySalon.Services.Users.Dtos;
 using BeautySalon.Services.Users.Exceptions;
 
 namespace BeautySalon.Services.Users;

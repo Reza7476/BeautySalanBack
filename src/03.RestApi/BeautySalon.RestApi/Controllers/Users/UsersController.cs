@@ -1,6 +1,5 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
-using BeautySalon.Application.Users.Dtos;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
 using BeautySalon.Services.Users.Contracts.Dtos;
@@ -66,7 +65,7 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpPatch("log-out")]
-    public async Task Logout([FromBody]LogOutDto dto)
+    public async Task Logout([FromBody] LogOutDto dto)
     {
         await _refreshTokenService.RevokedToken(dto);
     }

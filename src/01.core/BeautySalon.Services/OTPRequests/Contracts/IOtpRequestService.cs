@@ -1,7 +1,7 @@
 ﻿using BeautySalon.Common.Interfaces;
-using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 
-namespace BeautySalon.Services.OTPRequests.Contacts;
+namespace BeautySalon.Services.OTPRequests.Contracts;
 public interface IOtpRequestService : IService
 {
     Task<string> Add(AddOTPRequestDto dto);

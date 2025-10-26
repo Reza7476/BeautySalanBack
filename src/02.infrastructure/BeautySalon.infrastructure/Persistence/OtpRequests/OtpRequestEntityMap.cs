@@ -1,4 +1,4 @@
-﻿using BeautySalon.Entities.Users;
+﻿using BeautySalon.Entities.OTPRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

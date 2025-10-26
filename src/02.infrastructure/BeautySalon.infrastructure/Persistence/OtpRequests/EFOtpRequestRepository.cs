@@ -1,6 +1,6 @@
-﻿using BeautySalon.Entities.Users;
-using BeautySalon.Services.OTPRequests.Contacts;
-using BeautySalon.Services.OTPRequests.Contacts.Dtos;
+﻿using BeautySalon.Entities.OTPRequests;
+using BeautySalon.Services.OTPRequests.Contracts;
+using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautySalon.infrastructure.Persistence.OtpRequests;
