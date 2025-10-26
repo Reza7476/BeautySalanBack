@@ -124,4 +124,9 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.GetAllForAppointment();
     }
+
+    public async Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id)
+    {
+        return await _repository.GetDetailsForAppointment(id);
+    }
 }

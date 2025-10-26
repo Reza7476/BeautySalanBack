@@ -102,4 +102,24 @@ public class TreatmentServiceTests:BusinessIntegrationTest
         expected.First().Title.Should().Be(treatment.Title);
         expected.First().Id.Should().Be(treatment.Id);
     }
+
+    [Fact]
+    public async Task GetDetailsForAppointment_should_return_treatment_details_properly()
+    {
+        var treatment = new TreatmentBuilder()
+            .WithTitle("abc")
+            .WithDescription("abcD")
+            .WithImage()
+            .Build();
+        Save(treatment);
+        
+        var expected = await _sut.GetDetailsForAppointment(treatment.Id);
+
+        expected!.Description.Should().Be(treatment.Description);
+        expected.Title.Should().Be(treatment.Title);
+        expected.Image.ImageName.Should().Be(treatment.Images.First().ImageName);
+        expected.Image.UniqueName.Should().Be(treatment.Images.First().ImageUniqueName);
+        expected.Image.Extension.Should().Be(treatment.Images.First().Extension);
+        expected.Image.URL.Should().Be(treatment.Images.First().URL);
+    }
 }

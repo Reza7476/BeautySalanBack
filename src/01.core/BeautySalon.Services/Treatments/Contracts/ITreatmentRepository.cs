@@ -13,6 +13,7 @@ public interface ITreatmentRepository : IRepository
     Task<IPageResult<GetAllTreatmentsDto>> GetAll(IPagination? pagination);
     Task<List<GetAllTreatmentsForAppointmentDto>> GetAllForAppointment();
     Task<GetTreatmentDetailsDto?> GetDetails(long id);
+    Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id);
     Task<List<GetTreatmentForLandingDto>> GetForLanding();
     Task <List<TreatmentImage>>GetTreatmentImages(long id);
     Task RemoveImage(TreatmentImage treatmentImage);

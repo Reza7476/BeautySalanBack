@@ -79,4 +79,12 @@ public class TreatmentsController : ControllerBase
     {
         return await _service.GetAllForAppointment();
     }
+
+    [Authorize]
+    [HttpGet("{id}/for-appointment")]
+    public async Task<GetTreatmentDetailsForAppointmentDto?> 
+        GetDetailsForAppointment([FromRoute] long id)
+    {
+        return await _service.GetDetailsForAppointment(id);
+    }
 }
