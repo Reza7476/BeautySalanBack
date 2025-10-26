@@ -119,4 +119,9 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.GetForLanding();
     }
+
+    public async Task<List<GetAllTreatmentsForAppointmentDto>> GetAllForAppointment()
+    {
+        return await _repository.GetAllForAppointment();
+    }
 }
