@@ -19,6 +19,11 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
         await _weeklySchedules.AddAsync(schedules);
     }
 
+    public async Task<WeeklySchedule?> FindById(int id)
+    {
+        return await _weeklySchedules.FindAsync(id);
+    }
+
     public async Task<List<GetScheduleDto>> GetSchedules()
     {
         var aa = await _weeklySchedules.Select(_ => new GetScheduleDto()
