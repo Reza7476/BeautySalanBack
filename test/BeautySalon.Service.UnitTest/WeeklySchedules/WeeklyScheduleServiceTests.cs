@@ -1,11 +1,9 @@
 ﻿using BeautySalon.Entities.WeeklySchedules;
 using BeautySalon.Services.WeeklySchedules.Contracts;
-using BeautySalon.Services.WeeklySchedules.Contracts.Dtos;
 using BeautySalon.Services.WeeklySchedules.Exceptions;
 using BeautySalon.Test.Tool.Entities.WeeklySchedules;
 using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Xunit;
 
 namespace BeautySalon.Service.UnitTest.WhyUSSections;
@@ -70,7 +68,7 @@ public class WeeklyScheduleServiceTests : BusinessUnitTest
             .WithIsActive()
             .WithId(schedule.Id)
             .Build();
-        
+
         await _sut.EditSchedule(dto);
 
         var expected = ReadContext.Set<WeeklySchedule>().First();
@@ -87,7 +85,7 @@ public class WeeklyScheduleServiceTests : BusinessUnitTest
         var dto = new EditWeeklyScheduleDtoBuilder()
             .WithId(id)
             .Build();
-        
+
         Func<Task> expected = async () => await _sut.EditSchedule(dto);
 
         await expected.Should().ThrowExactlyAsync<ScheduleNotFoundException>();
