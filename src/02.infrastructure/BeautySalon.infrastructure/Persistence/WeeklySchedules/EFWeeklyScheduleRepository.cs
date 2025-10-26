@@ -14,9 +14,9 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
         _weeklySchedules = context.Set<WeeklySchedule>();
     }
 
-    public async Task AddRange(List<WeeklySchedule> schedules)
+    public async Task Add(WeeklySchedule schedules)
     {
-        await _weeklySchedules.AddRangeAsync(schedules);
+        await _weeklySchedules.AddAsync(schedules);
     }
 
     public async Task<List<GetScheduleDto>> GetSchedules()
@@ -31,5 +31,10 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
 
         }).ToListAsync();
         return aa;
+    }
+
+    public async Task<bool> IsExistByDayOfWeek(DayWeek dayOfWeek)
+    {
+        return await _weeklySchedules.AnyAsync(_=>_.DayOfWeek==dayOfWeek);
     }
 }
