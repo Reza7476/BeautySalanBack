@@ -10,6 +10,7 @@ public interface ITreatmentService : IService
     Task<IPageResult<GetAllTreatmentsDto>> GetAll(IPagination? pagination = null);
     Task<List<GetAllTreatmentsForAppointmentDto>> GetAllForAppointment();
     Task<GetTreatmentDetailsDto?> GetDetails(long id);
+    Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id);
     Task<List<GetTreatmentForLandingDto>> GetForLanding();
     Task<string> GetUrl_Remove_Image(long imageId, long id);
     Task Update(UpdateTreatmentDto dto, long id);

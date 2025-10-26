@@ -94,6 +94,24 @@ public class EFTreatmentRepository : ITreatmentRepository
             }).FirstOrDefaultAsync();
     }
 
+    public async Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id)
+    {
+        return await _treatments.Where(_ => _.Id == id)
+            .Include(_ => _.Images)
+            .Select(_ => new GetTreatmentDetailsForAppointmentDto()
+            {
+                Description = _.Description,
+                Title = _.Title,
+                Image = _.Images.Select(img => new ImageDetailsDto()
+                {
+                    Extension = img.Extension,
+                    ImageName = img.ImageName,
+                    UniqueName = img.ImageUniqueName,
+                    URL = img.URL
+                }).First()
+            }).FirstOrDefaultAsync();
+    }
+
     public async Task<List<GetTreatmentForLandingDto>> GetForLanding()
     {
         return await _treatments
