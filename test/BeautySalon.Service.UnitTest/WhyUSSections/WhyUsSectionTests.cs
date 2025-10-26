@@ -7,7 +7,7 @@ using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
 using Xunit;
 
-namespace BeautySalon.Service.UnitTest.WhyUSSections;
+namespace BeautySalon.Service.UnitTest.WhyUsSections;
 public class WhyUsSectionTests : BusinessUnitTest
 {
     private readonly IWhyUsSectionService _sut;
