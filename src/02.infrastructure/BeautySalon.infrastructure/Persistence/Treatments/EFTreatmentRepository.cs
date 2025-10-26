@@ -65,6 +65,14 @@ public class EFTreatmentRepository : ITreatmentRepository
         return await query.Paginate(pagination ?? new Pagination());
     }
 
+    public async Task<List<GetAllTreatmentsForAppointmentDto>> GetAllForAppointment()
+    {
+        return await _treatments.Select(_ => new GetAllTreatmentsForAppointmentDto()
+        {
+            Id = _.Id,
+            Title = _.Title
+        }).ToListAsync();
+    }
 
     public async Task<GetTreatmentDetailsDto?> GetDetails(long id)
     {
@@ -102,7 +110,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                     ImageName = media.ImageName,
                     UniqueName = media.ImageUniqueName,
                     URL = media.URL,
-                    Id=media.Id
+                    Id = media.Id
                 }).FirstOrDefault() : null
             }).ToListAsync();
     }

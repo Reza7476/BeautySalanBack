@@ -88,4 +88,18 @@ public class TreatmentServiceTests:BusinessIntegrationTest
         expected.First().Media!.Extension.Should().Be(treatment.Images.First().Extension);
         expected.First().Media!.Id.Should().Be(treatment.Images.First().Id);
     }
+
+    [Fact]
+    public async Task GetAllForAppointment_should_return_all_treatment()
+    {
+        var treatment = new TreatmentBuilder()
+            .WithTitle("abc")
+            .Build();
+        Save(treatment);
+
+        var expected = await _sut.GetAllForAppointment();
+
+        expected.First().Title.Should().Be(treatment.Title);
+        expected.First().Id.Should().Be(treatment.Id);
+    }
 }
