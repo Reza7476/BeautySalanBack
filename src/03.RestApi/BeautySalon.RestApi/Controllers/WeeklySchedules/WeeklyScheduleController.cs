@@ -23,6 +23,7 @@ public class WeeklyScheduleController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<List<GetScheduleDto>> GetSchedule()
     {
         return await _service.GetSchedules();
