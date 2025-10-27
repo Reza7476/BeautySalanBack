@@ -24,6 +24,17 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
         return await _weeklySchedules.FindAsync(id);
     }
 
+    public async Task<GetDayScheduleDto?> GetDaySchedule(DayWeek dayWeek)
+    {
+        return await _weeklySchedules
+            .Where(_ => _.IsActive && _.DayOfWeek == dayWeek)
+            .Select(_ => new GetDayScheduleDto()
+            {
+                StartTime = _.StartTime,
+                EndTime = _.EndTime
+            }).FirstOrDefaultAsync();
+    }
+
     public async Task<List<GetScheduleDto>> GetSchedules()
     {
         var aa = await _weeklySchedules.Select(_ => new GetScheduleDto()
@@ -40,6 +51,6 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
 
     public async Task<bool> IsExistByDayOfWeek(DayWeek dayOfWeek)
     {
-        return await _weeklySchedules.AnyAsync(_=>_.DayOfWeek==dayOfWeek);
+        return await _weeklySchedules.AnyAsync(_ => _.DayOfWeek == dayOfWeek);
     }
 }

@@ -65,6 +65,11 @@ public class WeeklyScheduleAppService : IWeeklyScheduleService
         await _unitOfWork.Complete();
     }
 
+    public async Task<GetDayScheduleDto?> GetDaySchedule(DayWeek dayWeek)
+    {
+        return await _repository.GetDaySchedule(dayWeek);
+    }
+
     public async Task<List<GetScheduleDto>> GetSchedules()
     {
         return await _repository.GetSchedules();

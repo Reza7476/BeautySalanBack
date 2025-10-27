@@ -34,4 +34,20 @@ public class WeeklyScheduleServiceTests : BusinessIntegrationTest
         expected.First().EndTime.Should().Be(schedules.EndTime);
     }
 
+    [Fact]
+    public async Task GetDaySchedule_should_return_day_schedule_properly()
+    {
+        var schedule = new WeeklyScheduleBuilder()
+            .WithStartTime(DateTime.Now)
+            .WithEndTime(DateTime.Now.AddHours(8))
+            .WithDay(DayWeek.Monday)
+            .WithIsActive(true)
+            .Build();
+        Save(schedule);
+
+        var expected = await _sut.GetDaySchedule(DayWeek.Monday);
+
+        expected!.StartTime.Should().Be(schedule.StartTime);
+        expected.EndTime.Should().Be(schedule.EndTime);
+    }
 }

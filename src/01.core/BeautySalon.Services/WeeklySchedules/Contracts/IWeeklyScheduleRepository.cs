@@ -7,6 +7,7 @@ public interface IWeeklyScheduleRepository : IRepository
 {
     Task Add(WeeklySchedule schedules);
     Task<WeeklySchedule?> FindById(int id);
+    Task<GetDayScheduleDto?> GetDaySchedule(DayWeek dayWeek);
     Task<List<GetScheduleDto>> GetSchedules();
     Task<bool> IsExistByDayOfWeek(DayWeek dayOfWeek);
 }
