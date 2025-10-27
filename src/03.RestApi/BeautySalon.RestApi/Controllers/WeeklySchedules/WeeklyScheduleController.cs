@@ -1,4 +1,5 @@
-﻿using BeautySalon.Services.WeeklySchedules.Contracts;
+﻿using BeautySalon.Entities.WeeklySchedules;
+using BeautySalon.Services.WeeklySchedules.Contracts;
 using BeautySalon.Services.WeeklySchedules.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,5 +35,12 @@ public class WeeklyScheduleController : ControllerBase
     public async Task Edit( [FromBody] EditWeeklyScheduleDto dto)
     {
         await _service.EditSchedule(dto);
+    }
+
+    [Authorize]
+    [HttpGet("{dayWeek}")]
+    public async Task<GetDayScheduleDto?> GetDaySchedule([FromRoute]DayWeek dayWeek)
+    {
+        return await _service.GetDaySchedule(dayWeek);
     }
 }
