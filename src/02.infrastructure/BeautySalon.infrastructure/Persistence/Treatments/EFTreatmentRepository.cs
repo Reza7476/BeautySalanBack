@@ -102,6 +102,7 @@ public class EFTreatmentRepository : ITreatmentRepository
             {
                 Description = _.Description,
                 Title = _.Title,
+                Duration=_.Duration,
                 Image = _.Images.Select(img => new ImageDetailsDto()
                 {
                     Extension = img.Extension,
