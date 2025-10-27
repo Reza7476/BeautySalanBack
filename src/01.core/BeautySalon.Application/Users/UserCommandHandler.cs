@@ -18,6 +18,8 @@ using BeautySalon.Services.Roles.Contracts;
 using BeautySalon.Services.Roles.Contracts.Dtos;
 using BeautySalon.Services.SMSLogs.Contracts;
 using BeautySalon.Services.SMSLogs.Contracts.Dtos;
+using BeautySalon.Services.Technicians.Contracts;
+using BeautySalon.Services.Technicians.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Exceptions;
@@ -29,7 +31,7 @@ public class UserCommandHandler : IUserHandle
     private readonly IRoleService _roleService;
     private readonly IJwtTokenService _jwtTokenService;
     private readonly IRefreshTokenService _refreshTokenService;
-
+    private readonly ITechnicianService _technicianService;
     private readonly ISMSService _smsService;
     private readonly ISMSLogService _smsLogService;
     private readonly ISMSSetting _smsSetting;
@@ -44,7 +46,8 @@ public class UserCommandHandler : IUserHandle
         ISMSLogService smsLogService,
         ISMSSetting smsSetting,
         IOtpRequestService otpService,
-        IMediaService mediaService)
+        IMediaService mediaService,
+        ITechnicianService technicianService)
     {
         _userService = userService;
         _roleService = roleService;
@@ -55,6 +58,7 @@ public class UserCommandHandler : IUserHandle
         _smsSetting = smsSetting;
         _otpService = otpService;
         _mediaService = mediaService;
+        _technicianService = technicianService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)
@@ -63,6 +67,7 @@ public class UserCommandHandler : IUserHandle
         if (!await _userService.IsExistByUserName(adminUser))
         {
             var adminId = await CreateAdmin(adminUser, adminPass);
+            await CreateTechnician(adminId);
             var roleId = await CreateAdministratorAsRole();
             await AssignRoleToUser(adminId, roleId);
         }
@@ -89,7 +94,8 @@ public class UserCommandHandler : IUserHandle
         await _userService.ChangePassword(dto.NewPassword, otpRequest.Mobile);
     }
 
-    public async Task<GetTokenDto> FinalizingRegister(FinalizingRegisterUserHandlerDto dto)
+    public async Task<GetTokenDto>
+        FinalizingRegister(FinalizingRegisterUserHandlerDto dto)
     {
         var otpRequest = await _otpService.GetByIdForRegister(dto.OtpRequestId);
         if (otpRequest == null)
@@ -200,8 +206,8 @@ public class UserCommandHandler : IUserHandle
     }
 
 
-
-    public async Task<ResponseInitializeRegisterUserHandlerDto> InitializeRegister(InitializeRegisterUserDto dto)
+    public async Task<ResponseInitializeRegisterUserHandlerDto>
+        InitializeRegister(InitializeRegisterUserDto dto)
     {
         string otpRequest = string.Empty;
         dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
@@ -340,6 +346,14 @@ public class UserCommandHandler : IUserHandle
         };
     }
 
+    private async Task CreateTechnician(string adminId)
+    {
+        await _technicianService.Add(new AddTechnicianDto()
+        {
+            UserId = adminId
+        });
+    }
+
     private async Task AssignRoleToUser(
         string adminId,
         long roleId)
@@ -347,7 +361,9 @@ public class UserCommandHandler : IUserHandle
         await _roleService.AssignRoleToUser(adminId, roleId);
     }
 
-    private async Task<string> CreateAdmin(string adminUser, string adminPass)
+    private async Task<string> CreateAdmin(
+        string adminUser,
+        string adminPass)
     {
         var userId = await _userService.Add(new AddUserDto()
         {
