@@ -1,10 +1,13 @@
-﻿namespace BeautySalon.Entities.Treatments;
+﻿using BeautySalon.Entities.Appointments;
+
+namespace BeautySalon.Entities.Treatments;
 
 public class Treatment
 {
     public Treatment()
     {
         Images = new HashSet<TreatmentImage>();
+        Appointments = new HashSet<Appointment>();
     }
 
     public long Id { get; set; }
@@ -13,6 +16,7 @@ public class Treatment
     public required string Description { get; set; }
     public required DateTime CreateDate { get; set; }
     public HashSet<TreatmentImage> Images { get; set; }
+    public HashSet<Appointment> Appointments { get; set; }
 }
 
 public class TreatmentImage
