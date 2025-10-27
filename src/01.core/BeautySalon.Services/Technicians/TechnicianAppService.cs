@@ -22,7 +22,8 @@ public class TechnicianAppService : ITechnicianService
         var technician = new Technician()
         {
             Id = Guid.NewGuid().ToString(),
-            UserId = dto.UserId
+            UserId = dto.UserId,
+            CreatedDate = DateTime.UtcNow,
         };
         await _repository.Add(technician);
         await _unitOfWork.Complete();
