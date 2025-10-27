@@ -7,7 +7,7 @@ public class ClientEntityMap : IEntityTypeConfiguration<Client>
 {
     public void Configure(EntityTypeBuilder<Client> _)
     {
-        _.ToTable("Users").HasKey("Id");
+        _.ToTable("Clients").HasKey(_=>_.Id);
         
         _.Property(_ => _.Id).IsRequired();
 

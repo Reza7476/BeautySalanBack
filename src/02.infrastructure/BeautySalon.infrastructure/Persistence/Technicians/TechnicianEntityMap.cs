@@ -7,7 +7,7 @@ public class TechnicianEntityMap : IEntityTypeConfiguration<Technician>
 {
     public void Configure(EntityTypeBuilder<Technician> _)
     {
-        _.ToTable("Technicians").HasKey();
+        _.ToTable("Technicians").HasKey(_=>_.Id);
 
         _.Property(_ => _.Id).IsRequired();
 
