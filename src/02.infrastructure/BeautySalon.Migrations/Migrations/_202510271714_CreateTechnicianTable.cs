@@ -10,6 +10,7 @@ public class _202510271714_CreateTechnicianTable : Migration
     {
         Create.Table("Technicians")
              .WithColumn("Id").AsString().NotNullable().PrimaryKey()
+             .WithColumn("CreatedDate").AsDateTime2()
              .WithColumn("UserId").AsString().NotNullable();
     }
 

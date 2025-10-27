@@ -12,5 +12,7 @@ public class TechnicianEntityMap : IEntityTypeConfiguration<Technician>
         _.Property(_ => _.Id).IsRequired();
 
         _.Property(_ => _.UserId).IsRequired();
+
+        _.Property(_ => _.CreatedDate);
     }
 }
