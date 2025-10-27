@@ -38,7 +38,7 @@ public class WeeklyScheduleController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{dayWeek}")]
+    [HttpGet("{dayWeek}/day-schedule")]
     public async Task<GetDayScheduleDto?> GetDaySchedule([FromRoute]DayWeek dayWeek)
     {
         return await _service.GetDaySchedule(dayWeek);
