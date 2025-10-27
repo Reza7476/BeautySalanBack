@@ -3,6 +3,7 @@
 namespace BeautySalon.Services.Treatments.Contracts.Dto;
 public class GetTreatmentDetailsForAppointmentDto
 {
+    public int Duration { get; set; }
     public string Description { get; set; } = default!;
     public string Title { get; set; } = default!;
     public ImageDetailsDto Image { get; set; }=default!;

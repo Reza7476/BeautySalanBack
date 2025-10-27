@@ -12,8 +12,15 @@ public class TreatmentBuilder
             CreateDate = DateTime.Now,
             Description = "description",
             Title = "title",
+            Duration=180,
             Images = new HashSet<TreatmentImage>()
         };
+    }
+    
+    public TreatmentBuilder WithDuration(int duration)
+    {
+        _treatment.Duration= duration;
+        return this;
     }
 
     public TreatmentBuilder WithTitle(string title)
