@@ -6,6 +6,8 @@ using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.OTPRequests;
 using BeautySalon.Entities.SMSLogs;
 using BeautySalon.Services;
+using BeautySalon.Services.Clients.Contracts;
+using BeautySalon.Services.Clients.Contracts.Dtos;
 using BeautySalon.Services.Extensions;
 using BeautySalon.Services.JWTTokenService;
 using BeautySalon.Services.JWTTokenService.Contracts.Dtos;
@@ -37,6 +39,7 @@ public class UserCommandHandler : IUserHandle
     private readonly ISMSSetting _smsSetting;
     private readonly IOtpRequestService _otpService;
     private readonly IMediaService _mediaService;
+    private readonly IClientService _clientService;
 
     public UserCommandHandler(IUserService userService,
         IRoleService roleService,
@@ -47,7 +50,8 @@ public class UserCommandHandler : IUserHandle
         ISMSSetting smsSetting,
         IOtpRequestService otpService,
         IMediaService mediaService,
-        ITechnicianService technicianService)
+        ITechnicianService technicianService,
+        IClientService clientService)
     {
         _userService = userService;
         _roleService = roleService;
@@ -59,6 +63,7 @@ public class UserCommandHandler : IUserHandle
         _otpService = otpService;
         _mediaService = mediaService;
         _technicianService = technicianService;
+        _clientService = clientService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)
@@ -132,6 +137,11 @@ public class UserCommandHandler : IUserHandle
         var roleId = await _roleService.Add(new AddRoleDto()
         {
             RoleName = SystemRole.Client
+        });
+
+        await _clientService.Add(new AddClientDto()
+        {
+            UserId = userId
         });
 
         await _roleService.AssignRoleToUser(userId, roleId);
