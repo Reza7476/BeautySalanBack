@@ -11,9 +11,6 @@ public class AddAppointmentHandlerDto
     public DateTime AppointmentDate { get; set; }
 
     [Required]
-    public DateTime EndTime { get; set; }
-
-    [Required]
     public int Duration { get; set; }
 
     public string? Description { get; set; }
