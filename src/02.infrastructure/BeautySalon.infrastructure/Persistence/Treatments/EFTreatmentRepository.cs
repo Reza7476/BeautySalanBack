@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Treatments.Contracts;
@@ -102,14 +103,14 @@ public class EFTreatmentRepository : ITreatmentRepository
             {
                 Description = _.Description,
                 Title = _.Title,
-                Duration=_.Duration,
+                Duration = _.Duration,
                 Image = _.Images.Select(img => new ImageDetailsDto()
                 {
                     Extension = img.Extension,
                     ImageName = img.ImageName,
                     UniqueName = img.ImageUniqueName,
                     URL = img.URL
-                }).First()
+                }).First(),
             }).FirstOrDefaultAsync();
     }
 

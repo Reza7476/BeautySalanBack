@@ -16,4 +16,12 @@ public class EFTechnicianRepository : ITechnicianRepository
     {
         await _technicians.AddAsync(technician);
     }
+
+    public async Task<string?> GetTechnicianId()
+    {
+        var technician = await _technicians
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+        return technician?.Id;
+    }
 }

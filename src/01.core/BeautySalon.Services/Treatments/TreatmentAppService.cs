@@ -129,4 +129,9 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.GetDetailsForAppointment(id);
     }
+
+    public async Task<bool> TreatmentIsExistById(long id)
+    {
+        return await _repository.ExistById(id);
+    }
 }

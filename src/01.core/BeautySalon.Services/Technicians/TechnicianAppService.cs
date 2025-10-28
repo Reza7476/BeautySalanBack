@@ -30,4 +30,9 @@ public class TechnicianAppService : ITechnicianService
 
         return technician.Id;
     }
+
+    public async Task<string?> GetTechnicianId()
+    {
+       return await _repository.GetTechnicianId();
+    }
 }
