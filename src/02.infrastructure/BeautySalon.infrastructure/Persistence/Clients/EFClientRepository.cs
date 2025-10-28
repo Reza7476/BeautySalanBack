@@ -16,4 +16,12 @@ public class EFClientRepository : IClientRepository
     {
      await _clients.AddAsync(client);
     }
+
+    public async Task<string?> GetClientIdByUserId(string userId)
+    {
+        return await _clients
+             .Where(_ => _.UserId == userId)
+             .Select(c => c.Id)
+             .FirstOrDefaultAsync();
+    }
 }

@@ -13,5 +13,6 @@ public interface ITreatmentService : IService
     Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id);
     Task<List<GetTreatmentForLandingDto>> GetForLanding();
     Task<string> GetUrl_Remove_Image(long imageId, long id);
+    Task<bool> TreatmentIsExistById(long id);
     Task Update(UpdateTreatmentDto dto, long id);
 }

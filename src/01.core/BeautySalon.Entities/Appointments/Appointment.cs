@@ -22,7 +22,7 @@ public class Appointment
     public Technician Technician { get; set; } = default!;
 }
 
-public enum AppointmentStatus
+public enum AppointmentStatus:byte
 {
     Completed,
     Confirmed,

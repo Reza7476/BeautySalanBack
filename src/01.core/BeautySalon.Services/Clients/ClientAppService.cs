@@ -29,4 +29,9 @@ public class ClientAppService : IClientService
         await _unitOfWork.Complete();
         return client.Id;
     }
+
+    public async Task<string?> GetClientIdByUserId(string userId)
+    {
+        return await _repository.GetClientIdByUserId(userId);
+    }
 }
