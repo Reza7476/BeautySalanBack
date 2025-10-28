@@ -11,6 +11,7 @@ public class ClientBuilder
         _client = new Client()
         {
             Id=Guid.NewGuid().ToString(),
+            CreatedAt = DateTime.Now,
         };
     }
 

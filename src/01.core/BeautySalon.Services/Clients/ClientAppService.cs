@@ -23,6 +23,7 @@ public class ClientAppService : IClientService
         {
             Id=Guid.NewGuid().ToString(),
             UserId = dto.UserId,
+            CreatedAt=DateTime.UtcNow
         };
 
         await _repository.Add(client);
