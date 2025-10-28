@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Entities.WeeklySchedules;
+using BeautySalon.Services;
 using BeautySalon.Services.WeeklySchedules.Contracts;
 using BeautySalon.Services.WeeklySchedules.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ public class WeeklyScheduleController : ControllerBase
         _service = service;
     }
 
-    [Authorize]
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPost]
     public async Task<int> Add([FromBody]AddWeeklyScheduleDto dto)
     {
@@ -30,7 +31,7 @@ public class WeeklyScheduleController : ControllerBase
         return await _service.GetSchedules();
     }
 
-    [Authorize]
+    [Authorize(Roles =SystemRole.Admin)]
     [HttpPut]
     public async Task Edit( [FromBody] EditWeeklyScheduleDto dto)
     {
