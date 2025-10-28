@@ -51,7 +51,6 @@ public class AppointmentCommandHandler : IAppointmentHandler
         var appointmentId = await _appointmentService.Add(new AddAppointmentDto()
         {
             AppointmentDate = dto.AppointmentDate,
-            Description=dto.Description,
             Duration=dto.Duration,
             ClientId=clientId,
             TechnicianId=technicianId,

@@ -3,7 +3,6 @@
 namespace BeautySalon.Application.Appointments.Contracts.Dtos;
 public class AddAppointmentHandlerDto
 {
-
     [Required]
     public long TreatmentId { get; set; }
 
@@ -12,6 +11,4 @@ public class AddAppointmentHandlerDto
 
     [Required]
     public int Duration { get; set; }
-
-    public string? Description { get; set; }
 }

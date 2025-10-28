@@ -10,9 +10,7 @@ public class AddAppointmentDtoBuilder
         _dto = new AddAppointmentDto()
         {
             AppointmentDate = DateTime.Now,
-            Description = string.Empty,
             Duration = 30,
-
         };
     }
 
