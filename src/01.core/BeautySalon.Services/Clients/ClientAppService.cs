@@ -1,5 +1,7 @@
 ﻿using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Clients;
 using BeautySalon.Services.Clients.Contracts;
+using BeautySalon.Services.Clients.Contracts.Dtos;
 
 namespace BeautySalon.Services.Clients;
 public class ClientAppService : IClientService
@@ -13,5 +15,18 @@ public class ClientAppService : IClientService
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
+    }
+
+    public async Task<string> Add(AddClientDto dto)
+    {
+        var client = new Client()
+        {
+            Id=Guid.NewGuid().ToString(),
+            UserId = dto.UserId,
+        };
+
+        await _repository.Add(client);
+        await _unitOfWork.Complete();
+        return client.Id;
     }
 }
