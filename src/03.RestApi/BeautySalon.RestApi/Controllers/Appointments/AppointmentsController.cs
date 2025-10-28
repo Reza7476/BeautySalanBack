@@ -2,6 +2,7 @@
 using BeautySalon.Application.Appointments.Contracts.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.Appointments.Contracts;
+using BeautySalon.Services.Appointments.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,4 +32,13 @@ public class AppointmentsController : ControllerBase
         var userId = _userTokenService.UserId;
         return await _handler.AddAppointment(dto, userId!);
     }
+
+    [Authorize]
+    [HttpGet("{dateTime}/booked-appointment")]
+
+    public async Task<List<GetBookedAppointmentByDayDto>>
+        GetBookedAppointment([FromRoute] DateTime dateTime)
+    {
+        return await _service.GetBookAppointmentByDay(dateTime);
+    } 
 }

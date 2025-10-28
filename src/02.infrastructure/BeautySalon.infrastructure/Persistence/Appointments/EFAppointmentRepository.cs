@@ -3,6 +3,7 @@ using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.Services.Appointments.Contracts;
+using BeautySalon.Services.Appointments.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautySalon.infrastructure.Persistence.Appointments;
@@ -35,6 +36,21 @@ public class EFAppointmentRepository : IAppointmentRepository
             appointmentDate >= a.AppointmentDate &&
             appointmentDate < a.EndTime);
         return b;
+    }
+
+    public async Task<List<GetBookedAppointmentByDayDto>>
+        GetBookAppointmentByDay(DateTime dateTime)
+    {
+        return await _appointments.Where(
+         _ => _.AppointmentDate.Date == dateTime.Date &&
+        (_.Status == AppointmentStatus.Pending ||
+         _.Status == AppointmentStatus.Confirmed))
+         .Select(a => new GetBookedAppointmentByDayDto()
+         {
+             Duration = a.Duration,
+             StartDate = TimeOnly.FromDateTime(a.AppointmentDate),
+             EndDate = TimeOnly.FromDateTime(a.EndTime),
+         }).ToListAsync();
     }
 
     public async Task<string?> GetClientIdByUserId(string userId)
