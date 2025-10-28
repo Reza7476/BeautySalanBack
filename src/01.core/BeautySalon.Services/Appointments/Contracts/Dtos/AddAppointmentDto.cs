@@ -9,5 +9,4 @@ public class AddAppointmentDto
     public long TreatmentId { get; set; }
     public DateTime AppointmentDate { get; set; }
     public int Duration { get; set; }
-    public string? Description { get; set; }
 }
