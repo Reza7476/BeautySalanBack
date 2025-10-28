@@ -1,7 +1,4 @@
-﻿using BeautySalon.Entities.Appointments;
-using System.ComponentModel.DataAnnotations;
-
-namespace BeautySalon.Services.Appointments.Contracts.Dtos;
+﻿namespace BeautySalon.Services.Appointments.Contracts.Dtos;
 public class AddAppointmentDto
 {
     public string ClientId { get; set; } = default!;

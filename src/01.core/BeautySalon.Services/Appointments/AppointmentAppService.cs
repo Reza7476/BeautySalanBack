@@ -42,4 +42,10 @@ public class AppointmentAppService : IAppointmentService
         await _unitOfWork.Complete();
         return appointment.Id;
     }
+
+    public async Task<List<GetBookedAppointmentByDayDto>>
+        GetBookAppointmentByDay(DateTime dateTime)
+    {
+        return await _repository.GetBookAppointmentByDay(dateTime);
+    }
 }
