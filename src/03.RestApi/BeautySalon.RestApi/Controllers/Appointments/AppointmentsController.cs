@@ -35,7 +35,6 @@ public class AppointmentsController : ControllerBase
 
     [Authorize]
     [HttpGet("booked-appointment")]
-
     public async Task<List<GetBookedAppointmentByDayDto>>
         GetBookedAppointment([FromForm] DateTime date)
     {
