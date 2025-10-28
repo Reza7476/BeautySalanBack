@@ -10,6 +10,7 @@ public class _202510271631_CreateClientTable : Migration
     {
         Create.Table("Clients")
             .WithColumn("Id").AsString().NotNullable().PrimaryKey()
+            .WithColumn("CreatedAt").AsDateTime2()
             .WithColumn("UserId").AsString().NotNullable();
     }
 

@@ -11,6 +11,9 @@ public class ClientEntityMap : IEntityTypeConfiguration<Client>
         
         _.Property(_ => _.Id).IsRequired();
 
+        _.Property(_ => _.CreatedAt);
+
+
         _.Property(_ => _.UserId).IsRequired();
     }
 }
