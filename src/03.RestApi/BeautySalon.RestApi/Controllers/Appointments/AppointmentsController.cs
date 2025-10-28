@@ -37,8 +37,8 @@ public class AppointmentsController : ControllerBase
     [HttpGet("booked-appointment")]
 
     public async Task<List<GetBookedAppointmentByDayDto>>
-        GetBookedAppointment([FromBody] GetTimeForBookedAppointmentDto dto)
+        GetBookedAppointment([FromForm] DateTime date)
     {
-        return await _service.GetBookAppointmentByDay(dto.DateTime);
+        return await _service.GetBookAppointmentByDay(date);
     } 
 }
