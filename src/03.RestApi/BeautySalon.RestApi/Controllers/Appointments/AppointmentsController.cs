@@ -25,6 +25,7 @@ public class AppointmentsController : ControllerBase
         _handler = handler;
     }
 
+
     [Authorize(Roles = "Client")]
     [HttpPost]
     public async Task<string> Add([FromBody] AddAppointmentHandlerDto dto)
@@ -32,6 +33,8 @@ public class AppointmentsController : ControllerBase
         var userId = _userTokenService.UserId;
         return await _handler.AddAppointment(dto, userId!);
     }
+
+
 
     [Authorize]
     [HttpGet("booked-appointment")]
