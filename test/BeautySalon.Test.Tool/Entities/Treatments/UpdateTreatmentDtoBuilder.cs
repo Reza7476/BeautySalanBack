@@ -10,12 +10,20 @@ public class UpdateTreatmentDtoBuilder
         _dto = new UpdateTreatmentDto()
         {
             Description = "description",
-            Title = "title"
+            Title = "title",
+            Duration=30
         };
     }
     public UpdateTreatmentDtoBuilder WithTitle(string title)
     {
         _dto.Title = title;
+        return this;
+    }
+
+
+    public UpdateTreatmentDtoBuilder WithDuration(int duration)
+    {
+        _dto.Duration= duration;
         return this;
     }
 
