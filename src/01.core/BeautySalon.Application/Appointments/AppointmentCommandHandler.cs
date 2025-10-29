@@ -54,7 +54,8 @@ public class AppointmentCommandHandler : IAppointmentHandler
             Duration=dto.Duration,
             ClientId=clientId,
             TechnicianId=technicianId,
-            TreatmentId=dto.TreatmentId
+            TreatmentId=dto.TreatmentId,
+            DayWeek=dto.DayWeek
         });
         
         return appointmentId;
