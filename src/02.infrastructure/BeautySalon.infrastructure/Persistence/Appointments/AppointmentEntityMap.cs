@@ -23,13 +23,13 @@ public class AppointmentEntityMap : IEntityTypeConfiguration<Appointment>
 
         _.Property(_ => _.Duration).IsRequired();
 
+        _.Property(_ => _.CancelledBy).IsRequired(false);
+        
+        _.Property(_ => _.CreatedAt).IsRequired();
+        
         _.Property(_ => _.Status);
 
-        _.Property(_ => _.CancelledBy).IsRequired(false);
-
-        _.Property(_ => _.CancelledAt).IsRequired(false);
-
-        _.Property(_ => _.CreatedAt).IsRequired();
+        _.Property(_ => _.CancelledAt);
 
         _.Property(_ => _.Description).IsRequired(false);
 

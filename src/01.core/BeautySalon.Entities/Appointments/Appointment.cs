@@ -15,7 +15,7 @@ public class Appointment
     public AppointmentStatus Status { get; set; }
     public string? Description { get; set; }
     public string? CancelledBy { get; set; }
-    public DateTime? CancelledAt { get; set; }
+    public DateTime CancelledAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public Client Client { get; set; } = default!;
     public Treatment Treatment { get; set; } = default!;

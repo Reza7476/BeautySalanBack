@@ -2,6 +2,7 @@
 using BeautySalon.Entities.Clients;
 using BeautySalon.Services.Clients.Contracts;
 using BeautySalon.Services.Clients.Contracts.Dtos;
+using BeautySalon.Services.Clients.Exceptions;
 
 namespace BeautySalon.Services.Clients;
 public class ClientAppService : IClientService
@@ -21,14 +22,33 @@ public class ClientAppService : IClientService
     {
         var client = new Client()
         {
-            Id=Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid().ToString(),
             UserId = dto.UserId,
-            CreatedAt=DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
 
         await _repository.Add(client);
         await _unitOfWork.Complete();
         return client.Id;
+    }
+
+    public async Task<IPageResult<GetAllClientAppointmentsDto>>
+        GetClientAppointments(
+        IPagination? pagination = null,
+        ClientAppointmentFilterDto? filter = null,
+        string? userId = null)
+    {
+        if (userId == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+        var clientId = await _repository.GetClientIdByUserId(userId);
+        if (clientId == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+
+        return await _repository.GetClientAppointments(clientId, pagination, filter);
     }
 
     public async Task<string?> GetClientIdByUserId(string userId)
