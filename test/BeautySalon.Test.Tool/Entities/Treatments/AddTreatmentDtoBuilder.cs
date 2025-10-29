@@ -15,9 +15,15 @@ public class AddTreatmentDtoBuilder
             Title = "title",
             URL = "url",
             Extension = "extension",
+            Duration=30
         };
     }
 
+    public AddTreatmentDtoBuilder WithDuration(int duration)
+    {
+        _dto.Duration=duration;
+        return this;
+    }
 
     public AddTreatmentDtoBuilder WithExtension(string extension)
     {

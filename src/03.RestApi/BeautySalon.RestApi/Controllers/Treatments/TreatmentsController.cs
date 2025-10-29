@@ -26,7 +26,7 @@ public class TreatmentsController : ControllerBase
         _service = service;
     }
 
-    [Authorize(Roles =SystemRole.Admin)]
+    [Authorize(Roles = SystemRole.Admin)]
     [HttpPost("add")]
     public async Task<long> Add([FromForm] AddTreatmentHandlerDto dto)
     {
@@ -61,9 +61,11 @@ public class TreatmentsController : ControllerBase
 
     [Authorize(Roles = SystemRole.Admin)]
     [HttpPut("{id}")]
-    public async Task Update([FromRoute] long id, [FromBody]UpdateTreatmentDto dto)
+    public async Task Update(
+        [FromRoute] long id,
+        [FromBody] UpdateTreatmentDto dto)
     {
-        await _service.Update(dto,id);
+        await _service.Update(dto, id);
     }
 
 
@@ -82,7 +84,7 @@ public class TreatmentsController : ControllerBase
 
     [Authorize]
     [HttpGet("{id}/for-appointment")]
-    public async Task<GetTreatmentDetailsForAppointmentDto?> 
+    public async Task<GetTreatmentDetailsForAppointmentDto?>
         GetDetailsForAppointment([FromRoute] long id)
     {
         return await _service.GetDetailsForAppointment(id);

@@ -103,8 +103,8 @@ public class TreatmentAppService : ITreatmentService
         StopIfTreatmentNotFound(treatment);
         treatment!.Title = dto.Title;
         treatment.Description = dto.Description;
+        treatment.Duration = dto.Duration;
         await _unitOfWork.Complete();
-
     }
 
     private static void StopIfTreatmentNotFound(Treatment? treatment)

@@ -26,6 +26,7 @@ public class TreatmentServiceTests : BusinessUnitTest
             .WithTitle("title")
             .WithDescription("description")
             .WithImageName("imageName")
+            .WithDuration(45)
             .WithImageUniqueName("unique")
             .Build();
 
@@ -34,6 +35,7 @@ public class TreatmentServiceTests : BusinessUnitTest
         var expected = ReadContext.Set<Treatment>().Include(_ => _.Images).FirstOrDefault();
         var expectedImage = expected!.Images.FirstOrDefault();
         expected!.Title.Should().Be(dto.Title);
+        expected.Duration.Should().Be(dto.Duration);
         expected.Description.Should().Be(dto.Description);
         expectedImage!.ImageName.Should().Be(dto.ImageName);
         expectedImage.ImageUniqueName.Should().Be(dto.ImageUniqueName);
@@ -119,11 +121,13 @@ public class TreatmentServiceTests : BusinessUnitTest
         var treatment = new TreatmentBuilder()
             .WithTitle("title")
             .WithDescription("description")
+            .WithDuration(30)
             .Build();
         Save(treatment);
         var dto = new UpdateTreatmentDtoBuilder()
             .WithDescription("description")
             .WithTitle("title")
+            .WithDuration(45)
             .Build();
 
         await _sut.Update(dto, treatment.Id);
@@ -131,6 +135,7 @@ public class TreatmentServiceTests : BusinessUnitTest
         var expected = ReadContext.Set<Treatment>().FirstOrDefault();
         expected!.Title.Should().Be(dto.Title);
         expected.Description.Should().Be(dto.Description);
+        expected.Duration.Should().Be(dto.Duration);
     }
 
 

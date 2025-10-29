@@ -54,6 +54,7 @@ public class TreatmentServiceTests:BusinessIntegrationTest
             .WithTitle("title1")
             .WithDescription("description1")
             .WithImage()
+            .WithDuration(30)
             .Build();
         Save(treat1);
 
@@ -61,6 +62,7 @@ public class TreatmentServiceTests:BusinessIntegrationTest
 
         expected!.Title.Should().Be(treat1.Title);
         expected.Description.Should().Be(treat1.Description);
+        expected.Duration.Should().Be(treat1.Duration);
         expected.Media.First().UniqueName.Should().Be(treat1.Images.First().ImageUniqueName);
         expected.Media.First().ImageName.Should().Be(treat1.Images.First().ImageName);
         expected.Media.First().Extension.Should().Be(treat1.Images.First().Extension);
