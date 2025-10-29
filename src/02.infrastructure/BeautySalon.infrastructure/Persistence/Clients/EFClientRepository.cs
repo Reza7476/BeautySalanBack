@@ -39,7 +39,7 @@ public class EFClientRepository : IClientRepository
                 Duration = _.Treatment.Duration,
                 StartTime = TimeOnly.FromDateTime(_.AppointmentDate),
                 EndTime = TimeOnly.FromDateTime(_.EndTime),
-                DayWeek = (DayWeek)_.AppointmentDate.DayOfWeek,
+                DayWeek = (DayWeek)_.AppointmentDate.DayOfWeek+1,
                 Status = _.Status,
                 CancelledBy = _.CancelledBy,
                 AppointmentDate = DateOnly.FromDateTime(_.AppointmentDate),
