@@ -22,12 +22,12 @@ public class Appointment
     public Technician Technician { get; set; } = default!;
 }
 
-public enum AppointmentStatus:byte
+public enum AppointmentStatus : byte
 {
-    None=0,
-    Completed=1,
-    Confirmed=2,
-    Pending=3,
-    NoShow=4,
-    Cancelled=5,
+    None = 0,
+    Completed = 1,
+    Confirmed = 2,
+    Pending = 3,
+    NoShow = 4,
+    Cancelled = 5,
 }
