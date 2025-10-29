@@ -11,7 +11,8 @@ public class GetAllClientAppointmentsDto
     public TimeOnly EndTime { get; set; }
     public DayWeek DayWeek { get; set; }
     public AppointmentStatus Status { get; set; }
-    public DateOnly CancelledDate { get; set; }
-    public string? CancelledBy { get; set; }
+    public DateOnly AppointmentDate { get; set; }
     public DateOnly CreatedAt { get; set; }
+    public string? CancelledBy { get; set; }
+    public DateOnly CancelledDate { get; set; }
 }

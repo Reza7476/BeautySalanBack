@@ -28,7 +28,7 @@ public class EFClientRepository : IClientRepository
     public async Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
         string id,
         IPagination? pagination = null,
-        ClientAppointmentFilterDto? filter = null)
+        ClientAppointmentFilterDto? filterDto = null)
     {
         var query = _appointments.Where(_ => _.ClientId == id)
             .Include(_ => _.Treatment)
@@ -39,14 +39,32 @@ public class EFClientRepository : IClientRepository
                 Duration = _.Treatment.Duration,
                 StartTime = TimeOnly.FromDateTime(_.AppointmentDate),
                 EndTime = TimeOnly.FromDateTime(_.EndTime),
-                DayWeek = (DayWeek)(_.AppointmentDate.DayOfWeek + 1),
+                DayWeek = (DayWeek)_.AppointmentDate.DayOfWeek,
                 Status = _.Status,
                 CancelledBy = _.CancelledBy,
-              //  CancelledDate = _.CancelledAt != null ? DateOnly.FromDateTime(_.CancelledAt) : null,
+                AppointmentDate = DateOnly.FromDateTime(_.AppointmentDate),
+                CancelledDate = DateOnly.FromDateTime(_.CancelledAt),
                 CreatedAt = DateOnly.FromDateTime(_.CreatedAt),
             }).AsQueryable();
 
+        if (filterDto != null)
+        {
+            if(filterDto.Date>new DateOnly(1, 1, 1))
+            {
+                query = query.Where(_ => _.AppointmentDate == filterDto.Date);
+            }
 
+            if (filterDto.Day != 0)
+            {
+                var numberDay=(int)filterDto.Day;
+                query = query.Where(_ => (int)_.DayWeek == numberDay);
+            }
+
+            if(filterDto.Status != 0)
+            {
+                query = query.Where(_ => _.Status == filterDto.Status);
+            }
+        }
 
         return await query.Paginate(pagination ?? new Pagination());
     }
