@@ -31,6 +31,7 @@ public class _202510271730_CreateAppointmentTable : Migration
             .WithColumn("Description").AsString(1000).Nullable()
             .WithColumn("CancelledBy").AsString().Nullable()
             .WithColumn("CancelledAt").AsDateTime2()
+            .WithColumn("DayWeek").AsByte()
             .WithColumn("CreatedAt").AsDateTime2();
 
         Create.ForeignKey("Fk_Appointments_Clients")

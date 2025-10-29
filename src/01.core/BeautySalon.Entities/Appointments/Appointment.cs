@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
+using BeautySalon.Entities.WeeklySchedules;
 
 namespace BeautySalon.Entities.Appointments;
 public class Appointment
@@ -20,6 +21,7 @@ public class Appointment
     public Client Client { get; set; } = default!;
     public Treatment Treatment { get; set; } = default!;
     public Technician Technician { get; set; } = default!;
+    public DayWeek DayWeek { get; set; }
 }
 
 public enum AppointmentStatus : byte

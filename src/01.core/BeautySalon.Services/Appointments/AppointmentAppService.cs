@@ -37,6 +37,7 @@ public class AppointmentAppService : IAppointmentService
             Duration = dto.Duration,
             EndTime = dto.AppointmentDate.AddMinutes(dto.Duration),
             Status = AppointmentStatus.Pending,
+            DayWeek=dto.DayWeek,
         };
         await _repository.Add(appointment);
         await _unitOfWork.Complete();

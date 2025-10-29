@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BeautySalon.Entities.WeeklySchedules;
+using System.ComponentModel.DataAnnotations;
 
 namespace BeautySalon.Application.Appointments.Contracts.Dtos;
 public class AddAppointmentHandlerDto
@@ -11,4 +12,6 @@ public class AddAppointmentHandlerDto
 
     [Required]
     public int Duration { get; set; }
+
+    public DayWeek DayWeek { get; set; }
 }

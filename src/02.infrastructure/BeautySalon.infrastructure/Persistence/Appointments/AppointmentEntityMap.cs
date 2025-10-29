@@ -29,6 +29,8 @@ public class AppointmentEntityMap : IEntityTypeConfiguration<Appointment>
         
         _.Property(_ => _.Status);
 
+        _.Property(_ => _.DayWeek);
+
         _.Property(_ => _.CancelledAt);
 
         _.Property(_ => _.Description).IsRequired(false);

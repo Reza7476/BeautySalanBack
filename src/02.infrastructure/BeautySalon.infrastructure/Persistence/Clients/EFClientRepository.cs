@@ -39,7 +39,7 @@ public class EFClientRepository : IClientRepository
                 Duration = _.Treatment.Duration,
                 StartTime = TimeOnly.FromDateTime(_.AppointmentDate),
                 EndTime = TimeOnly.FromDateTime(_.EndTime),
-                DayWeek = (DayWeek)_.AppointmentDate.DayOfWeek+1,
+                DayWeek = _.DayWeek,
                 Status = _.Status,
                 CancelledBy = _.CancelledBy,
                 AppointmentDate = DateOnly.FromDateTime(_.AppointmentDate),
@@ -49,18 +49,18 @@ public class EFClientRepository : IClientRepository
 
         if (filterDto != null)
         {
-            if(filterDto.Date>new DateOnly(1, 1, 1))
+            if (filterDto.Date > new DateOnly(1, 1, 1))
             {
                 query = query.Where(_ => _.AppointmentDate == filterDto.Date);
             }
 
             if (filterDto.Day != 0)
             {
-                var numberDay=(int)filterDto.Day;
+                var numberDay = (int)filterDto.Day;
                 query = query.Where(_ => (int)_.DayWeek == numberDay);
             }
 
-            if(filterDto.Status != 0)
+            if (filterDto.Status != 0)
             {
                 query = query.Where(_ => _.Status == filterDto.Status);
             }
