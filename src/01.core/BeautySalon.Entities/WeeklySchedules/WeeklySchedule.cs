@@ -10,6 +10,7 @@ public class WeeklySchedule
 
 public enum DayWeek : byte
 {
+    None=0,
     Saturday = 1,
     Sunday = 2,
     Monday = 3,

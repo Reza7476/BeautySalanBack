@@ -24,9 +24,10 @@ public class Appointment
 
 public enum AppointmentStatus:byte
 {
-    Completed,
-    Confirmed,
-    Pending,
-    NoShow,
-    Cancelled,
+    None=0,
+    Completed=1,
+    Confirmed=2,
+    Pending=3,
+    NoShow=4,
+    Cancelled=5,
 }
