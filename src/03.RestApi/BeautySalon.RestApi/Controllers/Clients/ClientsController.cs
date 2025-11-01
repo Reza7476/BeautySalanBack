@@ -22,7 +22,7 @@ public class ClientsController : ControllerBase
     }
 
     [Authorize(Roles = SystemRole.Client)]
-    [HttpGet]
+    [HttpGet("all-my-appointments")]
     public async Task<IPageResult<GetAllClientAppointmentsDto>>
         GetClientAppointments(
         [FromQuery] Pagination? pagination = null,
