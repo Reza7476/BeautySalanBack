@@ -65,7 +65,7 @@ public class EFClientRepository : IClientRepository
                 query = query.Where(_ => _.Status == filterDto.Status);
             }
         }
-        query.OrderByDescending(_ => _.AppointmentDate);
+        query = query.OrderByDescending(_ => _.AppointmentDate);
         return await query.Paginate(pagination ?? new Pagination());
     }
 
