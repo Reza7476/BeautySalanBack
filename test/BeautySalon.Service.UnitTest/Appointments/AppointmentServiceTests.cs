@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Entities.Appointments;
+using BeautySalon.Services;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Exceptions;
 using BeautySalon.Test.Tool.Entities.Appointments;
@@ -106,5 +107,45 @@ public class AppointmentServiceTests : BusinessUnitTest
         Func<Task> expected = async () => await _sut.Add(dto);
 
         await expected.Should().ThrowAsync<AppointmentIsBusyAtThisTimeException>();
+    }
+
+    [Fact]
+    public async Task CancelByClient_should_cancel_appointment_properly()
+    {
+        var user = new UserBuilder()
+            .Build();
+        Save(user);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var treatment = new TreatmentBuilder()
+            .Build();
+        Save(treatment);
+        var appointment=new AppointmentBuilder()
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .Build();
+        Save(appointment);
+
+        await _sut.CancelByClient(appointment.Id, client.Id);
+
+        var expected = ReadContext.Set<Appointment>().First();
+        expected.Status.Should().Be(AppointmentStatus.Cancelled);
+        expected.CancelledBy.Should().Be(SystemRole.Client);
+    }
+
+
+    [Theory]
+    [InlineData("appointmentId" ,"clientId")]
+    public async Task CancelByClient_should_throw_exception(string clientId,string appointmentId)
+    {
+        Func<Task> expected = async () => await _sut.CancelByClient(clientId, appointmentId);
+        await expected.Should().ThrowAsync<AppointmentNotFoundException>();
     }
 }

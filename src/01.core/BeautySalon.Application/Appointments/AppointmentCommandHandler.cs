@@ -1,10 +1,10 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
-using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
 using BeautySalon.Services.Clients.Contracts;
+using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Technicians.Contracts;
 using BeautySalon.Services.Technicians.Exceptions;
 using BeautySalon.Services.Treatments.Contracts;
@@ -19,9 +19,9 @@ public class AppointmentCommandHandler : IAppointmentHandler
     private readonly ITechnicianService _technicianService;
 
     public AppointmentCommandHandler(
-        IAppointmentService appointmentService, 
+        IAppointmentService appointmentService,
         ITreatmentService treatmentService,
-        IClientService clientService, 
+        IClientService clientService,
         ITechnicianService technicianService)
     {
         _appointmentService = appointmentService;
@@ -51,13 +51,29 @@ public class AppointmentCommandHandler : IAppointmentHandler
         var appointmentId = await _appointmentService.Add(new AddAppointmentDto()
         {
             AppointmentDate = dto.AppointmentDate,
-            Duration=dto.Duration,
-            ClientId=clientId,
-            TechnicianId=technicianId,
-            TreatmentId=dto.TreatmentId,
-            DayWeek=dto.DayWeek
+            Duration = dto.Duration,
+            ClientId = clientId,
+            TechnicianId = technicianId,
+            TreatmentId = dto.TreatmentId,
+            DayWeek = dto.DayWeek
         });
-        
+
         return appointmentId;
+    }
+
+    public async Task CancelAppointmentByClient(string appointmentId, string? userId)
+    {
+
+        if (userId == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+        var clientId = await _clientService.GetClientIdByUserId(userId!);
+        if (clientId == null)
+        {
+            throw new UserNotRegisterAsClientException();
+        }
+        await _appointmentService.CancelByClient(appointmentId, clientId);
+
     }
 }

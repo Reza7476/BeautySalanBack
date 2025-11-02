@@ -38,6 +38,13 @@ public class EFAppointmentRepository : IAppointmentRepository
         return b;
     }
 
+    public async Task<Appointment?> FindByIdAndClientId(string appointmentId, string clientId)
+    {
+        return await _appointments
+            .Where(_ => _.Id == appointmentId && _.ClientId == clientId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime)
     {

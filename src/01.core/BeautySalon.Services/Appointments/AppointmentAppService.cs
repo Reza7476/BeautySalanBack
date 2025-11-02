@@ -20,7 +20,7 @@ public class AppointmentAppService : IAppointmentService
 
     public async Task<string> Add(AddAppointmentDto dto)
     {
-        
+
         if (await _repository.CheckStatusForNewAppointment(dto.AppointmentDate))
         {
             throw new AppointmentIsBusyAtThisTimeException();
@@ -37,11 +37,25 @@ public class AppointmentAppService : IAppointmentService
             Duration = dto.Duration,
             EndTime = dto.AppointmentDate.AddMinutes(dto.Duration),
             Status = AppointmentStatus.Pending,
-            DayWeek=dto.DayWeek,
+            DayWeek = dto.DayWeek,
         };
         await _repository.Add(appointment);
         await _unitOfWork.Complete();
         return appointment.Id;
+    }
+
+    public async Task CancelByClient(string appointmentId, string clientId)
+    {
+        var appointment = await _repository.FindByIdAndClientId(appointmentId, clientId);
+        if (appointment == null)
+        {
+            throw new AppointmentNotFoundException();
+        }
+
+        appointment.CancelledAt = DateTime.UtcNow;
+        appointment.CancelledBy = SystemRole.Client;
+        appointment.Status = AppointmentStatus.Cancelled;
+        await _unitOfWork.Complete();
     }
 
     public async Task<List<GetBookedAppointmentByDayDto>>
