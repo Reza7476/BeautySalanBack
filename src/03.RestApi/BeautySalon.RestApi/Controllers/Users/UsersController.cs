@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Services;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
 using BeautySalon.Services.Users.Contracts;
@@ -89,11 +90,11 @@ public class UsersController : ControllerBase
     }
 
 
-    [Authorize]
-    [HttpPatch]
-    public async Task EditProfile([FromBody]EditUserProfileDto dto)
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpPatch("admin-profile")]
+    public async Task EditAdminProfile([FromBody]EditAdminProfileDto dto)
     {
         var userId=_userTokenService.UserId;
-        await _userService.EditProfile(dto, userId);
+        await _userService.EditAdminProfile(dto, userId);
     }
 }

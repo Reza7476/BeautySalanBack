@@ -73,7 +73,7 @@ public class UserServiceTests : BusinessUnitTest
     }
 
     [Fact]
-    public async Task EditProfile_should_update_profile_properly()
+    public async Task EditAdminProfile_should_update_profile_properly()
     {
         var user = new UserBuilder()
             .WithEmial("email")
@@ -82,48 +82,47 @@ public class UserServiceTests : BusinessUnitTest
             .WithLastName("Dehghani")
             .Build();
         Save(user);
-        var dto = new EditUserProfileDtoBuilder()
+        var dto = new EditAdminProfileDtoBuilder()
             .WithName("name")
             .withLastName("lastName")
             .WithEmail("email")
-            .WithUserName("Reza")
             .Build();
 
-        await _sut.EditProfile(dto, user.Id);
+        await _sut.EditAdminProfile(dto, user.Id);
 
         var expected = ReadContext.Set<User>().First();
         expected.Name.Should().Be(dto.Name);
         expected.LastName.Should().Be(dto.LastName);
         expected.Email.Should().Be(dto.Email);
-        expected.UserName.Should().Be(dto.UserName);
+        
     }
 
     [Fact]
-    public async Task EditProfile_should_throw_exception_when_user_Id_is_null()
+    public async Task EditAdminProfile_should_throw_exception_when_user_Id_is_null()
     {
-        var dto = new EditUserProfileDtoBuilder()
+        var dto = new EditAdminProfileDtoBuilder()
             .Build();
-        Func<Task> expected = async () => await _sut.EditProfile(dto, null);
+        Func<Task> expected = async () => await _sut.EditAdminProfile(dto, null);
         await expected.Should().ThrowAsync<YouAreNotAllowedToAccessException>();
     }
 
 
-    [Fact]
-    public async Task EditProfile_should_throw_exception_when_user_name_is_duplicate()
-    {
-        var user1 = new UserBuilder()
-            .WithUserName("userName")
-            .Build();
-        Save(user1);
-        var user2 = new UserBuilder()
-            .WithUserName("userName")
-            .Build();
-        Save(user2);
-        var dto = new EditUserProfileDtoBuilder()
-            .WithUserName("userName")
-            .Build();
-        Func<Task> expected = async () => await _sut.EditProfile(dto, user1.Id);
+    //[Fact]
+    //public async Task EditProfile_should_throw_exception_when_user_name_is_duplicate()
+    //{
+    //    var user1 = new UserBuilder()
+    //        .WithUserName("userName")
+    //        .Build();
+    //    Save(user1);
+    //    var user2 = new UserBuilder()
+    //        .WithUserName("userName")
+    //        .Build();
+    //    Save(user2);
+    //    var dto = new EditUserProfileDtoBuilder()
+    //        .WithUserName("userName")
+    //        .Build();
+    //    Func<Task> expected = async () => await _sut.EditAdminProfile(dto, user1.Id);
 
-        await expected.Should().ThrowAsync<UserNameIsDuplicateException>();
-    }
+    //    await expected.Should().ThrowAsync<UserNameIsDuplicateException>();
+    //}
 }
