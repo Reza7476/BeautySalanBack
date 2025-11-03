@@ -4,7 +4,6 @@ using BeautySalon.Entities.Users;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace BeautySalon.infrastructure.Persistence.Users;
 public class EFUserRepository : IUserRepository
@@ -24,6 +23,11 @@ public class EFUserRepository : IUserRepository
     public async Task Add(User user)
     {
         await _users.AddAsync(user);
+    }
+
+    public async Task<User?> FindById(string id)
+    {
+        return await _users.Where(_ => _.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<User?> FindByMobile(string mobile)
@@ -123,5 +127,10 @@ public class EFUserRepository : IUserRepository
     public async Task<bool> IsExistByUserName(string userName)
     {
         return await _users.AnyAsync(_ => _.UserName == userName);
+    }
+
+    public async Task<bool> IsExistByUserNameExceptItSelf(string? userName, string id)
+    {
+        return await _users.AnyAsync(_ => _.UserName == userName && _.Id != id);
     }
 }

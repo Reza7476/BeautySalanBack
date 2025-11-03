@@ -88,4 +88,12 @@ public class UsersController : ControllerBase
         return await _userService.GetUserInfo(userId);
     }
 
+
+    [Authorize]
+    [HttpPatch]
+    public async Task EditProfile([FromBody]EditUserProfileDto dto)
+    {
+        var userId=_userTokenService.UserId;
+        await _userService.EditProfile(dto, userId);
+    }
 }
