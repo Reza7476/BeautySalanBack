@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Users;
+using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Extensions;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
@@ -81,6 +82,17 @@ public class UserAppService : IUserService
     public async Task<string?> GetUserIdByMobileNumber(string mobileNumber)
     {
         return await _repository.GetUserIdByMobileNumber(mobileNumber);
+    }
+
+    public async Task<GetUserInfoDto?> GetUserInfo(string? userId)
+    {
+
+        if(userId== null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+        return await _repository.GetUserInfoById(userId);
+
     }
 
     public async Task<bool> IsExistByMobileNumber(string mobileNumber)

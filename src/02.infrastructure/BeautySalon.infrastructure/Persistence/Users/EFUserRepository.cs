@@ -1,8 +1,10 @@
-﻿using BeautySalon.Entities.Roles;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Entities.Roles;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace BeautySalon.infrastructure.Persistence.Users;
 public class EFUserRepository : IUserRepository
@@ -26,7 +28,7 @@ public class EFUserRepository : IUserRepository
 
     public async Task<User?> FindByMobile(string mobile)
     {
-        return await _users.FirstOrDefaultAsync(_=>_.Mobile == mobile);    
+        return await _users.FirstOrDefaultAsync(_ => _.Mobile == mobile);
     }
 
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
@@ -80,6 +82,37 @@ public class EFUserRepository : IUserRepository
         return await _users
             .Where(_ => _.Mobile == mobileNumber && _.IsActive)
             .Select(_ => _.Id).FirstOrDefaultAsync();
+    }
+
+    public async Task<GetUserInfoDto?> GetUserInfoById(string id)
+    {
+        var a = await (from user in _users
+                       where user.Id == id
+                       select new GetUserInfoDto()
+                       {
+                           Id = id,
+                           Avatar = user.Avatar != null ? new ImageDetailsDto()
+                           {
+                               Extension = user.Avatar.Extension,
+                               ImageName = user.Avatar.ImageName,
+                               UniqueName = user.Avatar.UniqueName,
+                               URL = user.Avatar.URL
+                           } : null,
+                           BirthDate = user.BirthDate,
+                           CreationDate = user.CreationDate,
+                           Email = user.Email,
+                           IsActive = user.IsActive,
+                           LastName = user.LastName,
+                           Mobile = user.Mobile,
+                           Name = user.Name,
+                           UserName = user.UserName,
+                           RoleNames = (from userRole in _userRoles
+                                        join role in _roles
+                                        on userRole.RoleId equals role.Id
+                                        where userRole.UserId == user.Id
+                                        select role.RoleName).ToList()
+                       }).FirstOrDefaultAsync();
+        return a;
     }
 
     public async Task<bool> IsExistByMobileNumber(string mobile)

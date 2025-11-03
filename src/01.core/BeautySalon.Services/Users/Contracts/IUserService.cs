@@ -9,6 +9,7 @@ public interface IUserService : IService
     Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId);
     Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName);
     Task<string?> GetUserIdByMobileNumber(string mobileNumber);
+    Task<GetUserInfoDto?> GetUserInfo(string? userId);
     Task<bool> IsExistByMobileNumber(string mobileNumber);
     Task<bool> IsExistByUserName(string userName);
 }

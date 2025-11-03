@@ -1,7 +1,9 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
+using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +15,20 @@ public class UsersController : ControllerBase
 {
     private readonly IUserHandle _handle;
     private readonly IRefreshTokenService _refreshTokenService;
+    private readonly IUserTokenService _userTokenService;
+    private readonly IUserService _userService;
+
+
     public UsersController(
         IUserHandle handle,
-        IRefreshTokenService refreshTokenService)
+        IRefreshTokenService refreshTokenService,
+        IUserTokenService userTokenService,
+        IUserService userService)
     {
         _handle = handle;
         _refreshTokenService = refreshTokenService;
+        _userTokenService = userTokenService;
+        _userService = userService;
     }
 
     [HttpPost("login")]
@@ -69,4 +79,13 @@ public class UsersController : ControllerBase
     {
         await _refreshTokenService.RevokedToken(dto);
     }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<GetUserInfoDto?> GetUserInfo()
+    {
+        var userId = _userTokenService.UserId;
+        return await _userService.GetUserInfo(userId);
+    }
+
 }
