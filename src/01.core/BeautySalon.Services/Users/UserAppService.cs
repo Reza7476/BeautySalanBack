@@ -70,19 +70,13 @@ public class UserAppService : IUserService
         await _unitOfWork.Complete();   
     }
 
-    public async Task EditProfile(EditUserProfileDto dto, string? id)
+    public async Task EditAdminProfile(EditAdminProfileDto dto, string? id)
     {
 
         if (id == null)
         {
             throw new YouAreNotAllowedToAccessException();
         }
-
-        if(await _repository.IsExistByUserNameExceptItSelf(dto.UserName, id))
-        {
-            throw new UserNameIsDuplicateException();
-        }
-
         var user = await _repository.FindById(id);
 
         if(user == null)
@@ -93,7 +87,6 @@ public class UserAppService : IUserService
         user.BirthDate = dto.BirthDate;
         user.Email = dto.Email;
         user.Name = dto.Name;
-        user.UserName = dto.UserName;
         user.LastName = dto.LastName;
         await _unitOfWork.Complete();
     }
