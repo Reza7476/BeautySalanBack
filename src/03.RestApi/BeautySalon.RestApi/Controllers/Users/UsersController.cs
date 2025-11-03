@@ -99,7 +99,6 @@ public class UsersController : ControllerBase
         await _userService.EditAdminProfile(dto, userId);
     }
 
-
     [Authorize]
     [HttpPatch("profile-image")]
     public async Task EditProfileImage([FromForm] AddMediaDto dto)
