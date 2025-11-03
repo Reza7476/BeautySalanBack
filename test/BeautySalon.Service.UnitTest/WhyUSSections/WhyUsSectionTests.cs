@@ -136,6 +136,8 @@ public class WhyUsSectionTests : BusinessUnitTest
     }
 
 
+
+
     [Fact]
     public async Task DeleteQuestion_should_remove_question_properly()
     {
@@ -168,7 +170,7 @@ public class WhyUsSectionTests : BusinessUnitTest
             .WithMedia()
             .Build();
         Save(whyUs);
-        var dto = new AddImageDetailsDtoBuilder()
+        var dto = new ImageDetailsDtoBuilder()
             .WithUniqueName("unique")
             .WithExtension(".jpeg")
             .WithImageName("imageName")

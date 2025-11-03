@@ -9,13 +9,12 @@ public class ImageDetailsDtoBuilder
     {
         _builder = new ImageDetailsDto()
         {
-            Extension = "extension",
-            ImageName="imageName",
-            UniqueName="uniqueName",
-            URL="url",
+            Extension = "Extension",
+            ImageName="ImageName",
+            UniqueName="Name",
+            URL="data-url",
         };
     }
-
 
     public ImageDetailsDtoBuilder WithExtension(string extension)
     {
