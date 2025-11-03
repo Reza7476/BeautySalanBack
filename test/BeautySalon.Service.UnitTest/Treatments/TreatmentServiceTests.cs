@@ -48,7 +48,7 @@ public class TreatmentServiceTests : BusinessUnitTest
         var treatment = new TreatmentBuilder()
             .Build();
         Save(treatment);
-        var dto = new AddImageDetailsDtoBuilder()
+        var dto = new ImageDetailsDtoBuilder()
             .WithUniqueName("name")
             .WithExtension("extension")
             .WithImageName("name")
@@ -68,7 +68,7 @@ public class TreatmentServiceTests : BusinessUnitTest
     [InlineData(-1)]
     public async Task AddImageReturnImageId_should_throw_exception_when_treatment_not_found(long id)
     {
-        var dto = new AddImageDetailsDtoBuilder()
+        var dto = new ImageDetailsDtoBuilder()
             .Build();
 
         Func<Task> expected = async () => await _sut.AddImageReturnImageId(id, dto);

@@ -1,11 +1,11 @@
 ﻿using BeautySalon.Common.Dtos;
 
 namespace BeautySalon.Test.Tool.Common;
-public class AddImageDetailsDtoBuilder
+public class ImageDetailsDtoBuilder
 {
     private readonly ImageDetailsDto _builder;
 
-    public AddImageDetailsDtoBuilder()
+    public ImageDetailsDtoBuilder()
     {
         _builder = new ImageDetailsDto()
         {
@@ -17,25 +17,25 @@ public class AddImageDetailsDtoBuilder
     }
 
 
-    public AddImageDetailsDtoBuilder WithExtension(string extension)
+    public ImageDetailsDtoBuilder WithExtension(string extension)
     {
         _builder.Extension = extension; 
         return this;
     }
 
-    public AddImageDetailsDtoBuilder WithImageName(string imageName)
+    public ImageDetailsDtoBuilder WithImageName(string imageName)
     {
         _builder.ImageName=imageName;
         return this;
     }
 
-    public AddImageDetailsDtoBuilder WithUniqueName(string unirqueName)
+    public ImageDetailsDtoBuilder WithUniqueName(string uniqueName)
     {
-        _builder.UniqueName = unirqueName;
+        _builder.UniqueName = uniqueName;
         return this;
     }
 
-    public AddImageDetailsDtoBuilder WithUrl(string url)
+    public ImageDetailsDtoBuilder WithUrl(string url)
     {
         _builder.URL=url;
         return this;
