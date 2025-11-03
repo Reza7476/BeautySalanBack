@@ -1,8 +1,8 @@
 ﻿using BeautySalon.Entities.Users;
 using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Users.Contracts;
-using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Exceptions;
+using BeautySalon.Test.Tool.Common;
 using BeautySalon.Test.Tool.Entities.Users;
 using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
@@ -94,7 +94,7 @@ public class UserServiceTests : BusinessUnitTest
         expected.Name.Should().Be(dto.Name);
         expected.LastName.Should().Be(dto.LastName);
         expected.Email.Should().Be(dto.Email);
-        
+
     }
 
     [Fact]
@@ -107,22 +107,32 @@ public class UserServiceTests : BusinessUnitTest
     }
 
 
-    //[Fact]
-    //public async Task EditProfile_should_throw_exception_when_user_name_is_duplicate()
-    //{
-    //    var user1 = new UserBuilder()
-    //        .WithUserName("userName")
-    //        .Build();
-    //    Save(user1);
-    //    var user2 = new UserBuilder()
-    //        .WithUserName("userName")
-    //        .Build();
-    //    Save(user2);
-    //    var dto = new EditUserProfileDtoBuilder()
-    //        .WithUserName("userName")
-    //        .Build();
-    //    Func<Task> expected = async () => await _sut.EditAdminProfile(dto, user1.Id);
+    [Fact]
+    public async Task EditImageProfile_should_update_profile_properly()
+    {
+        var user1 = new UserBuilder()
+            .WithAvatar()
+            .Build();
+        Save(user1);
+        var dto = new ImageDetailsDtoBuilder()
+           .Build();
 
-    //    await expected.Should().ThrowAsync<UserNameIsDuplicateException>();
-    //}
+        await _sut.EditImageProfile(dto, user1.Id);
+
+        var expected = ReadContext.Set<User>().First();
+        expected.Avatar!.Extension.Should().Be(dto.Extension);
+        expected.Avatar.ImageName.Should().Be(dto.ImageName);
+        expected.Avatar.UniqueName.Should().Be(dto.UniqueName);
+        expected.Avatar.URL.Should().Be(dto.URL);
+    }
+
+    [Theory]
+    [InlineData("userId")]
+    public async Task EditImageProfile_should_throw_exception_when_user_not_found(string userId)
+    {
+        var dto = new ImageDetailsDtoBuilder()
+            .Build();
+        Func<Task> expected = async () => await _sut.EditImageProfile(dto, userId);
+        await expected.Should().ThrowAsync<UserNotFoundException>();
+    }
 }

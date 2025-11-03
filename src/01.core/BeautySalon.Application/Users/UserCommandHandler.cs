@@ -2,6 +2,7 @@
 using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Extensions;
+using BeautySalon.Common.FileStorage.Exceptions;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.OTPRequests;
 using BeautySalon.Entities.SMSLogs;
@@ -400,5 +401,36 @@ public class UserCommandHandler : IUserHandle
 
         var roleId = await _roleService.Add(roleDto);
         return roleId;
+    }
+
+    public async Task EditProfileImage(AddMediaDto dto, string userId)
+    {
+        var user = await _userService.GetUserForEditProfileImage(userId);
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        if (user.Avatar != null && user.Avatar.URL!=null)
+        {
+            await _imageService.DeleteMediaByURL(user.Avatar.URL);
+        }
+
+        if (dto.Media == null || dto.Media.Length == 0)
+            throw new FileIsEmptyException();
+
+        MediaDto media = await _imageService.SaveMedia(new AddMediaDto()
+        {
+            Media = dto.Media
+        });
+
+        await _userService.EditImageProfile(new ImageDetailsDto() 
+        {
+            Extension=media.Extension,
+            UniqueName=media.UniqueName,
+            ImageName=media.ImageName,
+            URL=media.URL
+        }, userId);
+
     }
 }

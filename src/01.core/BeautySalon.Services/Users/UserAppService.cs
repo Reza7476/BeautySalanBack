@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Commons;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Extensions;
@@ -58,7 +59,7 @@ public class UserAppService : IUserService
     public async Task ChangePassword(string newPassword, string mobile)
     {
         var user = await _repository.FindByMobile(mobile);
-       
+
         if (user == null)
         {
             throw new UserNotFoundException();
@@ -67,7 +68,7 @@ public class UserAppService : IUserService
         var hashPass = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
         user.HashPass = hashPass;
-        await _unitOfWork.Complete();   
+        await _unitOfWork.Complete();
     }
 
     public async Task EditAdminProfile(EditAdminProfileDto dto, string? id)
@@ -79,7 +80,7 @@ public class UserAppService : IUserService
         }
         var user = await _repository.FindById(id);
 
-        if(user == null)
+        if (user == null)
         {
             throw new UserNotFoundException();
         }
@@ -88,6 +89,25 @@ public class UserAppService : IUserService
         user.Email = dto.Email;
         user.Name = dto.Name;
         user.LastName = dto.LastName;
+        await _unitOfWork.Complete();
+    }
+
+    public async Task EditImageProfile(ImageDetailsDto media, string id)
+    {
+        var user = await _repository.FindById(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        if (user.Avatar == null)
+            user.Avatar = new MediaDocument();
+
+        user.Avatar.ImageName = media.ImageName;
+        user.Avatar.UniqueName = media.UniqueName;
+        user.Avatar.URL = media.URL;
+        user.Avatar.Extension = media.Extension;
+
         await _unitOfWork.Complete();
     }
 
@@ -114,7 +134,7 @@ public class UserAppService : IUserService
     public async Task<GetUserInfoDto?> GetUserInfo(string? userId)
     {
 
-        if(userId== null)
+        if (userId == null)
         {
             throw new YouAreNotAllowedToAccessException();
         }
@@ -134,6 +154,6 @@ public class UserAppService : IUserService
 
     public async Task<bool> IsExistByUserNameExceptItSelf(string id, string userName)
     {
-        return await _repository.IsExistByUserNameExceptItSelf(userName,id);
+        return await _repository.IsExistByUserNameExceptItSelf(userName, id);
     }
 }

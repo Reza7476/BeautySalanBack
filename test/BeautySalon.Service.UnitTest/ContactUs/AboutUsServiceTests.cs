@@ -106,7 +106,7 @@ public class AboutUsServiceTests : BusinessUnitTest
             .WithLogoDetils()
             .Build();
         Save(aboutUs);
-        var dto = new AddImageDetailsDtoBuilder()
+        var dto = new ImageDetailsDtoBuilder()
             .Build();
 
         await _sut.UpdateLogo(aboutUs.Id, dto);
@@ -122,7 +122,7 @@ public class AboutUsServiceTests : BusinessUnitTest
     [InlineData(-1)]
     public async Task UpdateLogo_should_throw_exception_when_about_us_not_found(long id)
     {
-        var dto = new AddImageDetailsDtoBuilder()
+        var dto = new ImageDetailsDtoBuilder()
             .Build();
         
         Func<Task> expected = async () => await _sut.UpdateLogo(id, dto);

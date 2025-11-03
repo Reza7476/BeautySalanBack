@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Users.Contracts;
 using BeautySalon.Application.Users.Contracts.Dtos;
+using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Services;
 using BeautySalon.Services.RefreshTokens.Contacts;
@@ -96,5 +97,14 @@ public class UsersController : ControllerBase
     {
         var userId=_userTokenService.UserId;
         await _userService.EditAdminProfile(dto, userId);
+    }
+
+
+    [Authorize]
+    [HttpPatch("profile-image")]
+    public async Task EditProfileImage([FromForm] AddMediaDto dto)
+    {
+        var userId = _userTokenService.UserId;
+        await _handle.EditProfileImage(dto, userId!);
     }
 }

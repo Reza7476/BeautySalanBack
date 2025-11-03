@@ -33,19 +33,19 @@ public class UserEntityMap : IEntityTypeConfiguration<User>
         {
             image.Property(media => media.UniqueName)
                  .HasColumnName("UniqueName")
-                 .IsRequired();
+                 .IsRequired(false);
 
             image.Property(media => media.ImageName)
                  .HasColumnName("ImageName")
-                 .IsRequired();
+                 .IsRequired(false);
 
             image.Property(media => media.Extension)
                  .HasColumnName("Extension")
-                 .IsRequired();
+                 .IsRequired(false);
 
             image.Property(media => media.URL)
                  .HasColumnName("URL")
-                 .IsRequired();
+                 .IsRequired(false);
         });
     }
 }
