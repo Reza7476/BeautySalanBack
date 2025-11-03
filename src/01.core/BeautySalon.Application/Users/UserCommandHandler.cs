@@ -40,6 +40,8 @@ public class UserCommandHandler : IUserHandle
     private readonly IOtpRequestService _otpService;
     private readonly IMediaService _mediaService;
     private readonly IClientService _clientService;
+    private readonly IMediaService _imageService;
+
 
     public UserCommandHandler(IUserService userService,
         IRoleService roleService,
@@ -51,7 +53,8 @@ public class UserCommandHandler : IUserHandle
         IOtpRequestService otpService,
         IMediaService mediaService,
         ITechnicianService technicianService,
-        IClientService clientService)
+        IClientService clientService,
+        IMediaService imageService)
     {
         _userService = userService;
         _roleService = roleService;
@@ -64,6 +67,7 @@ public class UserCommandHandler : IUserHandle
         _mediaService = mediaService;
         _technicianService = technicianService;
         _clientService = clientService;
+        _imageService = imageService;
     }
 
     public async Task EnsureAdminIsExist(string adminUser, string adminPass)

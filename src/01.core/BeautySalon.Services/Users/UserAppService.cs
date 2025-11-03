@@ -1,4 +1,5 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Extensions;
@@ -69,6 +70,34 @@ public class UserAppService : IUserService
         await _unitOfWork.Complete();   
     }
 
+    public async Task EditProfile(EditUserProfileDto dto, string? id)
+    {
+
+        if (id == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+
+        if(await _repository.IsExistByUserNameExceptItSelf(dto.UserName, id))
+        {
+            throw new UserNameIsDuplicateException();
+        }
+
+        var user = await _repository.FindById(id);
+
+        if(user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        user.BirthDate = dto.BirthDate;
+        user.Email = dto.Email;
+        user.Name = dto.Name;
+        user.UserName = dto.UserName;
+        user.LastName = dto.LastName;
+        await _unitOfWork.Complete();
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
     {
         return await _repository.GetByUserIdForRefreshToken(userId);
@@ -77,6 +106,11 @@ public class UserAppService : IUserService
     public async Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName)
     {
         return await _repository.GetByUserNameForLogin(userName);
+    }
+
+    public async Task<User?> GetUserForEditProfileImage(string id)
+    {
+        return await _repository.FindById(id);
     }
 
     public async Task<string?> GetUserIdByMobileNumber(string mobileNumber)
@@ -103,5 +137,10 @@ public class UserAppService : IUserService
     public async Task<bool> IsExistByUserName(string userName)
     {
         return await _repository.IsExistByUserName(userName);
+    }
+
+    public async Task<bool> IsExistByUserNameExceptItSelf(string id, string userName)
+    {
+        return await _repository.IsExistByUserNameExceptItSelf(userName,id);
     }
 }

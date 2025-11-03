@@ -9,8 +9,12 @@ public interface IUserHandle : IScope
     Task FinalizeResetPassword(ForgetPassStepTwoDto dto);
     Task<GetTokenDto> FinalizingRegister(
         FinalizingRegisterUserHandlerDto dto);
-    Task<ResponseInitializeRegisterUserHandlerDto> ForgetPasswordInitialize(InitializeRegisterUserDto dto);
-    Task<ResponseInitializeRegisterUserHandlerDto> InitializeRegister(InitializeRegisterUserDto dto);
+   
+    Task<ResponseInitializeRegisterUserHandlerDto> 
+        ForgetPasswordInitialize(InitializeRegisterUserDto dto);
+   
+    Task<ResponseInitializeRegisterUserHandlerDto> 
+        InitializeRegister(InitializeRegisterUserDto dto);
     Task<GetTokenDto> Login(LoginDto dto);
     Task<GetTokenDto> RefreshToken(string refreshToken);
 }
