@@ -10,6 +10,7 @@ public interface IUserRepository : IRepository
     Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId);
     Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName);
     Task<string?> GetUserIdByMobileNumber(string mobileNumber);
+    Task<GetUserInfoDto?> GetUserInfoById(string id);
     Task<bool> IsExistByMobileNumber(string mobile);
     Task<bool> IsExistByUserName(string userName);
 }
