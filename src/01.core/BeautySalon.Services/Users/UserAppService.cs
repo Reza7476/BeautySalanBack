@@ -92,6 +92,25 @@ public class UserAppService : IUserService
         await _unitOfWork.Complete();
     }
 
+    public async Task EditClientProfile(EditClientProfileDto dto, string id)
+    {
+        var user = await _repository.FindById(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+        if (await _repository.IsExistByUserNameExceptItSelf(dto.UserName, id))
+        {
+            throw new UserNameIsDuplicateException();
+        }
+        user.BirthDate = dto.BirthDateGregorian;
+        user.Name = dto.Name;
+        user.LastName = dto.LastName;
+        user.UserName = dto.UserName;
+        user.Email = dto.Email;
+        await _unitOfWork.Complete();
+    }
+
     public async Task EditImageProfile(ImageDetailsDto media, string id)
     {
         var user = await _repository.FindById(id);

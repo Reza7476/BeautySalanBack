@@ -9,6 +9,7 @@ public interface IUserService : IService
     Task<string> Add(AddUserDto dto);
     Task ChangePassword(string newPassword, string mobile);
     Task EditAdminProfile(EditAdminProfileDto dto, string? id);
+    Task EditClientProfile(EditClientProfileDto dto, string id);
     Task EditImageProfile(ImageDetailsDto media, string id);
     Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId);
     Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName);

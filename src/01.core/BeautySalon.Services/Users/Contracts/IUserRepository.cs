@@ -15,5 +15,5 @@ public interface IUserRepository : IRepository
     Task<GetUserInfoDto?> GetUserInfoById(string id);
     Task<bool> IsExistByMobileNumber(string mobile);
     Task<bool> IsExistByUserName(string userName);
-    Task<bool> IsExistByUserNameExceptItSelf(string? userName, string id);
+    Task<bool> IsExistByUserNameExceptItSelf(string userName, string id);
 }

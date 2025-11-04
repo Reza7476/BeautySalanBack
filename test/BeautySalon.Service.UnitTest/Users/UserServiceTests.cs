@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Entities.Users;
 using BeautySalon.Services.Clients.Exceptions;
 using BeautySalon.Services.Users.Contracts;
+using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Exceptions;
 using BeautySalon.Test.Tool.Common;
 using BeautySalon.Test.Tool.Entities.Users;
@@ -134,5 +135,33 @@ public class UserServiceTests : BusinessUnitTest
             .Build();
         Func<Task> expected = async () => await _sut.EditImageProfile(dto, userId);
         await expected.Should().ThrowAsync<UserNotFoundException>();
+    }
+
+
+    [Fact]
+    public async Task EditClientProfile_should_update_client_profile()
+    {
+        var user = new UserBuilder()
+            .WithName("reza")
+            .WithLastName("dehghani")
+            .WithBirthDate(DateTime.Now)
+            .WithEmial("email")
+            .WithUserName("reza")
+            .Build();
+        Save(user);
+        var dto = new EditClientProfileDtoBuilder()
+            .WithName("Reza")
+            .WithLastName("Dehghani")
+            .WithUserName("UserName")
+            .WithEmail("Email")
+            .Build();
+
+        await _sut.EditClientProfile(dto, user.Id);
+
+        var expected = ReadContext.Set<User>().First();
+        expected.Name.Should().Be(dto.Name);
+        expected.LastName.Should().Be(dto.LastName);
+        expected.UserName.Should().Be(dto.UserName);
+        expected.Email.Should().Be(dto.Email);
     }
 }
