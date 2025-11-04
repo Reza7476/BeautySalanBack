@@ -129,7 +129,7 @@ public class EFUserRepository : IUserRepository
         return await _users.AnyAsync(_ => _.UserName == userName);
     }
 
-    public async Task<bool> IsExistByUserNameExceptItSelf(string? userName, string id)
+    public async Task<bool> IsExistByUserNameExceptItSelf(string userName, string id)
     {
         return await _users.AnyAsync(_ => _.UserName == userName && _.Id != id);
     }

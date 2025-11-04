@@ -74,7 +74,6 @@ public class UsersController : ControllerBase
         await _handle.FinalizeResetPassword(dto);
     }
 
-
     [Authorize]
     [HttpPatch("log-out")]
     public async Task Logout([FromBody] LogOutDto dto)
@@ -90,7 +89,6 @@ public class UsersController : ControllerBase
         return await _userService.GetUserInfo(userId);
     }
 
-
     [Authorize(Roles =SystemRole.Admin)]
     [HttpPatch("admin-profile")]
     public async Task EditAdminProfile([FromBody]EditAdminProfileDto dto)
@@ -105,5 +103,13 @@ public class UsersController : ControllerBase
     {
         var userId = _userTokenService.UserId;
         await _handle.EditProfileImage(dto, userId!);
+    }
+
+    [HttpPatch("client-profile")]
+    [Authorize(Roles =SystemRole.Client)]
+    public async Task EditClientProfile([FromBody] EditClientProfileDto dto)
+    {
+        var userId = _userTokenService.UserId;
+        await _userService.EditClientProfile(dto, userId!);
     }
 }
