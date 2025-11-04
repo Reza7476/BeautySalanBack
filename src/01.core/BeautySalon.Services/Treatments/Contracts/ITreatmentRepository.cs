@@ -16,5 +16,6 @@ public interface ITreatmentRepository : IRepository
     Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id);
     Task<List<GetTreatmentForLandingDto>> GetForLanding();
     Task <List<TreatmentImage>>GetTreatmentImages(long id);
+    Task<bool> IsExistByTitle(string title);
     Task RemoveImage(TreatmentImage treatmentImage);
 }

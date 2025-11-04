@@ -141,6 +141,11 @@ public class EFTreatmentRepository : ITreatmentRepository
         return await _treatmentImages.Where(_ => _.TreatmentId == id).ToListAsync();
     }
 
+    public async Task<bool> IsExistByTitle(string title)
+    {
+        return await _treatments.AnyAsync(_ => _.Title == title);
+    }
+
     public async Task RemoveImage(TreatmentImage treatmentImage)
     {
         _treatmentImages.Remove(treatmentImage);

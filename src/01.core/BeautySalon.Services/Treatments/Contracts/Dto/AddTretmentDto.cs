@@ -8,4 +8,5 @@ public class AddTreatmentDto
     public required string ImageName  { get; set; }
     public required string Extension { get; set; }
     public int Duration { get; set; }
+    public decimal Price { get; set; }
 }
