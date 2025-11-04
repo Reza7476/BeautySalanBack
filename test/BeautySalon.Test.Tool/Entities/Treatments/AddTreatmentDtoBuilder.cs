@@ -15,8 +15,16 @@ public class AddTreatmentDtoBuilder
             Title = "title",
             URL = "url",
             Extension = "extension",
-            Duration=30
+            Duration=30,
+            Price=1255.11m
         };
+    }
+
+
+    public AddTreatmentDtoBuilder withPrice(decimal price)
+    {
+        _dto.Price = price;
+        return this;
     }
 
     public AddTreatmentDtoBuilder WithDuration(int duration)

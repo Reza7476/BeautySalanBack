@@ -34,7 +34,8 @@ public class TreatmentCommandHandler : TreatmentHandler
             ImageName = media.ImageName,
             ImageUniqueName = media.UniqueName,
             URL = media.URL,
-            Extension = media.Extension
+            Extension = media.Extension,
+            Price=dto.Price
         });
 
         return treatmentId;

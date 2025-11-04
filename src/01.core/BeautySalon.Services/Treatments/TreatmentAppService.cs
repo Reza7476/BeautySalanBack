@@ -22,12 +22,18 @@ public class TreatmentAppService : ITreatmentService
 
     public async Task<long> Add(AddTreatmentDto dto)
     {
+
+        if(await _repository.IsExistByTitle(dto.Title))
+        {
+            throw new TreatmentIsDuplicateException();
+        }
         var treatment = new Treatment()
         {
             CreateDate = DateTime.UtcNow,
             Description = dto.Description,
             Title = dto.Title,
             Duration = dto.Duration,
+            Price = dto.Price,
         };
 
         treatment.Images.Add(new TreatmentImage()

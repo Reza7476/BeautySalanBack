@@ -28,6 +28,7 @@ public class TreatmentServiceTests : BusinessUnitTest
             .WithImageName("imageName")
             .WithDuration(45)
             .WithImageUniqueName("unique")
+            .withPrice(145225.12m)
             .Build();
 
         await _sut.Add(dto);
@@ -35,12 +36,30 @@ public class TreatmentServiceTests : BusinessUnitTest
         var expected = ReadContext.Set<Treatment>().Include(_ => _.Images).FirstOrDefault();
         var expectedImage = expected!.Images.FirstOrDefault();
         expected!.Title.Should().Be(dto.Title);
+        expected.Price.Should().Be(dto.Price);
         expected.Duration.Should().Be(dto.Duration);
         expected.Description.Should().Be(dto.Description);
         expectedImage!.ImageName.Should().Be(dto.ImageName);
         expectedImage.ImageUniqueName.Should().Be(dto.ImageUniqueName);
         expectedImage.URL.Should().Be(dto.URL);
     }
+
+    [Fact]
+    public async Task Add_should_throw_exception_when_title_is_duplicate()
+    {
+        var treatment = new TreatmentBuilder()
+            .WithTitle("title")
+            .Build();
+        Save(treatment);
+        var dto = new AddTreatmentDtoBuilder()
+            .WithTitle("title")
+            .Build();
+        
+        Func<Task> expected = async () => await _sut.Add(dto);
+
+        await expected.Should().ThrowAsync<TreatmentIsDuplicateException>();
+    }
+
 
     [Fact]
     public async Task AddImage_should_add_image_properly()

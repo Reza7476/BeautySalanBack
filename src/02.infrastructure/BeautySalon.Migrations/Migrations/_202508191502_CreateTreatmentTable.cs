@@ -13,6 +13,7 @@ public class _202508191502_CreateTreatmentTable : Migration
             .WithColumn("Description").AsString(1000).NotNullable()
             .WithColumn("Title").AsString().NotNullable()
             .WithColumn("Duration").AsInt32().WithDefaultValue(180)
+            .WithColumn("Price").AsDecimal(18,2).NotNullable()
             .WithColumn("CreateDate").AsDateTime2();
         Create.Table("TreatmentImages")
             .WithColumn("Id").AsInt64().PrimaryKey().NotNullable().Identity()
