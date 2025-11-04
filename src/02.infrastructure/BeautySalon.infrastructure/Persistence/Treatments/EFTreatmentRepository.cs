@@ -85,6 +85,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                 Description = _.Description,
                 Title = _.Title,
                 Duration=_.Duration,
+                Price=_.Price,
                 Media = _.Images.Select(media => new MediaDto()
                 {
                     Extension = media.Extension,
