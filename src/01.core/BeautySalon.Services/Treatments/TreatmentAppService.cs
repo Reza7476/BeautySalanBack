@@ -105,11 +105,17 @@ public class TreatmentAppService : ITreatmentService
 
     public async Task Update(UpdateTreatmentDto dto, long id)
     {
+        if (dto.Price <= 0)
+        {
+            throw new TreatmentPriceIsLesThanZeroException();
+        }
+
         var treatment = await _repository.FindById(id);
         StopIfTreatmentNotFound(treatment);
         treatment!.Title = dto.Title;
         treatment.Description = dto.Description;
         treatment.Duration = dto.Duration;
+        treatment.Price = dto.Price;
         await _unitOfWork.Complete();
     }
 

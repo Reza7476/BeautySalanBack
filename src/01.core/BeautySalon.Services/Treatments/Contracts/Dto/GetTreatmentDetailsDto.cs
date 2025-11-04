@@ -7,4 +7,5 @@ public class GetTreatmentDetailsDto
     public required string Description { get; set; }
     public List<MediaDto> Media { get; set; } = default!;
     public int Duration { get; set; }
+    public decimal Price { get; set; }
 }

@@ -133,7 +133,6 @@ public class TreatmentServiceTests : BusinessUnitTest
         await expected.Should().ThrowAsync<NotAllowedDeleteImageException>();
     }
 
-
     [Fact]
     public async Task Update_should_update_treatment_properly()
     {
@@ -141,22 +140,35 @@ public class TreatmentServiceTests : BusinessUnitTest
             .WithTitle("title")
             .WithDescription("description")
             .WithDuration(30)
+            .WithPrice(1223m)
             .Build();
         Save(treatment);
         var dto = new UpdateTreatmentDtoBuilder()
             .WithDescription("description")
             .WithTitle("title")
             .WithDuration(45)
+            .WithPrice(124)
             .Build();
 
         await _sut.Update(dto, treatment.Id);
 
         var expected = ReadContext.Set<Treatment>().FirstOrDefault();
         expected!.Title.Should().Be(dto.Title);
+        expected!.Price.Should().Be(dto.Price);
         expected.Description.Should().Be(dto.Description);
         expected.Duration.Should().Be(dto.Duration);
     }
 
+    [Theory]
+    [InlineData(4)]
+    public async Task Update_should_throw_exception_when_price_is_zero(long treatmentId)
+    {
+        var dto = new UpdateTreatmentDtoBuilder()
+            .WithPrice(0)
+            .Build();
+        Func<Task> expected = async () => await _sut.Update(dto, treatmentId);
+        await expected.Should().ThrowAsync<TreatmentPriceIsLesThanZeroException>();
+    } 
 
     [Theory]
     [InlineData(-1)]

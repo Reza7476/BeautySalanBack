@@ -12,14 +12,14 @@ public class TreatmentBuilder
             CreateDate = DateTime.Now,
             Description = "description",
             Title = "title",
-            Duration=180,
+            Duration = 180,
             Images = new HashSet<TreatmentImage>()
         };
     }
-    
+
     public TreatmentBuilder WithDuration(int duration)
     {
-        _treatment.Duration= duration;
+        _treatment.Duration = duration;
         return this;
     }
 
@@ -43,8 +43,13 @@ public class TreatmentBuilder
             ImageName = "imageName",
             ImageUniqueName = "imageUniqueName",
             URL = "url",
-            Extension="extension"
+            Extension = "extension"
         });
+        return this;
+    }
+    public TreatmentBuilder WithPrice(decimal price)
+    {
+        _treatment.Price = price;
         return this;
     }
 
@@ -52,4 +57,5 @@ public class TreatmentBuilder
     {
         return _treatment;
     }
+
 }

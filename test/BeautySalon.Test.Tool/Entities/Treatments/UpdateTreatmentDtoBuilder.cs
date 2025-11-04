@@ -33,6 +33,12 @@ public class UpdateTreatmentDtoBuilder
         return this;    
     }
 
+    public UpdateTreatmentDtoBuilder WithPrice(decimal price)
+    {
+        _dto.Price=price;
+        return this;
+    }
+
     public UpdateTreatmentDto Build()
     {
         return _dto;
