@@ -8,7 +8,13 @@ public interface IAppointmentRepository : IRepository
     Task Add(Appointment appointment);
     Task<bool> CheckStatusForNewAppointment(DateTime appointmentDate);
     Task<Appointment?> FindByIdAndClientId(string appointmentId, string clientId);
-
+   
+    Task<IPageResult<GetAllAdminAppointmentsDto>> 
+        GetAdminAllAppointments(
+        IPagination? pagination,
+        AdminAppointmentFilterDto? filter,
+        string? search);
+    
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
 

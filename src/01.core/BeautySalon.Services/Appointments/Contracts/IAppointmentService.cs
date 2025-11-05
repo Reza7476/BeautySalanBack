@@ -8,6 +8,11 @@ public interface IAppointmentService : IService
 
     Task CancelByClient(string appointmentId, string clientId);
 
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetAdminAllAppointments(
+     IPagination? pagination = null,
+     AdminAppointmentFilterDto? filter = null,
+     string? search = null);
+
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
 }
