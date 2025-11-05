@@ -45,7 +45,8 @@ public class EFTreatmentRepository : ITreatmentRepository
         return await _treatmentImages.FirstOrDefaultAsync(_ => _.Id == imageId);
     }
 
-    public async Task<IPageResult<GetAllTreatmentsDto>> GetAll(IPagination? pagination)
+    public async Task<IPageResult<GetAllTreatmentsDto>>
+        GetAll(IPagination? pagination)
     {
         var query = _treatments
             .Include(_ => _.Images)
@@ -54,6 +55,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                 Description = _.Description,
                 Title = _.Title,
                 Id = _.Id,
+                Price=_.Price,
                 Media = _.Images.Select(media => new MediaDto()
                 {
                     Extension = media.Extension,
@@ -106,6 +108,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                 Description = _.Description,
                 Title = _.Title,
                 Duration = _.Duration,
+                Price = _.Price,    
                 Image = _.Images.Select(img => new ImageDetailsDto()
                 {
                     Extension = img.Extension,

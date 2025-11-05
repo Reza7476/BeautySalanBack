@@ -78,7 +78,8 @@ public class TreatmentAppService : ITreatmentService
         }
     }
 
-    public async Task<IPageResult<GetAllTreatmentsDto>> GetAll(IPagination? pagination)
+    public async Task<IPageResult<GetAllTreatmentsDto>>
+        GetAll(IPagination? pagination)
     {
         return await _repository.GetAll(pagination);
     }

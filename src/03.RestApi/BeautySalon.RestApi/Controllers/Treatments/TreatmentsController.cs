@@ -34,7 +34,8 @@ public class TreatmentsController : ControllerBase
     }
 
     [HttpGet("all")]
-    public async Task<IPageResult<GetAllTreatmentsDto>> GetAll([FromQuery] Pagination? pagination = null)
+    public async Task<IPageResult<GetAllTreatmentsDto>> 
+        GetAll([FromQuery] Pagination? pagination = null)
     {
         return await _service.GetAll(pagination);
     }
