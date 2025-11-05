@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
@@ -52,4 +53,13 @@ public class AppointmentsController : ControllerBase
         await _handler.CancelAppointmentByClient(appointmentId,userId);
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpGet("all-admin")]
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllAdminAppointment(
+        [FromQuery]Pagination? pagination=null,
+        [FromQuery] AdminAppointmentFilterDto? filter=null,
+        string? search=null )
+    { 
+        return await _service.GetAdminAllAppointments(pagination, filter,search);
+    }
 }

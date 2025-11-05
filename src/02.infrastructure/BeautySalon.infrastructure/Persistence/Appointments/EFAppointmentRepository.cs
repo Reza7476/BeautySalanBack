@@ -1,7 +1,10 @@
-﻿using BeautySalon.Entities.Appointments;
+﻿using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Appointments;
 using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
+using BeautySalon.Entities.Users;
+using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,8 @@ public class EFAppointmentRepository : IAppointmentRepository
     private readonly DbSet<Client> _clients;
     private readonly DbSet<Technician> _technicians;
     private readonly DbSet<Treatment> _treatments;
+    private readonly DbSet<User> _users;
+
 
     public EFAppointmentRepository(EFDataContext context)
     {
@@ -20,6 +25,7 @@ public class EFAppointmentRepository : IAppointmentRepository
         _clients = context.Set<Client>();
         _technicians = context.Set<Technician>();
         _treatments = context.Set<Treatment>();
+        _users = context.Set<User>();
     }
 
     public async Task Add(Appointment appointment)
@@ -43,6 +49,66 @@ public class EFAppointmentRepository : IAppointmentRepository
         return await _appointments
             .Where(_ => _.Id == appointmentId && _.ClientId == clientId)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>>
+        GetAdminAllAppointments(
+        IPagination? pagination,
+        AdminAppointmentFilterDto? filter,
+        string? search)
+    {
+        var query = (from appointment in _appointments
+                     join client in _clients on appointment.ClientId equals client.Id
+                     join user in _users on client.UserId equals user.Id
+                     join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                     select new GetAllAdminAppointmentsDto()
+                     {
+                         ClientName = user.Name,
+                         ClientLastName = user.LastName,
+                         ClientMobile = user.Mobile,
+                         AppointmentDate = DateOnly.FromDateTime(appointment.AppointmentDate),
+                         DayWeek = appointment.DayWeek,
+                         Duration = appointment.Duration,
+                         EndTime = TimeOnly.FromDateTime(appointment.EndTime),
+                         StartTime = TimeOnly.FromDateTime(appointment.AppointmentDate),
+                         Id = appointment.Id,
+                         Status = appointment.Status,
+                         TreatmentTitle = treatment.Title,
+                     }).AsQueryable();
+
+        if (filter != null)
+        {
+            if (filter.Status != 0)
+            {
+                query = query.Where(_ => _.Status == filter.Status);
+            }
+
+            if (filter.Day != 0)
+            {
+                query = query.Where(_ => _.DayWeek == filter.Day);
+            }
+
+            if (filter.Date > new DateOnly(1, 1, 1))
+            {
+                query = query.Where(_ => _.AppointmentDate == filter.Date);
+            }
+
+            if (filter.TreatmentTitle != null)
+            {
+                query = query.Where(_ => _.TreatmentTitle == filter.TreatmentTitle);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var lowered = search.ToLower();
+            query = query.Where(_ =>
+                _.TreatmentTitle.ToLower().Contains(lowered) ||
+                _.ClientMobile.Contains(lowered)
+            );
+        }
+        query = query.OrderByDescending(_ => _.AppointmentDate);
+        return await query.Paginate(pagination ?? new Pagination());
     }
 
     public async Task<List<GetBookedAppointmentByDayDto>>
