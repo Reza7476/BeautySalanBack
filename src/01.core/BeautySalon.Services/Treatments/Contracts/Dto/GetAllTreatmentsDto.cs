@@ -7,4 +7,5 @@ public class GetAllTreatmentsDto
     public required string Description { get; set; }
     public long Id { get; set; }
     public MediaDto Media { get; set; } = default!;
+    public decimal Price { get; set; }
 }

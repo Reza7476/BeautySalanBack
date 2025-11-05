@@ -114,6 +114,7 @@ public class TreatmentServiceTests:BusinessIntegrationTest
             .WithTitle("abc")
             .WithDescription("abcD")
             .WithImage()
+            .WithPrice(11223m)
             .WithDuration(180)
             .Build();
         Save(treatment);
@@ -123,6 +124,7 @@ public class TreatmentServiceTests:BusinessIntegrationTest
         expected!.Description.Should().Be(treatment.Description);
         expected.Title.Should().Be(treatment.Title);
         expected.Duration.Should().Be(treatment.Duration);
+        expected.Price.Should().Be(treatment.Price);
         expected.Image.ImageName.Should().Be(treatment.Images.First().ImageName);
         expected.Image.UniqueName.Should().Be(treatment.Images.First().ImageUniqueName);
         expected.Image.Extension.Should().Be(treatment.Images.First().Extension);
