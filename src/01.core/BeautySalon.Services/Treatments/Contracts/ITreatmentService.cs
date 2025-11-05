@@ -9,6 +9,7 @@ public interface ITreatmentService : IService
     Task<long> AddImageReturnImageId(long id, ImageDetailsDto dto);
     Task<IPageResult<GetAllTreatmentsDto>> GetAll(IPagination? pagination = null);
     Task<List<GetAllTreatmentsForAppointmentDto>> GetAllForAppointment();
+    Task<List<GetTreatmentTitleForListAppointmentFilterDto>> GetAllTitles();
     Task<GetTreatmentDetailsDto?> GetDetails(long id);
     Task<GetTreatmentDetailsForAppointmentDto?> GetDetailsForAppointment(long id);
     Task<List<GetTreatmentForLandingDto>> GetForLanding();

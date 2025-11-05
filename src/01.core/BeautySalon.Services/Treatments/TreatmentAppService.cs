@@ -147,4 +147,9 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.ExistById(id);
     }
+
+    public async Task<List<GetTreatmentTitleForListAppointmentFilterDto>> GetAllTitles()
+    {
+        return await _repository.GetAllTitles();
+    }
 }

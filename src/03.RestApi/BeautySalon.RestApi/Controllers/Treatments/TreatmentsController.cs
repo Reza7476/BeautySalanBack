@@ -90,4 +90,11 @@ public class TreatmentsController : ControllerBase
     {
         return await _service.GetDetailsForAppointment(id);
     }
+
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpGet("all-for-admin-appointment-list")]
+    public async Task<List<GetTreatmentTitleForListAppointmentFilterDto>> GetAllTitles()
+    {
+        return await _service.GetAllTitles();
+    }
 }

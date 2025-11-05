@@ -102,10 +102,7 @@ public class EFAppointmentRepository : IAppointmentRepository
         if (!string.IsNullOrWhiteSpace(search))
         {
             var lowered = search.ToLower();
-            query = query.Where(_ =>
-                _.TreatmentTitle.ToLower().Contains(lowered) ||
-                _.ClientMobile.Contains(lowered)
-            );
+            query = query.Where(_ => _.ClientMobile.Contains(lowered));
         }
         query = query.OrderByDescending(_ => _.AppointmentDate);
         return await query.Paginate(pagination ?? new Pagination());

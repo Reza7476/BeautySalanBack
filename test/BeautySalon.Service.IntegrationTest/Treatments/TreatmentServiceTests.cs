@@ -130,4 +130,17 @@ public class TreatmentServiceTests:BusinessIntegrationTest
         expected.Image.Extension.Should().Be(treatment.Images.First().Extension);
         expected.Image.URL.Should().Be(treatment.Images.First().URL);
     }
+
+    [Fact]
+    public async Task GetAllTitles_should_return_all_treatment_titles()
+    {
+        var treatment = new TreatmentBuilder()
+            .WithTitle("title")
+            .Build();
+        Save(treatment);
+
+        var expected = await _sut.GetAllTitles();
+
+        expected.First().Title.Should().Be(treatment.Title);
+    }
 }
