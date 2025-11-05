@@ -1,6 +1,5 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
-using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Treatments.Contracts;
@@ -55,7 +54,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                 Description = _.Description,
                 Title = _.Title,
                 Id = _.Id,
-                Price=_.Price,
+                Price = _.Price,
                 Media = _.Images.Select(media => new MediaDto()
                 {
                     Extension = media.Extension,
@@ -77,6 +76,14 @@ public class EFTreatmentRepository : ITreatmentRepository
         }).ToListAsync();
     }
 
+    public async Task<List<GetTreatmentTitleForListAppointmentFilterDto>> GetAllTitles()
+    {
+        return await _treatments.Select(_ => new GetTreatmentTitleForListAppointmentFilterDto
+        {
+            Title = _.Title
+        }).ToListAsync();
+    }
+
     public async Task<GetTreatmentDetailsDto?> GetDetails(long id)
     {
         return await _treatments
@@ -86,8 +93,8 @@ public class EFTreatmentRepository : ITreatmentRepository
             {
                 Description = _.Description,
                 Title = _.Title,
-                Duration=_.Duration,
-                Price=_.Price,
+                Duration = _.Duration,
+                Price = _.Price,
                 Media = _.Images.Select(media => new MediaDto()
                 {
                     Extension = media.Extension,
@@ -108,7 +115,7 @@ public class EFTreatmentRepository : ITreatmentRepository
                 Description = _.Description,
                 Title = _.Title,
                 Duration = _.Duration,
-                Price = _.Price,    
+                Price = _.Price,
                 Image = _.Images.Select(img => new ImageDetailsDto()
                 {
                     Extension = img.Extension,
