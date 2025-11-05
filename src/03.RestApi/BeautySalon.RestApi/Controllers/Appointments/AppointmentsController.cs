@@ -62,4 +62,12 @@ public class AppointmentsController : ControllerBase
     { 
         return await _service.GetAdminAllAppointments(pagination, filter,search);
     }
+
+
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpGet("{id}")]
+    public async Task<GetAppointmentDetailsDto?> GetDetails([FromRoute]string id)
+    {
+        return await _service.GetDetails(id);
+    }
 }

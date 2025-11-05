@@ -71,4 +71,9 @@ public class AppointmentAppService : IAppointmentService
     {
         return await _repository.GetBookAppointmentByDay(dateTime);
     }
+
+    public async Task<GetAppointmentDetailsDto?> GetDetails(string id)
+    {
+        return await _repository.GetDetails(id);
+    }
 }

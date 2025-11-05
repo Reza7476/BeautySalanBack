@@ -15,4 +15,5 @@ public interface IAppointmentService : IService
 
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
+    Task<GetAppointmentDetailsDto?> GetDetails(string id);
 }
