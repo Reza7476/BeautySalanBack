@@ -65,7 +65,7 @@ public class EFAppointmentRepository : IAppointmentRepository
                      {
                          ClientName = user.Name,
                          ClientLastName = user.LastName,
-                         ClientMobile = user.Mobile,
+                         ClientMobile = user.Mobile!,
                          AppointmentDate = DateOnly.FromDateTime(appointment.AppointmentDate),
                          DayWeek = appointment.DayWeek,
                          Duration = appointment.Duration,
@@ -129,6 +129,29 @@ public class EFAppointmentRepository : IAppointmentRepository
             .Where(_ => _.UserId == userId)
             .Select(c => c.Id)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<GetAppointmentDetailsDto?> GetDetails(string id)
+    {
+        return await (from appointment in _appointments
+                      join client in _clients on appointment.ClientId equals client.Id
+                      join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                      join user in _users on client.UserId equals user.Id
+                      where appointment.Id == id
+                      select new GetAppointmentDetailsDto()
+                      {
+                          ClientLastName = user.LastName,
+                          ClientName = user.Name,
+                          ClientMobile = user.Mobile!,
+                          Date = DateOnly.FromDateTime(appointment.AppointmentDate),
+                          Day = appointment.DayWeek,
+                          Duration = appointment.Duration,
+                          EndTime = TimeOnly.FromDateTime(appointment.EndTime),
+                          StartTime = TimeOnly.FromDateTime(appointment.AppointmentDate),
+                          Status = appointment.Status,
+                          TreatmentTitle = treatment.Title,
+                          Price=treatment.Price
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<string?> GetTechnicianId()
