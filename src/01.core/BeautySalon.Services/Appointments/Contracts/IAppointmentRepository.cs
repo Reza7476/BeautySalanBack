@@ -7,6 +7,7 @@ public interface IAppointmentRepository : IRepository
 {
     Task Add(Appointment appointment);
     Task<bool> CheckStatusForNewAppointment(DateTime appointmentDate);
+    Task<Appointment?> FindById(string id);
     Task<Appointment?> FindByIdAndClientId(string appointmentId, string clientId);
    
     Task<IPageResult<GetAllAdminAppointmentsDto>> 

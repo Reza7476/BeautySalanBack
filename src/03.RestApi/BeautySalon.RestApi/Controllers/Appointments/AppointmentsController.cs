@@ -70,4 +70,12 @@ public class AppointmentsController : ControllerBase
     {
         return await _service.GetDetails(id);
     }
+
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpPatch("change-status")]
+    public  async   Task ChangeStatus([FromBody]ChangeAppointmentStatusDto dto)
+    {
+        await _service.ChangeStatus(dto);
+    }
+
 }

@@ -58,6 +58,25 @@ public class AppointmentAppService : IAppointmentService
         await _unitOfWork.Complete();
     }
 
+    public async Task ChangeStatus(ChangeAppointmentStatusDto dto)
+    {
+        var appointment = await _repository.FindById(dto.Id);
+        if (appointment == null)
+        {
+            throw new AppointmentNotFoundException();
+        }
+
+        if (dto.Status == AppointmentStatus.Cancelled)
+        {
+            appointment.CancelledBy = SystemRole.Admin;
+            appointment.CancelledAt= DateTime.UtcNow;
+        }
+
+        appointment.Status = dto.Status;
+
+        await _unitOfWork.Complete();
+    }
+
     public async Task<IPageResult<GetAllAdminAppointmentsDto>>
         GetAdminAllAppointments(IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null,
