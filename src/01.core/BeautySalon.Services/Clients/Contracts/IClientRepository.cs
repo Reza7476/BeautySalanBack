@@ -6,6 +6,8 @@ namespace BeautySalon.Services.Clients.Contracts;
 public interface IClientRepository : IRepository
 {
     Task Add(Client client);
+
+    Task<List<GetAllClientsForAddAppointment>> GetAllForAppointment(string? search=null);
     
     Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
         string id,

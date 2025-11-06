@@ -6,6 +6,8 @@ public interface IClientService : IService
 {
     Task<string> Add(AddClientDto dto);
     
+    Task<List<GetAllClientsForAddAppointment>> GetAllForAppointment(string? search=null);
+
     Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
         IPagination? pagination=null, 
         ClientAppointmentFilterDto? filter = null,
