@@ -32,6 +32,12 @@ public class ClientAppService : IClientService
         return client.Id;
     }
 
+    public async Task<List<GetAllClientsForAddAppointment>>
+        GetAllForAppointment(string? search=null)
+    {
+        return await _repository.GetAllForAppointment(search);
+    }
+
     public async Task<IPageResult<GetAllClientAppointmentsDto>>
         GetClientAppointments(
         IPagination? pagination = null,
