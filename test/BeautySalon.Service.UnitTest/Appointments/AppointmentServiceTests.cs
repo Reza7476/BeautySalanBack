@@ -126,7 +126,7 @@ public class AppointmentServiceTests : BusinessUnitTest
         var treatment = new TreatmentBuilder()
             .Build();
         Save(treatment);
-        var appointment=new AppointmentBuilder()
+        var appointment = new AppointmentBuilder()
             .WithClient(client.Id)
             .WithTechnicianId(technician.Id)
             .WithTreatment(treatment.Id)
@@ -142,10 +142,58 @@ public class AppointmentServiceTests : BusinessUnitTest
 
 
     [Theory]
-    [InlineData("appointmentId" ,"clientId")]
-    public async Task CancelByClient_should_throw_exception(string clientId,string appointmentId)
+    [InlineData("appointmentId", "clientId")]
+    public async Task CancelByClient_should_throw_exception(string clientId, string appointmentId)
     {
         Func<Task> expected = async () => await _sut.CancelByClient(clientId, appointmentId);
         await expected.Should().ThrowAsync<AppointmentNotFoundException>();
+    }
+
+    [Theory]
+    [InlineData("appointmentId")]
+    public async Task ChangeStatus_should_throw_exception_when_appointment_not_found(string id)
+    {
+        var dto = new ChangeAppointmentStatusDtoBuilder()
+            .WithId(id)
+            .Build();
+
+        Func<Task> expected = async () => await _sut.ChangeStatus(dto);
+
+        await expected.Should().ThrowAsync<AppointmentNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ChangeStatus_should_change_appointment_status_properly()
+    {
+        var user = new UserBuilder()
+            .Build();
+        Save(user);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var treatment = new TreatmentBuilder()
+            .Build();
+        Save(treatment);
+        var appointment = new AppointmentBuilder()
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithStatus(AppointmentStatus.Pending)
+            .Build();
+        Save(appointment);
+        var dto = new ChangeAppointmentStatusDtoBuilder()
+            .WithId(appointment.Id)
+            .WithStatus(AppointmentStatus.Confirmed)
+            .Build();
+
+        await _sut.ChangeStatus(dto);
+
+        var expected = ReadContext.Set<Appointment>().First();
+        expected.Status.Should().Be(dto.Status);
     }
 }

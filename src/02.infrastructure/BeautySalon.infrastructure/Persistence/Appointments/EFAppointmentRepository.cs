@@ -44,6 +44,11 @@ public class EFAppointmentRepository : IAppointmentRepository
         return b;
     }
 
+    public async Task<Appointment?> FindById(string id)
+    {
+        return await _appointments.FindAsync(id);
+    }
+
     public async Task<Appointment?> FindByIdAndClientId(string appointmentId, string clientId)
     {
         return await _appointments

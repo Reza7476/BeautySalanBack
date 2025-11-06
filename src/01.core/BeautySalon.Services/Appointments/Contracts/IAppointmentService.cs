@@ -7,7 +7,7 @@ public interface IAppointmentService : IService
     Task<string> Add(AddAppointmentDto dto);
 
     Task CancelByClient(string appointmentId, string clientId);
-
+    Task ChangeStatus(ChangeAppointmentStatusDto dto);
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAdminAllAppointments(
      IPagination? pagination = null,
      AdminAppointmentFilterDto? filter = null,
