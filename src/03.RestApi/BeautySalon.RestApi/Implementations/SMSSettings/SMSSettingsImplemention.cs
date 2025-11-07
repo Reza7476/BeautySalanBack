@@ -49,6 +49,7 @@ public class SMSSettingsImplementation : ISMSSetting
             SMSKey = config["SMSSettings:SMSKey"]!,
             BaseUrl = config["SMSSettings:BaseUrl"]!,
             OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
+            RegisterClient = int.Parse(config["SMSSettings:RegisterClient"]!),
         };
 
     }
