@@ -27,7 +27,7 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
     public async Task<GetDayScheduleDto?> GetDaySchedule(DayWeek dayWeek)
     {
         return await _weeklySchedules
-            .Where(_ => _.IsActive && _.DayOfWeek == dayWeek)
+            .Where(_ => _.DayOfWeek == dayWeek)
             .Select(_ => new GetDayScheduleDto()
             {
                 StartTime = _.StartTime,
