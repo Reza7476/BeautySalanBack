@@ -1,4 +1,7 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Application.Clients.Contracts;
+using BeautySalon.Application.Clients.Contracts.Dtos;
+using BeautySalon.Application.Users.Contracts;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
 using BeautySalon.Services.Clients.Contracts;
@@ -13,12 +16,15 @@ public class ClientsController : ControllerBase
 {
     private readonly IClientService _service;
     private readonly IUserTokenService _userTokenService;
+    private readonly ClientHandler _clientHandler;
     public ClientsController(
         IClientService service,
-        IUserTokenService userTokenService)
+        IUserTokenService userTokenService,
+        ClientHandler clientHandler)
     {
         _service = service;
         _userTokenService = userTokenService;
+        _clientHandler = clientHandler;
     }
 
     [Authorize(Roles = SystemRole.Client)]
@@ -38,5 +44,12 @@ public class ClientsController : ControllerBase
         GetAllForAppointment([FromQuery]string? search)
     {
         return await _service.GetAllForAppointment(search);
+    }
+
+    [HttpPost("new")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task<string> AddNewClient([FromBody]AddNewClientHandlerDto dto)
+    {
+        return await _clientHandler.AddNewClient(dto);
     }
 }
