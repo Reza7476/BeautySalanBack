@@ -3,4 +3,6 @@ public class SendSMSDto
 {
     public string? Message { get; set; }
     public string Number { get; set; } = default!;
+
+    public int BodyId { get; set; }
 }

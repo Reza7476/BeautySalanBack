@@ -26,7 +26,8 @@ public class SMSSettingsImplementation : ISMSSetting
             SMSKey = Environment.GetEnvironmentVariable("SMSReza_Key")!,
             ProviderNumber = config["SMSSettings:ProviderNumber"]!,
             OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
-            BaseUrl = config["SMSSettings:BaseUrl"]!
+            BaseUrl = config["SMSSettings:BaseUrl"]!,
+            RegisterClient = int.Parse(config["SMSSettings:RegisterClient"]!),
         };
     }
 
