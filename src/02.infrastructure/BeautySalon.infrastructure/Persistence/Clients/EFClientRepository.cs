@@ -106,4 +106,9 @@ public class EFClientRepository : IClientRepository
              .Select(c => c.Id)
              .FirstOrDefaultAsync();
     }
+
+    public async Task<bool> IsExistById(string id)
+    {
+        return await _clients.AnyAsync(_ => _.Id == id);
+    }
 }
