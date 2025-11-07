@@ -14,4 +14,5 @@ public interface IClientService : IService
         string? userId=null);
    
     Task<string?> GetClientIdByUserId(string userId);
+    Task<bool> IsExistById(string clientId);
 }

@@ -78,4 +78,10 @@ public class AppointmentsController : ControllerBase
         await _service.ChangeStatus(dto);
     }
 
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpPost("add-admin")]
+    public async Task<string> AddAdminAppointment([FromBody]AddAdminAppointmentHandlerDto dto)
+    {
+        return await _handler.AddAdminAppointment(dto);
+    }
 }

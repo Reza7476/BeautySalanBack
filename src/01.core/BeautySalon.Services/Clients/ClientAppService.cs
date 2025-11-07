@@ -61,4 +61,9 @@ public class ClientAppService : IClientService
     {
         return await _repository.GetClientIdByUserId(userId);
     }
+
+    public async Task<bool> IsExistById(string id)
+    {
+        return await _repository.IsExistById(id);
+    }
 }

@@ -15,4 +15,5 @@ public interface IClientRepository : IRepository
         ClientAppointmentFilterDto? filter = null);
 
     Task<string?> GetClientIdByUserId(string userId);
+    Task<bool> IsExistById(string id);
 }

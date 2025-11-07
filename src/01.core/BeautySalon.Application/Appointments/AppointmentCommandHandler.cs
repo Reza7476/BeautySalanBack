@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
+using BeautySalon.Entities.Clients;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
@@ -30,6 +31,34 @@ public class AppointmentCommandHandler : IAppointmentHandler
         _technicianService = technicianService;
     }
 
+    public async Task<string> AddAdminAppointment(AddAdminAppointmentHandlerDto dto)
+    {
+        if(!await _clientService.IsExistById(dto.ClientId))
+        {
+            throw new ClientNotFoundException();
+        }
+        if(!await _treatmentService.IsExistById(dto.TreatmentId))
+        {
+            throw new TreatmentNotFoundException();
+        }
+        var technicianId = await _technicianService.GetTechnicianId();
+        if (technicianId == null)
+        {
+            throw new TechnicianNotDefinedException();
+        }
+        var appointmentId = await _appointmentService.Add(new AddAppointmentDto()
+        {
+            AppointmentDate = dto.AppointmentDate,
+            Duration = dto.Duration,
+            ClientId = dto.ClientId,
+            TechnicianId = technicianId,
+            TreatmentId = dto.TreatmentId,
+            DayWeek = dto.DayWeek
+        });
+
+        return appointmentId;
+    }
+
     public async Task<string> AddAppointment(AddAppointmentHandlerDto dto, string userId)
     {
         var clientId = await _clientService.GetClientIdByUserId(userId);
@@ -43,7 +72,7 @@ public class AppointmentCommandHandler : IAppointmentHandler
             throw new TechnicianNotDefinedException();
         }
 
-        if (!await _treatmentService.TreatmentIsExistById(dto.TreatmentId))
+        if (!await _treatmentService.IsExistById(dto.TreatmentId))
         {
             throw new TreatmentNotFoundException();
         }
