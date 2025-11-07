@@ -49,5 +49,6 @@ public class WeeklyScheduleServiceTests : BusinessIntegrationTest
 
         expected!.StartTime.Should().Be(schedule.StartTime);
         expected.EndTime.Should().Be(schedule.EndTime);
+        expected.IsActive.Should().BeTrue();
     }
 }

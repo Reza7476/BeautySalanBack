@@ -31,7 +31,8 @@ public class EFWeeklyScheduleRepository : IWeeklyScheduleRepository
             .Select(_ => new GetDayScheduleDto()
             {
                 StartTime = _.StartTime,
-                EndTime = _.EndTime
+                EndTime = _.EndTime,
+                IsActive=_.IsActive
             }).FirstOrDefaultAsync();
     }
 
