@@ -36,7 +36,7 @@ public class AppointmentAppService : IAppointmentService
             CreatedAt = DateTime.UtcNow,
             Duration = dto.Duration,
             EndTime = dto.AppointmentDate.AddMinutes(dto.Duration),
-            Status = AppointmentStatus.Pending,
+            Status = AppointmentStatus.Approved,
             DayWeek = dto.DayWeek,
         };
         await _repository.Add(appointment);

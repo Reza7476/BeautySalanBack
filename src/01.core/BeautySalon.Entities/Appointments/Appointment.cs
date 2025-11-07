@@ -32,4 +32,5 @@ public enum AppointmentStatus : byte
     Pending = 3,
     NoShow = 4,
     Cancelled = 5,
+    Approved=6,
 }
