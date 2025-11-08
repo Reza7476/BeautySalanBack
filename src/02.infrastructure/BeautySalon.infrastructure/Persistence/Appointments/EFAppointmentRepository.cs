@@ -58,9 +58,9 @@ public class EFAppointmentRepository : IAppointmentRepository
 
     public async Task<IPageResult<GetAllAdminAppointmentsDto>>
         GetAdminAllAppointments(
-        IPagination? pagination,
-        AdminAppointmentFilterDto? filter,
-        string? search)
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search = null)
     {
         var query = (from appointment in _appointments
                      join client in _clients on appointment.ClientId equals client.Id
@@ -96,6 +96,54 @@ public class EFAppointmentRepository : IAppointmentRepository
             if (filter.Date > new DateOnly(1, 1, 1))
             {
                 query = query.Where(_ => _.AppointmentDate == filter.Date);
+            }
+
+            if (filter.TreatmentTitle != null)
+            {
+                query = query.Where(_ => _.TreatmentTitle == filter.TreatmentTitle);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var lowered = search.ToLower();
+            query = query.Where(_ => _.ClientMobile.Contains(lowered));
+        }
+        query = query.OrderByDescending(_ => _.AppointmentDate);
+        return await query.Paginate(pagination ?? new Pagination());
+    }
+
+    public  async Task<IPageResult<GetAllAdminAppointmentsDto>>
+        GetAllToday(IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search = null)
+    {
+        var query = (from appointment in _appointments
+                     join client in _clients on appointment.ClientId equals client.Id
+                     join user in _users on client.UserId equals user.Id
+                     join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                     where appointment.AppointmentDate.Date == DateTime.UtcNow.Date
+                     select new GetAllAdminAppointmentsDto()
+                     {
+                         ClientName = user.Name,
+                         ClientLastName = user.LastName,
+                         ClientMobile = user.Mobile!,
+                         AppointmentDate = DateOnly.FromDateTime(appointment.AppointmentDate),
+                         DayWeek = appointment.DayWeek,
+                         Duration = appointment.Duration,
+                         EndTime = TimeOnly.FromDateTime(appointment.EndTime),
+                         StartTime = TimeOnly.FromDateTime(appointment.AppointmentDate),
+                         Id = appointment.Id,
+                         Status = appointment.Status,
+                         TreatmentTitle = treatment.Title,
+                     }).AsQueryable();
+
+
+        if (filter != null)
+        {
+            if (filter.Status != 0)
+            {
+                query = query.Where(_ => _.Status == filter.Status);
             }
 
             if (filter.TreatmentTitle != null)

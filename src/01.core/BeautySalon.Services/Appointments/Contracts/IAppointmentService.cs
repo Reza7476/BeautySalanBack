@@ -8,11 +8,17 @@ public interface IAppointmentService : IService
 
     Task CancelByClient(string appointmentId, string clientId);
     Task ChangeStatus(ChangeAppointmentStatusDto dto);
+    
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAdminAllAppointments(
      IPagination? pagination = null,
      AdminAppointmentFilterDto? filter = null,
      string? search = null);
-
+    
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
+        IPagination? pagination=null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search=null);
+    
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);

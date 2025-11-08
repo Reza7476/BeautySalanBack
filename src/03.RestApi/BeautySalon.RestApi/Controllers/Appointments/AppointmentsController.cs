@@ -84,4 +84,14 @@ public class AppointmentsController : ControllerBase
     {
         return await _handler.AddAdminAppointment(dto);
     }
+
+    [Authorize(Roles =SystemRole.Admin)]
+    [HttpGet("all-today")]
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
+        [FromQuery] Pagination? pagination = null,
+        [FromQuery] AdminAppointmentFilterDto? filter = null,
+        string? search = null)
+    {
+        return await _service.GetAllToday(pagination, filter, search);
+    }
 }

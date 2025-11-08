@@ -16,6 +16,11 @@ public interface IAppointmentRepository : IRepository
         AdminAppointmentFilterDto? filter,
         string? search);
     
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null, 
+        string? search = null);
+    
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
 

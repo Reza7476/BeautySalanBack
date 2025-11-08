@@ -69,7 +69,7 @@ public class AppointmentAppService : IAppointmentService
         if (dto.Status == AppointmentStatus.Cancelled)
         {
             appointment.CancelledBy = SystemRole.Admin;
-            appointment.CancelledAt= DateTime.UtcNow;
+            appointment.CancelledAt = DateTime.UtcNow;
         }
 
         appointment.Status = dto.Status;
@@ -82,7 +82,15 @@ public class AppointmentAppService : IAppointmentService
         AdminAppointmentFilterDto? filter = null,
         string? search = null)
     {
-        return await _repository.GetAdminAllAppointments(pagination, filter,search);
+        return await _repository.GetAdminAllAppointments(pagination, filter, search);
+    }
+
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search = null)
+    {
+        return await _repository.GetAllToday(pagination, filter, search);   
     }
 
     public async Task<List<GetBookedAppointmentByDayDto>>
