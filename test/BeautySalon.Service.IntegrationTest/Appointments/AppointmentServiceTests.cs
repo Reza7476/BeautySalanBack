@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Entities.Appointments;
+using BeautySalon.Entities.WeeklySchedules;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Test.Tool.Entities.Appointments;
 using BeautySalon.Test.Tool.Entities.Clients;
@@ -198,5 +199,40 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.Elements.First().Status.Should().Be(appointment.Status);
         expected.Elements.First().DayWeek.Should().Be(appointment.DayWeek);
         expected.Elements.First().AppointmentDate.Should().Be(DateOnly.FromDateTime(appointment.AppointmentDate));
+    }
+
+    [Fact]
+    public async Task Ass()
+    {
+        var date = DateTime.Now;
+        var user = new UserBuilder()
+            .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var treatment = new TreatmentBuilder()
+            .Build();
+        Save(treatment);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var appointment = new AppointmentBuilder()
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithAppointmentDate(date)
+            .WithDayWeek(DayWeek.Saturday)
+            .WithEndTime(date.AddMinutes(30))
+            .Build();
+        Save(appointment);
+
+        var expected = await _sut.GetAppointmentPerDayForChart();
+
+        expected.Count.Should().Be(7);
+        expected.First().DayWeek.Should().Be(appointment.DayWeek);
+        expected.First().Count.Should().Be(1);
     }
 }

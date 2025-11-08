@@ -20,7 +20,7 @@ public interface IAppointmentRepository : IRepository
         IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null, 
         string? search = null);
-    
+    Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart();
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
 

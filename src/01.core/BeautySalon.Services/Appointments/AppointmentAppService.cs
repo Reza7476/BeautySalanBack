@@ -93,6 +93,11 @@ public class AppointmentAppService : IAppointmentService
         return await _repository.GetAllToday(pagination, filter, search);   
     }
 
+    public async Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart()
+    {
+        return await _repository.GetAppointmentPerDayForChart();
+    }
+
     public async Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime)
     {

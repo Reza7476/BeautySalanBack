@@ -19,6 +19,8 @@ public interface IAppointmentService : IService
         AdminAppointmentFilterDto? filter = null,
         string? search=null);
     
+    Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart();
+
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
