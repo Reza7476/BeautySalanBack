@@ -1,12 +1,13 @@
-﻿using BeautySalon.Services.Clients.Contracts;
+﻿using BeautySalon.Entities.Clients;
+using BeautySalon.Services.Clients.Contracts;
 using BeautySalon.Test.Tool.Entities.Clients;
 using BeautySalon.Test.Tool.Entities.Users;
-using BeautySalon.Test.Tool.Infrastructure.Integration;
+using BeautySalon.Test.Tool.Infrastructure.UnitTests;
 using FluentAssertions;
 using Xunit;
 
 namespace BeautySalon.Service.UnitTest.Clients;
-public class ClientServiceTests : BusinessIntegrationTest
+public class ClientServiceTests : BusinessUnitTest
 {
     private readonly IClientService _sut;
 
@@ -16,28 +17,18 @@ public class ClientServiceTests : BusinessIntegrationTest
     }
 
     [Fact]
-    public async Task GetAllForAppointement_should_return_all_properly()
+    public async Task Add_should_add_client_properly()
     {
         var user = new UserBuilder()
-            .WithMobile("091274367476")
-            .WithAvatar()
-            .WithName("Reza")
-            .WithLastName("Dehghani")
             .Build();
         Save(user);
-        var client = new ClientBuilder()
+        var dto = new AddClientDtoBuilder()
             .WithUser(user.Id)
             .Build();
-        Save(client);
 
-        var expected = await _sut.GetAllForAppointment();
+        await _sut.Add(dto);
 
-        expected.First().Name.Should().Be(user.Name);
-        expected.First().LastName.Should().Be(user.LastName);
-        expected.First().MobileNumber.Should().Be(user.Mobile);
-        expected.First().Profile!.URL.Should().Be(user.Avatar!.URL);
-        expected.First().Profile!.ImageName.Should().Be(user.Avatar.ImageName);
-        expected.First().Profile!.Extension.Should().Be(user.Avatar.Extension);
-        expected.First().Profile!.UniqueName.Should().Be(user.Avatar.UniqueName);
+        var expected = ReadContext.Set<Client>().First();
+        expected.UserId.Should().Be(user.Id);
     }
 }
