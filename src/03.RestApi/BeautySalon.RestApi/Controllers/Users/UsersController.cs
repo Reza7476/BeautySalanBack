@@ -74,7 +74,6 @@ public class UsersController : ControllerBase
         await _handle.FinalizeResetPassword(dto);
     }
 
-    [Authorize]
     [HttpPatch("log-out")]
     public async Task Logout([FromBody] LogOutDto dto)
     {

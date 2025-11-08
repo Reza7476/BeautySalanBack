@@ -150,5 +150,53 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.Day.Should().Be(appointment.DayWeek);
         expected.Date.Should().Be(DateOnly.FromDateTime(appointment.AppointmentDate));
         expected.Price.Should().Be(treatment.Price);
-    } 
+    }
+
+    [Fact]
+    public async Task GetAllToday_should_return_all_today_appointment()
+    {
+        var date = DateTime.Now;
+        var user = new UserBuilder()
+            .WithName("Reza")
+            .WithLastName("dehghani")
+            .WithMobile("09174367476")
+            .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var treatment = new TreatmentBuilder()
+            .WithTitle("Nile")
+            .Build();
+        Save(treatment);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var appointment = new AppointmentBuilder()
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithAppointmentDate(date.AddHours(1))
+            .WithEndTime(date.AddDays(1).AddMinutes(30))
+            .WithDuration(30)
+            .WithStatus(AppointmentStatus.Pending)
+            .Build();
+        Save(appointment);
+
+        var expected = await _sut.GetAllToday();
+
+        expected.Elements.First().Id.Should().Be(appointment.Id);
+        expected.Elements.First().TreatmentTitle.Should().Be(treatment.Title);
+        expected.Elements.First().ClientName.Should().Be(user.Name);
+        expected.Elements.First().ClientLastName.Should().Be(user.LastName);
+        expected.Elements.First().ClientMobile.Should().Be(user.Mobile);
+        expected.Elements.First().Duration.Should().Be(30);
+        //expected.Elements.First().StartTime.Should().Be(TimeOnly.FromDateTime(date.AddHours(1)));
+        //expected.Elements.First().EndTime.Should().Be(TimeOnly.FromDateTime(date.AddHours(1).AddMinutes(30)));
+        expected.Elements.First().Status.Should().Be(appointment.Status);
+        expected.Elements.First().DayWeek.Should().Be(appointment.DayWeek);
+        expected.Elements.First().AppointmentDate.Should().Be(DateOnly.FromDateTime(appointment.AppointmentDate));
+    }
 }
