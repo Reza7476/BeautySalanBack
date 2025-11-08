@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Entities.Appointments;
+using BeautySalon.Entities.WeeklySchedules;
 using System.Reflection.Metadata.Ecma335;
 
 namespace BeautySalon.Test.Tool.Entities.Appointments;
@@ -17,9 +18,15 @@ public class AppointmentBuilder
             Duration = 30,
             EndTime = DateTime.Now.AddMinutes(30),
             Status = AppointmentStatus.Pending,
+            DayWeek=DayWeek.Saturday
         };
     }
 
+    public AppointmentBuilder WithDayWeek(DayWeek day)
+    {
+        _appointment.DayWeek = day;
+        return this;
+    }
 
     public AppointmentBuilder WithClient(string id)
     {

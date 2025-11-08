@@ -4,10 +4,12 @@ using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.Entities.Users;
+using BeautySalon.Entities.WeeklySchedules;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace BeautySalon.infrastructure.Persistence.Appointments;
 public class EFAppointmentRepository : IAppointmentRepository
@@ -113,7 +115,7 @@ public class EFAppointmentRepository : IAppointmentRepository
         return await query.Paginate(pagination ?? new Pagination());
     }
 
-    public  async Task<IPageResult<GetAllAdminAppointmentsDto>>
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>>
         GetAllToday(IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null,
         string? search = null)
@@ -161,6 +163,27 @@ public class EFAppointmentRepository : IAppointmentRepository
         return await query.Paginate(pagination ?? new Pagination());
     }
 
+    public async Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart()
+    {
+        var today = DateTime.UtcNow;
+        var startDate = today.AddDays(-6);
+        List<GetAppointmentCountPerDayDto> appointment = new List<GetAppointmentCountPerDayDto>();
+        var query = await _appointments
+            .Where(_ => _.AppointmentDate.Date >= startDate &&
+                   _.AppointmentDate.Date <= today)
+            .ToListAsync();
+        for (var i = 1; i <= 7; i++)
+        {
+            int count = query.Count(a => (int)a.DayWeek == i);
+            appointment.Add(new GetAppointmentCountPerDayDto
+            {
+                Count = count,
+                DayWeek = (DayWeek)i
+            });
+        }
+        return appointment;
+    }
+
     public async Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime)
     {
@@ -203,7 +226,7 @@ public class EFAppointmentRepository : IAppointmentRepository
                           StartTime = TimeOnly.FromDateTime(appointment.AppointmentDate),
                           Status = appointment.Status,
                           TreatmentTitle = treatment.Title,
-                          Price=treatment.Price
+                          Price = treatment.Price
                       }).FirstOrDefaultAsync();
     }
 

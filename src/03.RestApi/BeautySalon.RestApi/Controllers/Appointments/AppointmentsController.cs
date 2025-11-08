@@ -94,4 +94,10 @@ public class AppointmentsController : ControllerBase
     {
         return await _service.GetAllToday(pagination, filter, search);
     }
+
+    [HttpGet("appointment-per-day-for-chart")]
+    public async Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDay()
+    {
+        return await _service.GetAppointmentPerDayForChart();
+    }
 }
