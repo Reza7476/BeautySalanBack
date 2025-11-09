@@ -1,4 +1,5 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 
@@ -16,6 +17,8 @@ public interface IAppointmentRepository : IRepository
         AdminAppointmentFilterDto? filter,
         string? search);
     
+    Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary();
+
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
         IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null, 

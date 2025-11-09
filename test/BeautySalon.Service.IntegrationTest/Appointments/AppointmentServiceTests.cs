@@ -202,7 +202,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
     }
 
     [Fact]
-    public async Task Ass()
+    public async Task GetAppointmentPerDayForChart_should_return_appointment_each_day_properly()
     {
         var date = DateTime.Now;
         var user = new UserBuilder()
@@ -234,5 +234,37 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.Count.Should().Be(7);
         expected.First().DayWeek.Should().Be(appointment.DayWeek);
         expected.First().Count.Should().Be(1);
+    }
+
+    [Fact] 
+    public async Task should_return_summary_for_admin_doashboard()
+    {
+        var user = new UserBuilder()
+            .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var technician=new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var treatment = new TreatmentBuilder()
+            .Build();
+        Save(treatment);
+        var  appointment = new AppointmentBuilder()
+            .WithAppointmentDate(DateTime.Now)
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .Build();
+        Save(appointment);
+
+        var expected = await _sut.GetAdminDashboardSummary();
+
+        expected!.TodayAppointments.Should().Be(1);
+        expected.TotalClients.Should().Be(1);
+        expected.TotalTreatments.Should().Be(1);
     }
 }

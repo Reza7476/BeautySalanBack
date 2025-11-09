@@ -1,4 +1,5 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
@@ -9,7 +10,6 @@ using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace BeautySalon.infrastructure.Persistence.Appointments;
 public class EFAppointmentRepository : IAppointmentRepository
@@ -113,6 +113,19 @@ public class EFAppointmentRepository : IAppointmentRepository
         }
         query = query.OrderByDescending(_ => _.AppointmentDate);
         return await query.Paginate(pagination ?? new Pagination());
+    }
+
+    public async Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary()
+    {
+        var today = DateTime.UtcNow.Date;
+        var query = new GetDashboardAdminSummaryDto()
+        {
+            TodayAppointments = await _appointments.Where(_ => _.AppointmentDate.Date == today).CountAsync(),
+            TotalClients = await _clients.CountAsync(),
+            TotalTreatments = await _treatments.CountAsync()
+        };
+        return query;
+
     }
 
     public async Task<IPageResult<GetAllAdminAppointmentsDto>>

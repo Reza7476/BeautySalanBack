@@ -1,4 +1,5 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
@@ -83,6 +84,11 @@ public class AppointmentAppService : IAppointmentService
         string? search = null)
     {
         return await _repository.GetAdminAllAppointments(pagination, filter, search);
+    }
+
+    public async Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary()
+    {
+        return await _repository.GetAdminDashboardSummary();
     }
 
     public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
