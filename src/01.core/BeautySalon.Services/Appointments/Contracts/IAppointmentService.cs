@@ -1,4 +1,5 @@
-﻿using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 
 namespace BeautySalon.Services.Appointments.Contracts;
@@ -14,6 +15,8 @@ public interface IAppointmentService : IService
      AdminAppointmentFilterDto? filter = null,
      string? search = null);
     
+    Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary();
+   
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
         IPagination? pagination=null,
         AdminAppointmentFilterDto? filter = null,
@@ -23,5 +26,6 @@ public interface IAppointmentService : IService
 
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
+   
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
 }

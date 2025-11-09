@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
+using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
@@ -95,9 +96,18 @@ public class AppointmentsController : ControllerBase
         return await _service.GetAllToday(pagination, filter, search);
     }
 
+
     [HttpGet("appointment-per-day-for-chart")]
+    [Authorize(Roles =SystemRole.Admin)]
     public async Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDay()
     {
         return await _service.GetAppointmentPerDayForChart();
     }
+
+    [HttpGet("admin-dashboard-summary")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary()
+    {
+        return await _service.GetAdminDashboardSummary();
+    } 
 }
