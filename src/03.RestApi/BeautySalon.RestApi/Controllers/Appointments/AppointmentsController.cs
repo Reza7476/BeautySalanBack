@@ -109,5 +109,13 @@ public class AppointmentsController : ControllerBase
     public async Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary()
     {
         return await _service.GetAdminDashboardSummary();
-    } 
+    }
+
+
+    [HttpGet("new-appointments-for-dashboard")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard()
+    {
+        return await _service.GetNewAppointmentDashboard();
+    }
 }

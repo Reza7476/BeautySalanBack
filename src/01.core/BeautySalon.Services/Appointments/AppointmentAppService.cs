@@ -114,4 +114,9 @@ public class AppointmentAppService : IAppointmentService
     {
         return await _repository.GetDetails(id);
     }
+
+    public async Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard()
+    {
+        return await _repository.GetNewAppointmentDashboard();
+    }
 }

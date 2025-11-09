@@ -237,7 +237,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
     }
 
     [Fact] 
-    public async Task should_return_summary_for_admin_doashboard()
+    public async Task should_return_summary_for_admin_dashboard()
     {
         var user = new UserBuilder()
             .Build();
@@ -266,5 +266,47 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected!.TodayAppointments.Should().Be(1);
         expected.TotalClients.Should().Be(1);
         expected.TotalTreatments.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetNewAppointmentDashboard_should_return_new_appointment_properly()
+    {
+        var date= DateTime.Now;
+        var user = new UserBuilder()
+            .WithName("Reza")
+            .WithLastName("Dehghani")
+            .WithMobile("9174367476")
+           .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var treatment = new TreatmentBuilder()
+            .WithTitle("Title")
+            .Build();
+        Save(treatment);
+        var appointment = new AppointmentBuilder()
+            .WithAppointmentDate(date)
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithDayWeek(DayWeek.Saturday)
+            .Build();
+        Save(appointment);
+
+        var expected = await _sut.GetNewAppointmentDashboard();
+
+        expected.First().Mobile.Should().Be(user.Mobile);
+        expected.First().ClientName.Should().Be(user.Name);
+        expected.First().ClientLastName.Should().Be(user.LastName);
+        expected.First().Date.Should().Be(DateOnly.FromDateTime(date));
+        expected.First().Status.Should().Be(appointment.Status);
+        expected.First().DayWeek.Should().Be(appointment.DayWeek);
+        expected.First().TreatmentTitle.Should().Be(treatment.Title);
     }
 }
