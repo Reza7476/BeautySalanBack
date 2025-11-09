@@ -97,4 +97,12 @@ public class TreatmentsController : ControllerBase
     {
         return await _service.GetAllTitles();
     }
+
+
+    [HttpGet("popular")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task<List<GetPopularTreatmentsDto>> GetPopularTreatments()
+    {
+        return await _service.GetPopularTreatments();
+    }
 }

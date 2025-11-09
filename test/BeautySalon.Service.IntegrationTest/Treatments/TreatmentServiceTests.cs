@@ -1,14 +1,18 @@
 ﻿using BeautySalon.Services.Treatments.Contracts;
+using BeautySalon.Test.Tool.Entities.Appointments;
+using BeautySalon.Test.Tool.Entities.Clients;
+using BeautySalon.Test.Tool.Entities.Technicians;
 using BeautySalon.Test.Tool.Entities.Treatments;
+using BeautySalon.Test.Tool.Entities.Users;
 using BeautySalon.Test.Tool.Infrastructure.Integration;
 using FluentAssertions;
 using Xunit;
 
 namespace BeautySalon.Service.IntegrationTest.Treatments;
-public class TreatmentServiceTests:BusinessIntegrationTest
+public class TreatmentServiceTests : BusinessIntegrationTest
 {
     private readonly ITreatmentService _sut;
-    
+
     public TreatmentServiceTests()
     {
         _sut = TreatmentServiceFactory.Generate(DbContext);
@@ -118,7 +122,7 @@ public class TreatmentServiceTests:BusinessIntegrationTest
             .WithDuration(180)
             .Build();
         Save(treatment);
-        
+
         var expected = await _sut.GetDetailsForAppointment(treatment.Id);
 
         expected!.Description.Should().Be(treatment.Description);
@@ -142,5 +146,47 @@ public class TreatmentServiceTests:BusinessIntegrationTest
         var expected = await _sut.GetAllTitles();
 
         expected.First().Title.Should().Be(treatment.Title);
+    }
+
+
+    [Fact]
+    public async Task GetPopularTreatments_shopuld_return_popular()
+    {
+        var date = DateTime.Now;
+        var user = new UserBuilder()
+            .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var treatment = new TreatmentBuilder()
+            .WithTitle("title")
+            .WithImage()
+            .Build();
+        Save(treatment);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var appointment = new AppointmentBuilder()
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithAppointmentDate(date.AddDays(1))
+            .WithEndTime(date.AddDays(1).AddMinutes(30))
+            .WithDuration(30)
+            .Build();
+        Save(appointment);
+
+        var expected = await _sut.GetPopularTreatments();
+
+        expected.Count.Should().Be(1);
+        expected.First().Id.Should().Be(treatment.Id);
+        expected.First().Title.Should().Be(treatment.Title);
+        expected.First().Image!.Extension.Should().Be(treatment.Images.First().Extension);
+        expected.First().Image!.UniqueName.Should().Be(treatment.Images.First().ImageUniqueName);
+        expected.First().Image!.ImageName.Should().Be(treatment.Images.First().ImageName);
+        expected.First().Image!.URL.Should().Be(treatment.Images.First().URL);
     }
 }
