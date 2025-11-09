@@ -152,4 +152,9 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.GetAllTitles();
     }
+
+    public async Task<List<GetPopularTreatmentsDto>> GetPopularTreatments()
+    {
+        return await _repository.GetPopularTreatments();
+    }
 }

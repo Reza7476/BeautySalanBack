@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Appointments;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Treatments.Contracts;
@@ -11,12 +12,14 @@ public class EFTreatmentRepository : ITreatmentRepository
 {
     private readonly DbSet<Treatment> _treatments;
     private readonly DbSet<TreatmentImage> _treatmentImages;
+    private readonly DbSet<Appointment> _appointments;
+
 
     public EFTreatmentRepository(EFDataContext context)
     {
         _treatments = context.Set<Treatment>();
         _treatmentImages = context.Set<TreatmentImage>();
-
+        _appointments = context.Set<Appointment>();
     }
 
     public async Task Add(Treatment treatment)
@@ -145,6 +148,40 @@ public class EFTreatmentRepository : ITreatmentRepository
                     Id = media.Id
                 }).FirstOrDefault() : null
             }).ToListAsync();
+    }
+
+    public async Task<List<GetPopularTreatmentsDto>> GetPopularTreatments()
+    {
+        var start = DateTime.UtcNow.AddDays(-30);
+        var query = await (
+                   from appointment in _appointments
+                   join treatment in _treatments
+                   on appointment.TreatmentId equals treatment.Id
+                   where appointment.AppointmentDate >= start
+                   group appointment by new
+                   {
+                       appointment.TreatmentId,
+                       treatment.Title,
+                   } into g
+                   orderby g.Count() descending
+                   select new GetPopularTreatmentsDto()
+                   {
+                       AppointmentCount = g.Count(),
+                       Title = g.Key.Title,
+                       Image = _treatmentImages
+                       .Where(_ => _.TreatmentId == g.Key.TreatmentId)
+                       .Select(_ => new ImageDetailsDto()
+                       {
+                           Extension = _.Extension,
+                           ImageName = _.ImageName,
+                           UniqueName = _.ImageUniqueName,
+                           URL = _.URL
+                       }).FirstOrDefault(),
+                       Id = g.Key.TreatmentId
+                   }).Take(3)
+                   .ToListAsync();
+
+        return query;
     }
 
     public async Task<List<TreatmentImage>> GetTreatmentImages(long id)
