@@ -28,4 +28,5 @@ public interface IAppointmentService : IService
         GetBookAppointmentByDay(DateTime dateTime);
    
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
+    Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
 }

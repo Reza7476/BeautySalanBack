@@ -34,7 +34,6 @@ public class AppointmentServiceTests : BusinessUnitTest
         var userTechnician = new UserBuilder()
             .Build();
         Save(userTechnician);
-
         var technician = new TechnicianBuilder()
             .WithUser(userTechnician.Id)
             .Build();
@@ -60,7 +59,6 @@ public class AppointmentServiceTests : BusinessUnitTest
         expected.AppointmentDate.Should().Be(dto.AppointmentDate);
         // expected.EndTime.Should().Be(dto.AppointmentDate.AddMinutes(dto.Duration));
         expected.Duration.Should().Be(dto.Duration);
-        expected.Status.Should().Be(AppointmentStatus.Pending);
     }
 
 

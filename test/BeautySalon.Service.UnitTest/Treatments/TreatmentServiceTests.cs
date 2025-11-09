@@ -175,6 +175,7 @@ public class TreatmentServiceTests : BusinessUnitTest
     public async Task Update_should_throw_exception_when_treatment_not_found(long id)
     {
         var dto = new UpdateTreatmentDtoBuilder()
+            .WithPrice(10m)
             .Build();
         Func<Task> expected = async () => await _sut.Update(dto, id);
         await expected.Should().ThrowExactlyAsync<TreatmentNotFoundException>();

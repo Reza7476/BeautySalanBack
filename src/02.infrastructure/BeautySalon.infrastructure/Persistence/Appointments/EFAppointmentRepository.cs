@@ -203,7 +203,8 @@ public class EFAppointmentRepository : IAppointmentRepository
         return await _appointments.Where(
          _ => _.AppointmentDate.Date == dateTime.Date &&
         (_.Status == AppointmentStatus.Pending ||
-         _.Status == AppointmentStatus.Confirmed))
+         _.Status == AppointmentStatus.Confirmed ||
+         _.Status == AppointmentStatus.Approved))
          .Select(a => new GetBookedAppointmentByDayDto()
          {
              Duration = a.Duration,
@@ -241,6 +242,26 @@ public class EFAppointmentRepository : IAppointmentRepository
                           TreatmentTitle = treatment.Title,
                           Price = treatment.Price
                       }).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard()
+    {
+        var query = await (from appointment in _appointments
+                           join client in _clients on appointment.ClientId equals client.Id
+                           join user in _users on client.UserId equals user.Id
+                           join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                           where appointment.Status == AppointmentStatus.Pending
+                           select new GetNewAppointmentsDashboardDto()
+                           {
+                               ClientLastName = user.LastName,
+                               ClientName = user.Name,
+                               Date = DateOnly.FromDateTime(appointment.AppointmentDate),
+                               DayWeek = appointment.DayWeek,
+                               Mobile = user.Mobile,
+                               Status = appointment.Status,
+                               TreatmentTitle = treatment.Title
+                           }).ToListAsync();
+        return query;
     }
 
     public async Task<string?> GetTechnicianId()
