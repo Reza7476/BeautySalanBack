@@ -4,7 +4,7 @@ using BeautySalon.Entities.WeeklySchedules;
 namespace BeautySalon.Services.Clients.Contracts.Dtos;
 public class ClientAppointmentFilterDto
 {
-    public DayWeek Day { get; set; }
+    public DayWeek DayWeek { get; set; }
     public DateOnly Date { get; set; }
     public AppointmentStatus Status { get; set; }
 

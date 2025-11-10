@@ -84,9 +84,9 @@ public class EFClientRepository : IClientRepository
                 query = query.Where(_ => _.AppointmentDate == filterDto.Date);
             }
 
-            if (filterDto.Day != 0)
+            if (filterDto.DayWeek != 0)
             {
-                var numberDay = (int)filterDto.Day;
+                var numberDay = (int)filterDto.DayWeek;
                 query = query.Where(_ => (int)_.DayWeek == numberDay);
             }
 
