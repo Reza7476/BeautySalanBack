@@ -90,9 +90,9 @@ public class EFAppointmentRepository : IAppointmentRepository
                 query = query.Where(_ => _.Status == filter.Status);
             }
 
-            if (filter.Day != 0)
+            if (filter.DayWeek != 0)
             {
-                query = query.Where(_ => _.DayWeek == filter.Day);
+                query = query.Where(_ => _.DayWeek == filter.DayWeek);
             }
 
             if (filter.Date > new DateOnly(1, 1, 1))
