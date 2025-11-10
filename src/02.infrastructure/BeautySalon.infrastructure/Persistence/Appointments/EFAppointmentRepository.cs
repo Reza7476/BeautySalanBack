@@ -221,6 +221,51 @@ public class EFAppointmentRepository : IAppointmentRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId)
+    {
+        var query = await (
+                    from appointment in _appointments
+                    join client in _clients on appointment.ClientId equals client.Id
+                    join user in _users
+                    on client.UserId equals user.Id
+                    join treatment in _treatments
+                    on appointment.TreatmentId equals treatment.Id
+                    where user.Id == userId
+                    select new
+                    {
+                        treatment.Title,
+                        appointment.DayWeek,
+                        appointment.AppointmentDate,
+                        appointment.Status
+                    }).ToListAsync();
+
+        if (!query.Any()) return null;
+        var dto = new DashboardClientSummaryDto()
+        {
+            FutureAppointments = query
+            .Where(_ => DateOnly.FromDateTime(_.AppointmentDate) >= DateOnly.FromDateTime(DateTime.UtcNow))
+            .Select(f => new DashboardClientAppointmentDto()
+            {
+                Date = DateOnly.FromDateTime(f.AppointmentDate),
+                Day = f.DayWeek,
+                Start = TimeOnly.FromDateTime(f.AppointmentDate),
+                Status = f.Status,
+                TreatmentTitle = f.Title
+            }).ToList(),
+            FormerAppointments = query
+            .Where(_ => DateOnly.FromDateTime(_.AppointmentDate) < DateOnly.FromDateTime(DateTime.UtcNow))
+            .Select(f => new DashboardClientAppointmentDto()
+            {
+                Date = DateOnly.FromDateTime(f.AppointmentDate),
+                Day = f.DayWeek,
+                Start = TimeOnly.FromDateTime(f.AppointmentDate),
+                Status = f.Status,
+                TreatmentTitle = f.Title
+            }).ToList(),
+        };
+        return dto;
+    }
+
     public async Task<GetAppointmentDetailsDto?> GetDetails(string id)
     {
         return await (from appointment in _appointments

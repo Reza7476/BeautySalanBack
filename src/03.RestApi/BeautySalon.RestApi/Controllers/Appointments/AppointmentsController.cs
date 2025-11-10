@@ -118,4 +118,12 @@ public class AppointmentsController : ControllerBase
     {
         return await _service.GetNewAppointmentDashboard();
     }
+
+    [HttpGet("dashboard-client-summary")]
+    [Authorize(Roles =SystemRole.Client)]
+    public async Task<DashboardClientSummaryDto?> GetDashboardClientSummary()
+    {
+        var userId = _userTokenService.UserId;
+        return await _service.GetDashboardClientSummary(userId!);
+    }
 }
