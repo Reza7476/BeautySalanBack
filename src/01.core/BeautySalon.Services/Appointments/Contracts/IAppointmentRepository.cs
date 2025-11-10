@@ -28,6 +28,7 @@ public interface IAppointmentRepository : IRepository
         GetBookAppointmentByDay(DateTime dateTime);
 
     Task<string?> GetClientIdByUserId(string userId);
+    Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
     Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
     Task<string?> GetTechnicianId();

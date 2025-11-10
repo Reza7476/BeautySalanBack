@@ -17,7 +17,7 @@ public class AppointmentBuilder
             CreatedAt = DateTime.Now,
             Duration = 30,
             EndTime = DateTime.Now.AddMinutes(30),
-            Status = AppointmentStatus.Pending,
+            //Status = AppointmentStatus.Pending,
             DayWeek=DayWeek.Saturday
         };
     }

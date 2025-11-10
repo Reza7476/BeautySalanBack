@@ -110,6 +110,11 @@ public class AppointmentAppService : IAppointmentService
         return await _repository.GetBookAppointmentByDay(dateTime);
     }
 
+    public async Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId)
+    {
+        return await _repository.GetDashboardClientSummary(userId);
+    }
+
     public async Task<GetAppointmentDetailsDto?> GetDetails(string id)
     {
         return await _repository.GetDetails(id);

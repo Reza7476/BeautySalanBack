@@ -309,4 +309,58 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.First().DayWeek.Should().Be(appointment.DayWeek);
         expected.First().TreatmentTitle.Should().Be(treatment.Title);
     }
+
+    [Fact]
+    public async Task GetClientDashboardSummary_should_return_client_appointments()
+    {
+        var date = DateTime.Now;
+        var user = new UserBuilder()
+           .Build();
+        Save(user);
+        var client = new ClientBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(client);
+        var technician = new TechnicianBuilder()
+            .WithUser(user.Id)
+            .Build();
+        Save(technician);
+        var treatment = new TreatmentBuilder()
+            .WithTitle("Title")
+            .Build();
+        Save(treatment);
+        var futureAppointment = new AppointmentBuilder()
+            .WithAppointmentDate(date.AddDays(1))
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithDayWeek(DayWeek.Monday)
+            .WithStatus(AppointmentStatus.Pending)
+            .Build();
+        Save(futureAppointment);
+        var formerAppointment = new AppointmentBuilder()
+            .WithAppointmentDate(date.AddDays(-1))
+            .WithClient(client.Id)
+            .WithTechnicianId(technician.Id)
+            .WithTreatment(treatment.Id)
+            .WithDayWeek(DayWeek.Tuesday)
+            .WithStatus(AppointmentStatus.Completed)
+            .Build();
+        Save(formerAppointment);
+
+        var expected = await _sut.GetDashboardClientSummary(user.Id);
+
+        expected!.FutureAppointments.First().Date.Should().Be(DateOnly.FromDateTime(date).AddDays(1));
+        expected!.FutureAppointments.First().Day.Should().Be(futureAppointment.DayWeek);
+        expected!.FutureAppointments.First().Start.Should().Be(TimeOnly.FromDateTime(futureAppointment.AppointmentDate));
+        expected!.FutureAppointments.First().Status.Should().Be(futureAppointment.Status);
+        expected!.FutureAppointments.First().TreatmentTitle.Should().Be(treatment.Title);
+        expected!.FormerAppointments.First().Date.Should().Be(DateOnly.FromDateTime(date).AddDays(-1));
+        expected!.FormerAppointments.First().Day.Should().Be(formerAppointment.DayWeek);
+        expected!.FormerAppointments.First().Start.Should().Be(TimeOnly.FromDateTime(formerAppointment.AppointmentDate));
+        expected!.FormerAppointments.First().Status.Should().Be(formerAppointment.Status);
+        expected!.FormerAppointments.First().TreatmentTitle.Should().Be(treatment.Title);
+
+    }
+
 }
