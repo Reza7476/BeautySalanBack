@@ -1,4 +1,5 @@
-﻿using BeautySalon.Entities.WeeklySchedules;
+﻿using BeautySalon.Entities.Appointments;
+using BeautySalon.Entities.WeeklySchedules;
 
 namespace BeautySalon.Services.Appointments.Contracts.Dtos;
 public class AddAppointmentDto
@@ -9,4 +10,5 @@ public class AddAppointmentDto
     public DateTime AppointmentDate { get; set; }
     public int Duration { get; set; }
     public DayWeek   DayWeek { get; set; }
+    public AppointmentStatus Status { get; set; }
 }

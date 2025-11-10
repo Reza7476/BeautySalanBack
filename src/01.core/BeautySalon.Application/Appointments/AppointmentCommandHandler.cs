@@ -1,6 +1,6 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
-using BeautySalon.Entities.Clients;
+using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
@@ -33,11 +33,11 @@ public class AppointmentCommandHandler : IAppointmentHandler
 
     public async Task<string> AddAdminAppointment(AddAdminAppointmentHandlerDto dto)
     {
-        if(!await _clientService.IsExistById(dto.ClientId))
+        if (!await _clientService.IsExistById(dto.ClientId))
         {
             throw new ClientNotFoundException();
         }
-        if(!await _treatmentService.IsExistById(dto.TreatmentId))
+        if (!await _treatmentService.IsExistById(dto.TreatmentId))
         {
             throw new TreatmentNotFoundException();
         }
@@ -53,7 +53,8 @@ public class AppointmentCommandHandler : IAppointmentHandler
             ClientId = dto.ClientId,
             TechnicianId = technicianId,
             TreatmentId = dto.TreatmentId,
-            DayWeek = dto.DayWeek
+            DayWeek = dto.DayWeek,
+            Status=AppointmentStatus.Approved
         });
 
         return appointmentId;
@@ -84,7 +85,8 @@ public class AppointmentCommandHandler : IAppointmentHandler
             ClientId = clientId,
             TechnicianId = technicianId,
             TreatmentId = dto.TreatmentId,
-            DayWeek = dto.DayWeek
+            DayWeek = dto.DayWeek,
+            Status = AppointmentStatus.Pending
         });
 
         return appointmentId;
