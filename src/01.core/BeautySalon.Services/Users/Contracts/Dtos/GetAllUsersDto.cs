@@ -13,4 +13,5 @@ public class GetAllUsersDto
     public DateTime CreatedAt { get; set; }
     public int AppointmentNumber { get; set; }
     public ImageDetailsDto? Avatar { get; set; }
+    public string Id { get; set; } = default!;
 }
