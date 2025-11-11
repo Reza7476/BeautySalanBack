@@ -1,5 +1,4 @@
-﻿using BeautySalon.Common.Dtos;
-using BeautySalon.Common.Interfaces;
+﻿using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Users;
 using BeautySalon.Services.Users.Contracts.Dtos;
 
@@ -9,6 +8,11 @@ public interface IUserRepository : IRepository
     Task Add(User user);
     Task<User?> FindById(string id);
     Task<User?> FindByMobile(string mobile);
+
+    Task<IPageResult<GetAllUsersDto>> GetAllUsers(
+        IPagination? pagination,
+        string? search);
+
     Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId);
     Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName);
     Task<string?> GetUserIdByMobileNumber(string mobileNumber);

@@ -130,6 +130,13 @@ public class UserAppService : IUserService
         await _unitOfWork.Complete();
     }
 
+    public async Task<IPageResult<GetAllUsersDto>> GetAllUsers(
+        IPagination? pagination = null,
+        string? search = null)
+    {
+        return await _repository.GetAllUsers(pagination,search);
+    }
+
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)
     {
         return await _repository.GetByUserIdForRefreshToken(userId);

@@ -1,9 +1,14 @@
 ﻿using BeautySalon.Common.Dtos;
+using BeautySalon.Common.Interfaces;
+using BeautySalon.Entities.Appointments;
+using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Roles;
 using BeautySalon.Entities.Users;
+using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BeautySalon.infrastructure.Persistence.Users;
 public class EFUserRepository : IUserRepository
@@ -11,13 +16,16 @@ public class EFUserRepository : IUserRepository
     private readonly DbSet<User> _users;
     private readonly DbSet<UserRole> _userRoles;
     private readonly DbSet<Role> _roles;
+    private readonly DbSet<Client> _clients;
+    private readonly DbSet<Appointment> _appointments;
 
     public EFUserRepository(EFDataContext context)
     {
         _users = context.Set<User>();
         _userRoles = context.Set<UserRole>();
         _roles = context.Set<Role>();
-
+        _clients = context.Set<Client>();
+        _appointments = context.Set<Appointment>();
     }
 
     public async Task Add(User user)
@@ -33,6 +41,53 @@ public class EFUserRepository : IUserRepository
     public async Task<User?> FindByMobile(string mobile)
     {
         return await _users.FirstOrDefaultAsync(_ => _.Mobile == mobile);
+    }
+
+    public async Task<IPageResult<GetAllUsersDto>> GetAllUsers(
+        IPagination? pagination, 
+        string? search)
+    {
+        var query = (from user in _users
+                     join userRole in _userRoles on user.Id equals userRole.UserId into userRolesGroup
+                     
+                     from userRoles in userRolesGroup.DefaultIfEmpty()
+                     join role in _roles on userRoles.RoleId equals role.Id into roleGroup
+
+                     from roles in roleGroup.DefaultIfEmpty()
+                     join client in _clients on user.Id equals client.UserId into clientGroup
+
+                     from client in clientGroup.DefaultIfEmpty()
+                     select new GetAllUsersDto()
+                     {
+                         Name=user.Name,
+                         LastName=user.LastName,
+                         Mobile=user.Mobile,
+                         Email=user.Email,
+                         CreatedAt=user.CreationDate,
+                         IsActive=user.IsActive,
+                         UserName=user.UserName,
+                         Roles= new List<string>() { roles.RoleName },
+                         AppointmentNumber=_appointments .Where(_=>_.ClientId==client.Id).Count(),
+                         Avatar=user.Avatar!=null ?new ImageDetailsDto()
+                         {
+                             Extension=user.Avatar!.Extension!,
+                             ImageName=user.Avatar!.ImageName!,
+                             UniqueName=user.Avatar!.UniqueName!,
+                             URL=user.Avatar!.URL!,
+                         }:null
+                     }
+                   ).AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.ToLower();
+            query = query.Where(_ => _.Mobile!.Contains(search));
+        }
+
+        query = query.OrderByDescending(_ => _.CreatedAt);
+
+
+        return await query.Paginate(pagination ?? new Pagination());
     }
 
     public async Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId)

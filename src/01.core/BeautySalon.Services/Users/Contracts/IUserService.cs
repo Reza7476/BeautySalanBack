@@ -11,6 +11,11 @@ public interface IUserService : IService
     Task EditAdminProfile(EditAdminProfileDto dto, string? id);
     Task EditClientProfile(EditClientProfileDto dto, string id);
     Task EditImageProfile(ImageDetailsDto media, string id);
+   
+    Task<IPageResult<GetAllUsersDto>> GetAllUsers(
+        IPagination? pagination=null,
+        string? search=null);
+    
     Task<GetUserForLoginDto?> GetByUserIdForRefreshToken(string userId);
     Task<GetUserForLoginDto?> GetByUserNameForLogin(string userName);
     Task <User?>GetUserForEditProfileImage(string userId);
