@@ -2,6 +2,7 @@
 using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
 using BeautySalon.Services.RefreshTokens.Contacts;
 using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
@@ -88,11 +89,11 @@ public class UsersController : ControllerBase
         return await _userService.GetUserInfo(userId);
     }
 
-    [Authorize(Roles =SystemRole.Admin)]
+    [Authorize(Roles = SystemRole.Admin)]
     [HttpPatch("admin-profile")]
-    public async Task EditAdminProfile([FromBody]EditAdminProfileDto dto)
+    public async Task EditAdminProfile([FromBody] EditAdminProfileDto dto)
     {
-        var userId=_userTokenService.UserId;
+        var userId = _userTokenService.UserId;
         await _userService.EditAdminProfile(dto, userId);
     }
 
@@ -105,10 +106,19 @@ public class UsersController : ControllerBase
     }
 
     [HttpPatch("client-profile")]
-    [Authorize(Roles =SystemRole.Client)]
+    [Authorize(Roles = SystemRole.Client)]
     public async Task EditClientProfile([FromBody] EditClientProfileDto dto)
     {
         var userId = _userTokenService.UserId;
         await _userService.EditClientProfile(dto, userId!);
+    }
+
+    [HttpGet("all")]
+    [Authorize(Roles = SystemRole.Admin)]
+    public async Task<IPageResult<GetAllUsersDto>> GetAllUsers(
+        [FromQuery] Pagination? pagination = null,
+        string? search = null)
+    {
+        return await _userService.GetAllUsers(pagination,search);
     }
 }
