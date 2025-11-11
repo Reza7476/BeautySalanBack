@@ -74,7 +74,8 @@ public class EFUserRepository : IUserRepository
                              ImageName=user.Avatar!.ImageName!,
                              UniqueName=user.Avatar!.UniqueName!,
                              URL=user.Avatar!.URL!,
-                         }:null
+                         }:null,
+                         Id=user.Id
                      }
                    ).AsQueryable();
 
