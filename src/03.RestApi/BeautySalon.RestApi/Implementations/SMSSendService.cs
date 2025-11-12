@@ -18,10 +18,11 @@ public class SMSSendService : ISMSService
 
     public async Task<GetSMSumberCreditDto?> GetSMSCountCredit()
     {
+        var key = _setting.SMSSettings.SMSKey;
         Uri apiBaseAddress = new Uri("https://console.melipayamak.com");
         using (HttpClient client = new HttpClient() { BaseAddress = apiBaseAddress })
         {
-            var result = client.GetAsync("api/receive/credit/2efc285793fb4eb7a897b82991e7fd8c").Result;
+            var result = client.GetAsync($"api/receive/credit/{key}").Result;
             var response = result.Content.ReadAsStringAsync().Result;
             if (response != "")
             {
