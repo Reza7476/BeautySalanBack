@@ -2,13 +2,13 @@
 public class SMSLog
 {
     public string Id { get; set; } = default!;
-    public long RecId { get; set; }
+    public string Title { get; set; } = default!;
+    public string Content { get; set; } = default!;
     public string ReceiverNumber { get; set; } = default!;
-    public string Message { get; set; } = default!;
+    public long RecId { get; set; }
     public SendSMSStatus Status { get; set; }
-    public string? ErrorMessage { get; set; }
+    public string? ResponseContent { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string ProviderNumber { get; set; } = default!;
 }
 
 

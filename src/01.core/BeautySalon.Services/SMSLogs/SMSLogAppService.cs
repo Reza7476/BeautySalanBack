@@ -23,13 +23,13 @@ public class SMSLogAppService : ISMSLogService
         var newSMSLog = new SMSLog()
         {
             CreatedAt = DateTime.UtcNow,
-            ErrorMessage = dto.ErrorMessage,
+            ResponseContent = dto.ResponseContent,
             Id = Guid.NewGuid().ToString(),
-            Message = dto.Message,
-            ProviderNumber = dto.ProviderNumber,
+            Content = dto.Content,
             ReceiverNumber = dto.ReceiverNumber,
-            Status = SendSMSStatus.Pending,
-            RecId = dto.RecId
+            Status = dto.Status,
+            RecId = dto.RecId,
+            Title=dto.Title
         };
 
         await _repository.Add(newSMSLog);
