@@ -29,6 +29,7 @@ public class SMSController : ControllerBase
     }
 
     [HttpGet("all-sent-sms")]
+    [Authorize(Roles =SystemRole.Admin)]
     public async Task<IPageResult<GetAllSentSMSDto>>
         GetAllSentSMS([FromQuery] Pagination? pagination = null,
         [FromQuery] string? search=null)
