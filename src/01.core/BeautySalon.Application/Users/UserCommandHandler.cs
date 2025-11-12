@@ -303,6 +303,11 @@ public class UserCommandHandler : IUserHandle
         {
             throw new UserNotFoundException();
         }
+        if (!user.IsActive)
+        {
+            throw new YourAccountIsInActiveException();
+        }
+
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.HashPass))
         {
             throw new UserNotFoundException();
