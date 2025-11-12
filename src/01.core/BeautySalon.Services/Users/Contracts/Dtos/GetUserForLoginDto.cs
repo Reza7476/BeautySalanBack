@@ -11,4 +11,5 @@ public class GetUserForLoginDto
     public string? Mobile { get; set; }
     public string? Email { get; set; }
     public List<string> UserRoles { get; set; } = new();
+    public bool IsActive { get; set; }
 }

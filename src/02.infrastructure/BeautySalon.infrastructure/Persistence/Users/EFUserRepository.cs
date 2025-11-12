@@ -8,7 +8,6 @@ using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace BeautySalon.infrastructure.Persistence.Users;
 public class EFUserRepository : IUserRepository
@@ -44,12 +43,12 @@ public class EFUserRepository : IUserRepository
     }
 
     public async Task<IPageResult<GetAllUsersDto>> GetAllUsers(
-        IPagination? pagination, 
+        IPagination? pagination,
         string? search)
     {
         var query = (from user in _users
                      join userRole in _userRoles on user.Id equals userRole.UserId into userRolesGroup
-                     
+
                      from userRoles in userRolesGroup.DefaultIfEmpty()
                      join role in _roles on userRoles.RoleId equals role.Id into roleGroup
 
@@ -59,23 +58,23 @@ public class EFUserRepository : IUserRepository
                      from client in clientGroup.DefaultIfEmpty()
                      select new GetAllUsersDto()
                      {
-                         Name=user.Name,
-                         LastName=user.LastName,
-                         Mobile=user.Mobile,
-                         Email=user.Email,
-                         CreatedAt=user.CreationDate,
-                         IsActive=user.IsActive,
-                         UserName=user.UserName,
-                         Roles= new List<string>() { roles.RoleName },
-                         AppointmentNumber=_appointments .Where(_=>_.ClientId==client.Id).Count(),
-                         Avatar=user.Avatar!=null ?new ImageDetailsDto()
+                         Name = user.Name,
+                         LastName = user.LastName,
+                         Mobile = user.Mobile,
+                         Email = user.Email,
+                         CreatedAt = user.CreationDate,
+                         IsActive = user.IsActive,
+                         UserName = user.UserName,
+                         Roles = new List<string>() { roles.RoleName },
+                         AppointmentNumber = _appointments.Where(_ => _.ClientId == client.Id).Count(),
+                         Avatar = user.Avatar != null ? new ImageDetailsDto()
                          {
-                             Extension=user.Avatar!.Extension!,
-                             ImageName=user.Avatar!.ImageName!,
-                             UniqueName=user.Avatar!.UniqueName!,
-                             URL=user.Avatar!.URL!,
-                         }:null,
-                         Id=user.Id
+                             Extension = user.Avatar!.Extension!,
+                             ImageName = user.Avatar!.ImageName!,
+                             UniqueName = user.Avatar!.UniqueName!,
+                             URL = user.Avatar!.URL!,
+                         } : null,
+                         Id = user.Id
                      }
                    ).AsQueryable();
 
@@ -133,6 +132,7 @@ public class EFUserRepository : IUserRepository
                           Id = user.Id,
                           Mobile = user.Mobile,
                           Name = user.Name,
+                          IsActive = user.IsActive,
                           UserRoles = new List<string>() { role.RoleName }
                       }).FirstOrDefaultAsync();
     }
@@ -153,10 +153,10 @@ public class EFUserRepository : IUserRepository
                            Id = id,
                            Avatar = user.Avatar != null ? new ImageDetailsDto()
                            {
-                               Extension = user.Avatar.Extension,
-                               ImageName = user.Avatar.ImageName,
-                               UniqueName = user.Avatar.UniqueName,
-                               URL = user.Avatar.URL
+                               Extension = user.Avatar.Extension!,
+                               ImageName = user.Avatar.ImageName!,
+                               UniqueName = user.Avatar.UniqueName!,
+                               URL = user.Avatar.URL!
                            } : null,
                            BirthDate = user.BirthDate,
                            CreationDate = user.CreationDate,
