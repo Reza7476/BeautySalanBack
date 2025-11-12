@@ -11,18 +11,20 @@ public class SMSLogEntityMap : IEntityTypeConfiguration<SMSLog>
 
         _.Property(_ => _.Id).IsRequired();
 
+        _.Property(_ => _.Title).IsRequired();
+        
+        
+        _.Property(_=>_.Content).IsRequired();
+        
         _.Property(_ => _.ReceiverNumber).IsRequired();
-
-        _.Property(_ => _.Message).IsRequired();
-
-        _.Property(_ => _.Status).IsRequired();
 
         _.Property(_=>_.RecId).IsRequired();
 
-        _.Property(_ => _.ErrorMessage).IsRequired(false);
+        _.Property(_ => _.Status).IsRequired();
+
+        _.Property(_=>_.ResponseContent).IsRequired(false);
 
         _.Property(_ => _.CreatedAt).IsRequired();
 
-        _.Property(_ => _.ProviderNumber).IsRequired();
     }
 }

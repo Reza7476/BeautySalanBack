@@ -192,11 +192,12 @@ public class UserCommandHandler : IUserHandle
         });
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {
-            ErrorMessage = send.Status,
-            Message = message,
-            ProviderNumber = _smsSetting.SMSSettings.ProviderNumber,
+            Title = "تغییر رمز عبور",
+            ResponseContent = send.Status,
+            Content = message,
             ReceiverNumber = dto.MobileNumber,
-            RecId = send.RecId
+            RecId = send.RecId,
+            Status = SendSMSStatus.Pending
         });
         var smsStatus = await _smsService.VerifySMS(send.RecId);
         if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
@@ -241,11 +242,12 @@ public class UserCommandHandler : IUserHandle
         });
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {
-            ErrorMessage = send.Status,
-            Message = message,
-            ProviderNumber = _smsSetting.SMSSettings.ProviderNumber,
+            Title="ثبت نام کاربر ",
+            ResponseContent = send.Status,
+            Content = message,
             ReceiverNumber = dto.MobileNumber,
-            RecId = send.RecId
+            RecId = send.RecId,
+            Status= SendSMSStatus.Pending
         });
 
         var smsStatus = await _smsService.VerifySMS(send.RecId);

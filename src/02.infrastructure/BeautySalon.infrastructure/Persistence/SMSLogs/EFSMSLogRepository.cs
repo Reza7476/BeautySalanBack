@@ -34,12 +34,12 @@ public class EFSMSLogRepository : ISMSLogRepository
                      GetAllSentSMSDto()
                      {
                          CreatedAt = smsLog.CreatedAt,
-                         ErrorMessage = smsLog.ErrorMessage,
-                         Message = smsLog.Message,
-                         ProviderNumber = smsLog.ProviderNumber,
                          ReceiverNumber = smsLog.ReceiverNumber,
                          RecId = smsLog.RecId,
                          Status = smsLog.Status,
+                         Content = smsLog.Content,
+                         ResponseContent = smsLog.ResponseContent,
+                         Title = smsLog.Title
                      }).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))

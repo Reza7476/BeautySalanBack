@@ -9,14 +9,22 @@ public class _202510182006_CreateSMSLogTable : Migration
     public override void Up()
     {
         Create.Table("SMSLogs")
+
             .WithColumn("Id").AsString().NotNullable().PrimaryKey()
+
+            .WithColumn("Title").AsString().NotNullable()
+
+            .WithColumn("Content").AsString().NotNullable()
+
             .WithColumn("ReceiverNumber").AsString().NotNullable()
-            .WithColumn("Message").AsString().NotNullable()
-            .WithColumn("Status").AsByte()
-            .WithColumn("ErrorMessage").AsString().Nullable()
-            .WithColumn("CreatedAt").AsDateTime2()
+
             .WithColumn("RecId").AsInt64()
-            .WithColumn("ProviderNumber").AsString().NotNullable();
+
+            .WithColumn("Status").AsByte()
+
+            .WithColumn("ResponseContent").AsString().Nullable()
+
+            .WithColumn("CreatedAt").AsDateTime2();
     }
     public override void Down()
     {
