@@ -67,7 +67,7 @@ public class ClientCommandHandler : ClientHandler
             UserId = userId
         });
 
-        var sendSMS = await _smsService.SendSMSSpecial(new SendSMSSpecialDto()
+        var sendSMS = await _smsService.SendSMS(new SendSMSDto()
         {
             BodyName = "RegisterClient",
             Number = dto.Mobile,

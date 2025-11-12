@@ -7,4 +7,6 @@ public interface ISMSLogService : IService
 {
     Task<string> Add(AddSMSLogDto dto);
     Task ChangeStatus(string id, SendSMSStatus status);
+    Task<IPageResult<GetAllSentSMSDto>>
+        GetAllSentSMS(IPagination? pagination=null, string? search = null);
 }
