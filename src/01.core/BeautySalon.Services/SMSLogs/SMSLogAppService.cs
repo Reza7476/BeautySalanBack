@@ -48,4 +48,10 @@ public class SMSLogAppService : ISMSLogService
         }
 
     }
+
+    public async Task<IPageResult<GetAllSentSMSDto>>
+        GetAllSentSMS(IPagination? pagination = null, string? search = null)
+    {
+        return await _repository.GetAllSentSMS(pagination,search);
+    }
 }

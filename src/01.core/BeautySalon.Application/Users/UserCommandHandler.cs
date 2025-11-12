@@ -183,10 +183,11 @@ public class UserCommandHandler : IUserHandle
         }
 
         var otpCode = 6.GenerateOtpCode();
-        var message = $"کد تغییر رمز عبور در سایت سالن زیبایی{otpCode}";
+        var message = $"کاربر گرامی کد تایید شما  {otpCode}  میباشد";
         var send = await _smsService.SendSMS(new SendSMSDto()
         {
-            Message = message,
+            BodyName= "OtpBodyIdShared",
+            Args = new List<string>() { otpCode},
             Number = dto.MobileNumber
         });
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
@@ -231,11 +232,12 @@ public class UserCommandHandler : IUserHandle
             throw new MobileNumberHasBeenRegisteredException();
         }
         var otpCode = 6.GenerateOtpCode();
-        var message = otpCode;
+        var message = $"کاربر گرامی کد تایید شما  {otpCode}  میباشد";
         var send = await _smsService.SendSMS(new SendSMSDto()
         {
-            Message = message,
-            Number = dto.MobileNumber
+            BodyName= "OtpBodyIdShared",
+            Number = dto.MobileNumber,
+             Args = new List<string>() { otpCode }
         });
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {

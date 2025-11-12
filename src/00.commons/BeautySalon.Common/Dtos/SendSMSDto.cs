@@ -1,8 +1,12 @@
-﻿namespace BeautySalon.Common.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BeautySalon.Common.Dtos;
 public class SendSMSDto
 {
-    public string? Message { get; set; }
+    [Required]
     public string Number { get; set; } = default!;
 
-    public int BodyId { get; set; }
+    public string BodyName { get; set; } = default!;
+
+    public List<string> Args { get; set; } = new();
 }

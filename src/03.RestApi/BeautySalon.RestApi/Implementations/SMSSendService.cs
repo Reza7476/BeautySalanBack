@@ -16,39 +16,26 @@ public class SMSSendService : ISMSService
         _httpClient = httpClient;
     }
 
-    public async Task<SendSMSResponseDto?> SendSMS(SendSMSDto dto)
+    public async Task<GetSMSumberCreditDto?> GetSMSCountCredit()
     {
-        var key = _setting.SMSSettings.SMSKey;
-        var bodyId = _setting.SMSSettings.OtpBodyIdShared;
-        var payLoad = new
-        {
-            bodyId = bodyId,
-            to = dto.Number,
-            args = new[] { dto.Message }
-        };
-
         Uri apiBaseAddress = new Uri("https://console.melipayamak.com");
         using (HttpClient client = new HttpClient() { BaseAddress = apiBaseAddress })
         {
-            // You may need to Install-Package Microsoft.AspNet.WebApi.Client
-            var result = client.PostAsJsonAsync($"api/send/shared/{key}",
-               payLoad).Result;
+            var result = client.GetAsync("api/receive/credit/2efc285793fb4eb7a897b82991e7fd8c").Result;
             var response = result.Content.ReadAsStringAsync().Result;
             if (response != "")
             {
-
-                var smsResponse = JsonSerializer.Deserialize<SendSMSResponseDto>(response, new JsonSerializerOptions()
+                var creditResponse = JsonSerializer.Deserialize<GetSMSumberCreditDto>(response, new JsonSerializerOptions()
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
                 });
-
-                return smsResponse;
+                return creditResponse;
             }
             return null;
         }
     }
 
-    public async Task<SendSMSResponseDto?> SendSMSSpecial(SendSMSSpecialDto dto)
+    public async Task<SendSMSResponseDto?> SendSMS(SendSMSDto dto)
     {
         var a = GetSMSBodyId(dto.BodyName);
         var key = _setting.SMSSettings.SMSKey;
@@ -117,7 +104,8 @@ public class SMSSendService : ISMSService
             case "RegisterClient":
                 a = _setting.SMSSettings.RegisterClient;
                 break;
-            default: a = 0;
+            default:
+                a = 0;
                 break;
         }
 
