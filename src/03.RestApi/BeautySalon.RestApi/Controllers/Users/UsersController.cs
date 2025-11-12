@@ -121,4 +121,12 @@ public class UsersController : ControllerBase
     {
         return await _userService.GetAllUsers(pagination,search);
     }
+
+    [HttpPatch("change-user-activation")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task ChangeUserActivation([FromBody]ChangeUserActivationDto dto)
+    {
+        var userId = _userTokenService.UserId;
+        await _userService.ChangeUserActivation(dto,userId!);
+    }
 }

@@ -164,4 +164,52 @@ public class UserServiceTests : BusinessUnitTest
         expected.UserName.Should().Be(dto.UserName);
         expected.Email.Should().Be(dto.Email);
     }
+
+    [Fact]
+    public async Task ChangeUserActivation_should_change_user_activity()
+    {
+        var admin = new UserBuilder()
+            .WithMobile("9174367472")
+            .Build();
+        Save(admin);
+        var client = new UserBuilder()
+            .WithIsActive(true)
+            .Build();
+        Save(client);
+        var dto = new ChangeUserActivationDtoBuilder()
+            .WithIcActive(false)
+            .WithUserId(client.Id)
+            .Build();
+        await _sut.ChangeUserActivation(dto, admin.Id);
+
+        var expected = ReadContext.Set<User>().First();
+        expected.IsActive.Should().Be(dto.IsActive);
+    }
+
+
+    [Theory]
+    [InlineData("userId")]
+    public async Task ChangeUserActivation_should_throw_exception_when_user_not_found(string userId)
+    {
+        var dto = new ChangeUserActivationDtoBuilder()
+            .WithUserId(userId)
+            .Build();
+        Func<Task> expected = async () => await _sut.ChangeUserActivation(dto, userId);
+        await expected.Should().ThrowAsync<UserNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ChangeUserActivation_should_throw_exception_when_user_is_admin()
+    {
+        var admin = new UserBuilder()
+            .Build();
+        Save(admin);
+        var dto = new ChangeUserActivationDtoBuilder()
+            .WithIcActive(false)
+            .WithUserId(admin.Id)
+            .Build();
+        Func<Task> expected = async () => await _sut.ChangeUserActivation(dto, admin.Id);
+        await expected.Should().ThrowAsync<YouAreNotAllowedToAccessException>();
+    }
+
 }

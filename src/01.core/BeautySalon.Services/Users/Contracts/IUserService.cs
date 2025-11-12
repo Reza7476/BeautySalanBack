@@ -8,6 +8,7 @@ public interface IUserService : IService
 {
     Task<string> Add(AddUserDto dto);
     Task ChangePassword(string newPassword, string mobile);
+    Task ChangeUserActivation(ChangeUserActivationDto dto, string userId);
     Task EditAdminProfile(EditAdminProfileDto dto, string? id);
     Task EditClientProfile(EditClientProfileDto dto, string id);
     Task EditImageProfile(ImageDetailsDto media, string id);
