@@ -71,6 +71,25 @@ public class UserAppService : IUserService
         await _unitOfWork.Complete();
     }
 
+    public async Task ChangeUserActivation(ChangeUserActivationDto dto, string userId)
+    {
+
+        var user=await _repository.FindById(dto.UserId);
+        if(user== null) 
+        {
+            throw new UserNotFoundException();
+        }
+        
+        if (user.Id == userId)
+        {
+            throw new YouAreNotAllowedToAccessException();  
+        }
+
+        user.IsActive = dto.IsActive;
+        await _unitOfWork.Complete();   
+
+    }
+
     public async Task EditAdminProfile(EditAdminProfileDto dto, string? id)
     {
 
