@@ -29,7 +29,7 @@ public class SMSLogAppService : ISMSLogService
             ReceiverNumber = dto.ReceiverNumber,
             Status = dto.Status,
             RecId = dto.RecId,
-            Title=dto.Title
+            Title = dto.Title
         };
 
         await _repository.Add(newSMSLog);
@@ -50,8 +50,10 @@ public class SMSLogAppService : ISMSLogService
     }
 
     public async Task<IPageResult<GetAllSentSMSDto>>
-        GetAllSentSMS(IPagination? pagination = null, string? search = null)
+        GetAllSentSMS(
+         IPagination? pagination = null,
+         string? search = null)
     {
-        return await _repository.GetAllSentSMS(pagination,search);
+        return await _repository.GetAllSentSMS(pagination, search);
     }
 }
