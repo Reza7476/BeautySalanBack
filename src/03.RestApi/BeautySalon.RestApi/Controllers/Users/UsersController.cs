@@ -17,7 +17,6 @@ namespace BeautySalon.RestApi.Controllers.Users;
 public class UsersController : ControllerBase
 {
     private readonly IUserHandle _handle;
-    private readonly IRefreshTokenService _refreshTokenService;
     private readonly IUserTokenService _userTokenService;
     private readonly IUserService _userService;
 
@@ -29,52 +28,8 @@ public class UsersController : ControllerBase
         IUserService userService)
     {
         _handle = handle;
-        _refreshTokenService = refreshTokenService;
         _userTokenService = userTokenService;
         _userService = userService;
-    }
-
- 
-
-    [HttpPost("initializing-register-user")]
-    public async Task<ResponseInitializeRegisterUserHandlerDto> InitializingRegister(
-        [FromBody] InitializeRegisterUserDto dto)
-    {
-        return await _handle.InitializeRegister(dto);
-    }
-
-    [HttpPost("finalizing-register-user")]
-    public async Task<GetTokenDto> FinalizingRegister(
-        [FromBody] FinalizingRegisterUserHandlerDto dto)
-    {
-        return await _handle.FinalizingRegister(dto);
-    }
-
-    [Authorize]
-    [HttpPost("{refreshToken}/refresh-token")]
-    public async Task<GetTokenDto> RefreshToken(string refreshToken)
-    {
-        return await _handle.RefreshToken(refreshToken);
-    }
-
-
-    [HttpPost("forget-pass-step-one")]
-    public async Task<ResponseInitializeRegisterUserHandlerDto>
-        ForgetPassword([FromBody] InitializeRegisterUserDto dto)
-    {
-        return await _handle.ForgetPasswordInitialize(dto);
-    }
-
-    [HttpPost("forget-password-step-two")]
-    public async Task ForgetPassStepTwo([FromBody] ForgetPassStepTwoDto dto)
-    {
-        await _handle.FinalizeResetPassword(dto);
-    }
-
-    [HttpPatch("log-out")]
-    public async Task Logout([FromBody] LogOutDto dto)
-    {
-        await _refreshTokenService.RevokedToken(dto);
     }
 
     [Authorize]
