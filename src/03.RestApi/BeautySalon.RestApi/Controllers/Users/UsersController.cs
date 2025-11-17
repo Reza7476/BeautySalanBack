@@ -34,11 +34,7 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("login")]
-    public async Task<GetTokenDto> Login([FromForm] LoginDto dto)
-    {
-        return await _handle.Login(dto);
-    }
+ 
 
     [HttpPost("initializing-register-user")]
     public async Task<ResponseInitializeRegisterUserHandlerDto> InitializingRegister(
