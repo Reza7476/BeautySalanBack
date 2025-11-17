@@ -16,7 +16,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<GetTokenDto> Login([FromForm] LoginDto dto)
+    public async Task<GetTokenDto> Login([FromBody] LoginDto dto)
     {
         return await _handle.Login(dto);
     }
