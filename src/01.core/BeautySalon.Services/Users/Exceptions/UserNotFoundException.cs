@@ -1,4 +1,6 @@
-﻿namespace BeautySalon.Services.Users.Exceptions;
-public class UserNotFoundException : Exception
+﻿using BeautySalon.Common.Exceptions;
+
+namespace BeautySalon.Services.Users.Exceptions;
+public class UserNotFoundException : CustomException
 {
 }
