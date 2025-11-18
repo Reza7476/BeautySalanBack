@@ -124,4 +124,12 @@ public class AppointmentAppService : IAppointmentService
     {
         return await _repository.GetNewAppointmentDashboard();
     }
+
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null, 
+        string? search = null)
+    {
+        return await _repository.GetPendingAppointment(pagination,filter,search);
+    }
 }

@@ -20,7 +20,6 @@ public class EFAppointmentRepository : IAppointmentRepository
     private readonly DbSet<Treatment> _treatments;
     private readonly DbSet<User> _users;
 
-
     public EFAppointmentRepository(EFDataContext context)
     {
         _appointments = context.Set<Appointment>();
@@ -307,6 +306,60 @@ public class EFAppointmentRepository : IAppointmentRepository
                                TreatmentTitle = treatment.Title
                            }).ToListAsync();
         return query;
+    }
+
+    public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search = null)
+    {
+        var query = (from appointment in _appointments
+                     join client in _clients on appointment.ClientId equals client.Id
+                     join user in _users on client.UserId equals user.Id
+                     join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                     where appointment.Status==AppointmentStatus.Pending
+                     select new GetAllAdminAppointmentsDto()
+                     {
+                         ClientName = user.Name,
+                         ClientLastName = user.LastName,
+                         ClientMobile = user.Mobile!,
+                         AppointmentDate = DateOnly.FromDateTime(appointment.AppointmentDate),
+                         DayWeek = appointment.DayWeek,
+                         Duration = appointment.Duration,
+                         EndTime = TimeOnly.FromDateTime(appointment.EndTime),
+                         StartTime = TimeOnly.FromDateTime(appointment.AppointmentDate),
+                         Id = appointment.Id,
+                         Status = appointment.Status,
+                         TreatmentTitle = treatment.Title,
+                     }).AsQueryable();
+
+
+        if (filter != null)
+        {
+
+            if (filter.TreatmentTitle != null)
+            {
+                query = query.Where(_ => _.TreatmentTitle == filter.TreatmentTitle);
+            }
+
+            if (filter.DayWeek != 0)
+            {
+                query = query.Where(_ => _.DayWeek == filter.DayWeek);
+            }
+
+            if (filter.Date > new DateOnly(1, 1, 1))
+            {
+                query = query.Where(_ => _.AppointmentDate == filter.Date);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var lowered = search.ToLower();
+            query = query.Where(_ => _.ClientMobile.Contains(lowered));
+        }
+        query = query.OrderByDescending(_ => _.AppointmentDate);
+        return await query.Paginate(pagination ?? new Pagination());
     }
 
     public async Task<string?> GetTechnicianId()
