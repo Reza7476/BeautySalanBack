@@ -44,7 +44,7 @@ public class AuthenticationController : ControllerBase
 
     [Authorize]
     [HttpPost("{refreshToken}/refresh-token")]
-    public async Task<GetTokenDto> RefreshToken(string refreshToken)
+    public async Task<GetTokenDto> RefreshToken([FromRoute]string refreshToken)
     {
         return await _handle.RefreshToken(refreshToken);
     }

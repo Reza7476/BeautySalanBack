@@ -1,11 +1,9 @@
 ﻿using BeautySalon.Application.Users.Contracts;
-using BeautySalon.Application.Users.Contracts.Dtos;
 using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
 using BeautySalon.Services.RefreshTokens.Contacts;
-using BeautySalon.Services.RefreshTokens.Contacts.Dtos;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -70,14 +68,14 @@ public class UsersController : ControllerBase
         [FromQuery] Pagination? pagination = null,
         string? search = null)
     {
-        return await _userService.GetAllUsers(pagination,search);
+        return await _userService.GetAllUsers(pagination, search);
     }
 
     [HttpPatch("change-user-activation")]
-    [Authorize(Roles =SystemRole.Admin)]
-    public async Task ChangeUserActivation([FromBody]ChangeUserActivationDto dto)
+    [Authorize(Roles = SystemRole.Admin)]
+    public async Task ChangeUserActivation([FromBody] ChangeUserActivationDto dto)
     {
         var userId = _userTokenService.UserId;
-        await _userService.ChangeUserActivation(dto,userId!);
+        await _userService.ChangeUserActivation(dto, userId!);
     }
 }
