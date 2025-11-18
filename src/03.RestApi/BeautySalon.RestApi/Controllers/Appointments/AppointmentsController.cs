@@ -6,6 +6,7 @@ using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
 using BeautySalon.Services;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
+using BeautySalon.Services.Clients.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -136,5 +137,16 @@ public class AppointmentsController : ControllerBase
         [FromQuery] string? search = null)
     {
         return await _service.GetPendingAppointment(pagination, filter, search);
+    }
+
+    [Authorize(Roles = SystemRole.Client)]
+    [HttpGet("all-my-appointments")]
+    public async Task<IPageResult<GetAllClientAppointmentsDto>>
+       GetClientAppointments(
+       [FromQuery] Pagination? pagination = null,
+       [FromQuery] ClientAppointmentFilterDto? filter = null)
+    {
+        var userId = _userTokenService.UserId;
+        return await _service.GetClientAppointments(pagination, filter, userId);
     }
 }

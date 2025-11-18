@@ -38,25 +38,6 @@ public class ClientAppService : IClientService
         return await _repository.GetAllForAppointment(search);
     }
 
-    public async Task<IPageResult<GetAllClientAppointmentsDto>>
-        GetClientAppointments(
-        IPagination? pagination = null,
-        ClientAppointmentFilterDto? filter = null,
-        string? userId = null)
-    {
-        if (userId == null)
-        {
-            throw new YouAreNotAllowedToAccessException();
-        }
-        var clientId = await _repository.GetClientIdByUserId(userId);
-        if (clientId == null)
-        {
-            throw new YouAreNotAllowedToAccessException();
-        }
-
-        return await _repository.GetClientAppointments(clientId, pagination, filter);
-    }
-
     public async Task<string?> GetClientIdByUserId(string userId)
     {
         return await _repository.GetClientIdByUserId(userId);

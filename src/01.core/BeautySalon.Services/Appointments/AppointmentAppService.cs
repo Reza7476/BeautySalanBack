@@ -4,6 +4,8 @@ using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
+using BeautySalon.Services.Clients.Contracts.Dtos;
+using BeautySalon.Services.Clients.Exceptions;
 
 namespace BeautySalon.Services.Appointments;
 public class AppointmentAppService : IAppointmentService
@@ -96,7 +98,7 @@ public class AppointmentAppService : IAppointmentService
         AdminAppointmentFilterDto? filter = null,
         string? search = null)
     {
-        return await _repository.GetAllToday(pagination, filter, search);   
+        return await _repository.GetAllToday(pagination, filter, search);
     }
 
     public async Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart()
@@ -108,6 +110,25 @@ public class AppointmentAppService : IAppointmentService
         GetBookAppointmentByDay(DateTime dateTime)
     {
         return await _repository.GetBookAppointmentByDay(dateTime);
+    }
+
+    public async Task<IPageResult<GetAllClientAppointmentsDto>>
+         GetClientAppointments(
+         IPagination? pagination = null,
+         ClientAppointmentFilterDto? filter = null,
+         string? userId = null)
+    {
+        if (userId == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+        var clientId = await _repository.GetClientIdByUserId(userId);
+        if (clientId == null)
+        {
+            throw new YouAreNotAllowedToAccessException();
+        }
+
+        return await _repository.GetClientAppointments(clientId, pagination, filter);
     }
 
     public async Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId)
@@ -127,9 +148,9 @@ public class AppointmentAppService : IAppointmentService
 
     public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
         IPagination? pagination = null,
-        AdminAppointmentFilterDto? filter = null, 
+        AdminAppointmentFilterDto? filter = null,
         string? search = null)
     {
-        return await _repository.GetPendingAppointment(pagination,filter,search);
+        return await _repository.GetPendingAppointment(pagination, filter, search);
     }
 }

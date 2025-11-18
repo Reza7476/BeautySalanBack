@@ -7,12 +7,8 @@ public interface IClientRepository : IRepository
 {
     Task Add(Client client);
 
-    Task<List<GetAllClientsForAddAppointment>> GetAllForAppointment(string? search=null);
-    
-    Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
-        string id,
-        IPagination? pagination = null,
-        ClientAppointmentFilterDto? filter = null);
+    Task<List<GetAllClientsForAddAppointment>> 
+        GetAllForAppointment(string? search=null);
 
     Task<string?> GetClientIdByUserId(string userId);
     Task<bool> IsExistById(string id);

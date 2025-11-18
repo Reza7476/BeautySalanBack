@@ -27,16 +27,7 @@ public class ClientsController : ControllerBase
         _clientHandler = clientHandler;
     }
 
-    [Authorize(Roles = SystemRole.Client)]
-    [HttpGet("all-my-appointments")]
-    public async Task<IPageResult<GetAllClientAppointmentsDto>>
-        GetClientAppointments(
-        [FromQuery] Pagination? pagination = null,
-        [FromQuery] ClientAppointmentFilterDto? filter = null)
-    {
-        var userId = _userTokenService.UserId;
-        return await _service.GetClientAppointments(pagination, filter, userId);
-    }
+   
 
     [Authorize(Roles =SystemRole.Admin)]
     [HttpGet("all-for-create-appointment")]
