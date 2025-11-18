@@ -233,6 +233,7 @@ public class EFAppointmentRepository : IAppointmentRepository
                 AppointmentDate = DateOnly.FromDateTime(_.AppointmentDate),
                 CancelledDate = DateOnly.FromDateTime(_.CancelledAt),
                 CreatedAt = DateOnly.FromDateTime(_.CreatedAt),
+                Reviewed = _.Review != null ? true : false
             }).AsQueryable();
 
         if (filterDto != null)
@@ -362,7 +363,7 @@ public class EFAppointmentRepository : IAppointmentRepository
                      join client in _clients on appointment.ClientId equals client.Id
                      join user in _users on client.UserId equals user.Id
                      join treatment in _treatments on appointment.TreatmentId equals treatment.Id
-                     where appointment.Status==AppointmentStatus.Pending
+                     where appointment.Status == AppointmentStatus.Pending
                      select new GetAllAdminAppointmentsDto()
                      {
                          ClientName = user.Name,

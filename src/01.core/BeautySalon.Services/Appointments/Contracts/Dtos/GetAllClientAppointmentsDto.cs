@@ -1,7 +1,7 @@
 ﻿using BeautySalon.Entities.Appointments;
 using BeautySalon.Entities.WeeklySchedules;
 
-namespace BeautySalon.Services.Clients.Contracts.Dtos;
+namespace BeautySalon.Services.Appointments.Contracts.Dtos;
 public class GetAllClientAppointmentsDto
 {
     public string Id { get; set; } = default!;
@@ -15,4 +15,5 @@ public class GetAllClientAppointmentsDto
     public DateOnly CreatedAt { get; set; }
     public string? CancelledBy { get; set; }
     public DateOnly CancelledDate { get; set; }
+    public bool Reviewed { get; set; }
 }
