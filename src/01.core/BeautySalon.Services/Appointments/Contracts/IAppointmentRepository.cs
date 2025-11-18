@@ -31,6 +31,12 @@ public interface IAppointmentRepository : IRepository
     Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
     Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
+    
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
+        IPagination? pagination=null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search=null);
+    
     Task<string?> GetTechnicianId();
     Task<bool> TreatmentIsExistById(long treatmentId);
 }

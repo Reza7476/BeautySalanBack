@@ -9,19 +9,19 @@ public interface IAppointmentService : IService
 
     Task CancelByClient(string appointmentId, string clientId);
     Task ChangeStatus(ChangeAppointmentStatusDto dto);
-    
+
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAdminAllAppointments(
      IPagination? pagination = null,
      AdminAppointmentFilterDto? filter = null,
      string? search = null);
-    
+
     Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary();
-   
+
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
-        IPagination? pagination=null,
+        IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null,
-        string? search=null);
-    
+        string? search = null);
+
     Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart();
 
     Task<List<GetBookedAppointmentByDayDto>>
@@ -29,4 +29,9 @@ public interface IAppointmentService : IService
     Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
     Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
+
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
+     IPagination? pagination = null,
+     AdminAppointmentFilterDto? filter = null,
+     string? search = null);
 }
