@@ -1,4 +1,5 @@
-﻿using BeautySalon.Entities.Clients;
+﻿using BeautySalon.Entities.AppointmentReviews;
+using BeautySalon.Entities.Clients;
 using BeautySalon.Entities.Technicians;
 using BeautySalon.Entities.Treatments;
 using BeautySalon.Entities.WeeklySchedules;
@@ -18,10 +19,12 @@ public class Appointment
     public string? CancelledBy { get; set; }
     public DateTime CancelledAt { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DayWeek DayWeek { get; set; }
     public Client Client { get; set; } = default!;
     public Treatment Treatment { get; set; } = default!;
     public Technician Technician { get; set; } = default!;
-    public DayWeek DayWeek { get; set; }
+
+    public AppointmentReview? Review { get; set; }
 }
 
 public enum AppointmentStatus : byte
