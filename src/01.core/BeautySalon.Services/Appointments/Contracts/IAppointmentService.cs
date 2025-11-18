@@ -1,6 +1,7 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
+using BeautySalon.Services.Clients.Contracts.Dtos;
 
 namespace BeautySalon.Services.Appointments.Contracts;
 public interface IAppointmentService : IService
@@ -26,6 +27,12 @@ public interface IAppointmentService : IService
 
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
+ 
+    Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
+        IPagination? pagination = null,
+        ClientAppointmentFilterDto? filter = null,
+        string? userId = null);
+    
     Task<DashboardClientSummaryDto?> GetDashboardClientSummary(string userId);
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
     Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
