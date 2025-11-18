@@ -17,7 +17,7 @@ public static class DataMigration
         };
         EnsureDatabaseExist(connectionString);
         var runner = CreateRunner(connectionString);
-        runner.MigrateDown(202510181318); 
+       // runner.MigrateDown(202510271730); 
         runner.MigrateUp();
     }
 

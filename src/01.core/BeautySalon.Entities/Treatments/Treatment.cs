@@ -1,4 +1,5 @@
-﻿using BeautySalon.Entities.Appointments;
+﻿using BeautySalon.Entities.AppointmentReviews;
+using BeautySalon.Entities.Appointments;
 
 namespace BeautySalon.Entities.Treatments;
 
@@ -18,6 +19,7 @@ public class Treatment
     public required DateTime CreateDate { get; set; }
     public HashSet<TreatmentImage> Images { get; set; }
     public HashSet<Appointment> Appointments { get; set; }
+
 }
 
 public class TreatmentImage
