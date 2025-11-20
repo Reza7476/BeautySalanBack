@@ -15,7 +15,6 @@ using BeautySalon.Services.SMSLogs.Contracts.Dtos;
 using BeautySalon.Services.Users.Contracts;
 using BeautySalon.Services.Users.Contracts.Dtos;
 using BeautySalon.Services.Users.Exceptions;
-using System.Net.NetworkInformation;
 
 namespace BeautySalon.Application.Clients;
 public class ClientCommandHandler : ClientHandler
@@ -78,35 +77,39 @@ public class ClientCommandHandler : ClientHandler
 
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {
-
             Title = "ثبت نام  مشتری توسط ادمین",
-            ResponseContent = sendSMS.Status,
+            ResponseContent = sendSMS != null ? sendSMS.Status : "not response",
             Content = $"کاربر گرامی برای ورود به سایت سالن زیبایی از نام کاربری {dto.Mobile} و رمز عبور {password} استفاده کنید. لطفا بعد از ورود نسبت به تغییر رمز اقدام کنید . ",
             ReceiverNumber = dto.Mobile,
-            RecId = sendSMS.RecId,
-            Status = SendSMSStatus.Pending
+            RecId = sendSMS != null ? sendSMS.RecId : 0,
+            Status = sendSMS != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse
         });
         bool isVerified = false;
         int verifyCode = 0;
         string? verifyStatus = null;
 
-        var smsStatus = await _smsService.VerifySMS(sendSMS.RecId);
-        if (smsStatus != null)
-        {
-            verifyStatus = smsStatus.Status;
-            verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
 
-            if ((smsStatus.ResultsAsCode != null &&
-                smsStatus.ResultsAsCode.Contains(1)) ||
-                string.Equals(smsStatus.Status, "عملیات موفق",
-                StringComparison.OrdinalIgnoreCase))
-            {
-                isVerified = true;
-            }
-        }
-        if (isVerified)
+        if (sendSMS != null)
         {
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+
+            var smsStatus = await _smsService.VerifySMS(sendSMS.RecId);
+            if (smsStatus != null)
+            {
+                verifyStatus = smsStatus.Status;
+                verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
+
+                if ((smsStatus.ResultsAsCode != null &&
+                    smsStatus.ResultsAsCode.Contains(1)) ||
+                    string.Equals(smsStatus.Status, "عملیات موفق",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    isVerified = true;
+                }
+            }
+            if (isVerified)
+            {
+                await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+            }
         }
 
         return clientId;
