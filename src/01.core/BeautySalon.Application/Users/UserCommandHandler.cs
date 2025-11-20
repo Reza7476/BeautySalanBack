@@ -176,6 +176,7 @@ public class UserCommandHandler : IUserHandle
     {
         string otpRequest = string.Empty;
         dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
+        var response = new ResponseInitializeRegisterUserHandlerDto();
         var userId = await _userService.GetUserIdByMobileNumber(dto.MobileNumber);
         if (userId == null)
         {
@@ -190,48 +191,47 @@ public class UserCommandHandler : IUserHandle
             Args = new List<string>() { otpCode },
             Number = dto.MobileNumber
         });
-        if (send != null)
-        {
-
 
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {
             Title = "تغییر رمز عبور",
-            ResponseContent = send.Status,
+            ResponseContent = send != null ? send.Status : "not  valid response",
             Content = message,
             ReceiverNumber = dto.MobileNumber,
-            RecId = send.RecId,
-            Status = SendSMSStatus.Pending
+            RecId = send != null ? send.RecId : 0,
+            Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse,
         });
-        var smsStatus = await _smsService.VerifySMS(send.RecId);
-        if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
+        if (send != null)
         {
-            otpRequest = await _otpService.Add(new AddOTPRequestDto()
+            var smsStatus = await _smsService.VerifySMS(send.RecId);
+            if (smsStatus != null)
             {
-                ExpireAt = DateTime.UtcNow.AddSeconds(120),
-                IsUsed = false,
-                Mobile = dto.MobileNumber,
-                OtpCode = otpCode,
-                Purpose = OtpPurpose.ResetPassword,
-            });
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+                if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
+                {
+                    otpRequest = await _otpService.Add(new AddOTPRequestDto()
+                    {
+                        ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                        IsUsed = false,
+                        Mobile = dto.MobileNumber,
+                        OtpCode = otpCode,
+                        Purpose = OtpPurpose.ResetPassword,
+                    });
+                    await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+                }
+                response.OtpRequestId = otpRequest;
+                response.VerifyStatus = smsStatus.Status;
+                response.VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault();
+            }
         }
-        var a =
-            new ResponseInitializeRegisterUserHandlerDto()
-            {
-                OtpRequestId = otpRequest,
-                VerifyStatus = smsStatus.Status,
-                VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault()
-            };
-        return a;
-        }
-        throw new SMSServiceIsCollapsException();
+        return response;
     }
 
 
     public async Task<ResponseInitializeRegisterUserHandlerDto>
         InitializeRegister(InitializeRegisterUserDto dto)
     {
+
+        var response = new ResponseInitializeRegisterUserHandlerDto();
         string otpRequest = string.Empty;
         dto.MobileNumber = PhoneNumberExtensions.NormalizePhoneNumber(dto.MobileNumber);
         if (await _userService.IsExistByMobileNumber(dto.MobileNumber))
@@ -247,68 +247,60 @@ public class UserCommandHandler : IUserHandle
             Args = new List<string>() { otpCode }
         });
 
+
+        var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
+        {
+            Title = "ثبت نام کاربر ",
+            ResponseContent = send != null ? send.Status : "not response",
+            Content = message,
+            ReceiverNumber = dto.MobileNumber,
+            RecId = send != null ? send.RecId : 0,
+            Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse
+        });
+
+
+        bool isVerified = false;
+        int verifyCode = 0;
+        string? verifyStatus = null;
+
         if (send != null)
         {
-            var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
-            {
-                Title = "ثبت نام کاربر ",
-                ResponseContent = send.Status,
-                Content = message,
-                ReceiverNumber = dto.MobileNumber,
-                RecId = send.RecId,
-                Status = SendSMSStatus.Pending
-            });
-
-
             var smsStatus = await _smsService.VerifySMS(send.RecId);
-
-            bool isVerified = false;
-            int verifyCode = 0;
-            string? verifyStatus = null;
-
             if (smsStatus != null)
             {
                 verifyStatus = smsStatus.Status;
                 verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
-
-                // مقایسه ایمن رشته‌ای و بررسی لیست
                 if ((smsStatus.ResultsAsCode != null && smsStatus.ResultsAsCode.Contains(1)) ||
                     string.Equals(smsStatus.Status, "عملیات موفق", StringComparison.OrdinalIgnoreCase))
                 {
                     isVerified = true;
                 }
             }
-
-            if (isVerified)
-            {
-                // اضافه شدن OTP
-                otpRequest = await _otpService.Add(new AddOTPRequestDto()
-                {
-                    ExpireAt = DateTime.UtcNow.AddSeconds(120),
-                    IsUsed = false,
-                    Mobile = dto.MobileNumber,
-                    OtpCode = otpCode,
-                    Purpose = OtpPurpose.Register,
-                });
-
-                await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
-            }
-            else
-            {
-                // اگر لازم است وضعیت لاگ را به failed تغییر بده
-                await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
-            }
-
-            var response = new ResponseInitializeRegisterUserHandlerDto()
-            {
-                OtpRequestId = otpRequest,
-                VerifyStatus = verifyStatus,
-                VerifyStatusCode = verifyCode
-            };
-
-            return response;
         }
-        throw new SMSServiceIsCollapsException();
+
+        if (isVerified)
+        {
+            otpRequest = await _otpService.Add(new AddOTPRequestDto()
+            {
+                ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                IsUsed = false,
+                Mobile = dto.MobileNumber,
+                OtpCode = otpCode,
+                Purpose = OtpPurpose.Register,
+            });
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+        }
+        else
+        {
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
+        }
+
+        response.OtpRequestId = otpRequest;
+        response.VerifyStatus = verifyStatus;
+        response.VerifyStatusCode = verifyCode;
+
+        return response;
+
     }
 
     public async Task<GetTokenDto> Login(LoginDto dto)
