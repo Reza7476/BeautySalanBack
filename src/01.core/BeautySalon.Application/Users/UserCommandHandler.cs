@@ -186,10 +186,14 @@ public class UserCommandHandler : IUserHandle
         var message = $"کاربر گرامی کد تایید شما  {otpCode}  میباشد";
         var send = await _smsService.SendSMS(new SendSMSDto()
         {
-            BodyName= "OtpBodyIdShared",
-            Args = new List<string>() { otpCode},
+            BodyName = "OtpBodyIdShared",
+            Args = new List<string>() { otpCode },
             Number = dto.MobileNumber
         });
+        if (send != null)
+        {
+
+
         var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
         {
             Title = "تغییر رمز عبور",
@@ -220,6 +224,8 @@ public class UserCommandHandler : IUserHandle
                 VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault()
             };
         return a;
+        }
+        throw new SMSServiceIsCollapsException();
     }
 
 
@@ -236,67 +242,73 @@ public class UserCommandHandler : IUserHandle
         var message = $"کاربر گرامی کد تایید شما  {otpCode}  میباشد";
         var send = await _smsService.SendSMS(new SendSMSDto()
         {
-            BodyName= "OtpBodyIdShared",
+            BodyName = "OtpBodyIdShared",
             Number = dto.MobileNumber,
-             Args = new List<string>() { otpCode }
-        });
-        var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
-        {
-            Title="ثبت نام کاربر ",
-            ResponseContent = send.Status,
-            Content = message,
-            ReceiverNumber = dto.MobileNumber,
-            RecId = send.RecId,
-            Status= SendSMSStatus.Pending
+            Args = new List<string>() { otpCode }
         });
 
-        var smsStatus = await _smsService.VerifySMS(send.RecId);
-
-        bool isVerified = false;
-        int verifyCode = 0;
-        string? verifyStatus = null;
-
-        if (smsStatus != null)
+        if (send != null)
         {
-            verifyStatus = smsStatus.Status;
-            verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
-
-            // مقایسه ایمن رشته‌ای و بررسی لیست
-            if ((smsStatus.ResultsAsCode != null && smsStatus.ResultsAsCode.Contains(1)) ||
-                string.Equals(smsStatus.Status, "عملیات موفق", StringComparison.OrdinalIgnoreCase))
+            var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
             {
-                isVerified = true;
-            }
-        }
-
-        if (isVerified)
-        {
-            // اضافه شدن OTP
-            otpRequest = await _otpService.Add(new AddOTPRequestDto()
-            {
-                ExpireAt = DateTime.UtcNow.AddSeconds(120),
-                IsUsed = false,
-                Mobile = dto.MobileNumber,
-                OtpCode = otpCode,
-                Purpose = OtpPurpose.Register,
+                Title = "ثبت نام کاربر ",
+                ResponseContent = send.Status,
+                Content = message,
+                ReceiverNumber = dto.MobileNumber,
+                RecId = send.RecId,
+                Status = SendSMSStatus.Pending
             });
 
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
-        }
-        else
-        {
-            // اگر لازم است وضعیت لاگ را به failed تغییر بده
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
-        }
 
-        var response = new ResponseInitializeRegisterUserHandlerDto()
-        {
-            OtpRequestId = otpRequest,
-            VerifyStatus = verifyStatus,
-            VerifyStatusCode = verifyCode
-        };
+            var smsStatus = await _smsService.VerifySMS(send.RecId);
 
-        return response;
+            bool isVerified = false;
+            int verifyCode = 0;
+            string? verifyStatus = null;
+
+            if (smsStatus != null)
+            {
+                verifyStatus = smsStatus.Status;
+                verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
+
+                // مقایسه ایمن رشته‌ای و بررسی لیست
+                if ((smsStatus.ResultsAsCode != null && smsStatus.ResultsAsCode.Contains(1)) ||
+                    string.Equals(smsStatus.Status, "عملیات موفق", StringComparison.OrdinalIgnoreCase))
+                {
+                    isVerified = true;
+                }
+            }
+
+            if (isVerified)
+            {
+                // اضافه شدن OTP
+                otpRequest = await _otpService.Add(new AddOTPRequestDto()
+                {
+                    ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                    IsUsed = false,
+                    Mobile = dto.MobileNumber,
+                    OtpCode = otpCode,
+                    Purpose = OtpPurpose.Register,
+                });
+
+                await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+            }
+            else
+            {
+                // اگر لازم است وضعیت لاگ را به failed تغییر بده
+                await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
+            }
+
+            var response = new ResponseInitializeRegisterUserHandlerDto()
+            {
+                OtpRequestId = otpRequest,
+                VerifyStatus = verifyStatus,
+                VerifyStatusCode = verifyCode
+            };
+
+            return response;
+        }
+        throw new SMSServiceIsCollapsException();
     }
 
     public async Task<GetTokenDto> Login(LoginDto dto)
@@ -420,7 +432,7 @@ public class UserCommandHandler : IUserHandle
             throw new UserNotFoundException();
         }
 
-        if (user.Avatar != null && user.Avatar.URL!=null)
+        if (user.Avatar != null && user.Avatar.URL != null)
         {
             await _imageService.DeleteMediaByURL(user.Avatar.URL);
         }
@@ -433,12 +445,12 @@ public class UserCommandHandler : IUserHandle
             Media = dto.Media
         });
 
-        await _userService.EditImageProfile(new ImageDetailsDto() 
+        await _userService.EditImageProfile(new ImageDetailsDto()
         {
-            Extension=media.Extension,
-            UniqueName=media.UniqueName,
-            ImageName=media.ImageName,
-            URL=media.URL
+            Extension = media.Extension,
+            UniqueName = media.UniqueName,
+            ImageName = media.ImageName,
+            URL = media.URL
         }, userId);
 
     }
