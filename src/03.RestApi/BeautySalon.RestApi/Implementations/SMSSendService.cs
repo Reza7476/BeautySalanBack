@@ -67,12 +67,12 @@ public class SMSSendService : ISMSService
 
     }
 
-    public async Task<VerifySMSDto?> VerifySMS(long recId)
+    public async Task<VerifySMSDto?> VerifySMS(long recIds)
     {
         var key = _setting.SMSSettings.SMSKey;
         var payload = new
         {
-            recIds = new[] { recId }
+            recIds = new[] { recIds }
         };
 
         Uri apiBaseAddress = new Uri("https://console.melipayamak.com");
@@ -92,6 +92,11 @@ public class SMSSendService : ISMSService
             }
             return null;
         }
+    }
+
+    public Task<VerifySMSDto?> VerifySMS22(List<long> recIds)
+    {
+        throw new NotImplementedException();
     }
 
     private int GetSMSBodyId(string templateName)

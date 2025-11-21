@@ -265,13 +265,13 @@ public class UserCommandHandler : IUserHandle
 
         if (send != null)
         {
-            var smsStatus = await _smsService.VerifySMS(send.RecId);
-            if (smsStatus != null)
+            var verifySMS = await _smsService.VerifySMS(send.RecId);
+            if (verifySMS != null)
             {
-                verifyStatus = smsStatus.Status;
-                verifyCode = smsStatus.ResultsAsCode?.FirstOrDefault() ?? 0;
-                if ((smsStatus.ResultsAsCode != null && smsStatus.ResultsAsCode.Contains(1)) ||
-                    string.Equals(smsStatus.Status, "عملیات موفق", StringComparison.OrdinalIgnoreCase))
+                int a = verifySMS.ResultsAsCode.FirstOrDefault();
+                verifyStatus = verifySMS.Status;
+                verifyCode = a;
+                if (verifyCode == 1)
                 {
                     isVerified = true;
                 }
@@ -300,7 +300,6 @@ public class UserCommandHandler : IUserHandle
         response.VerifyStatusCode = verifyCode;
 
         return response;
-
     }
 
     public async Task<GetTokenDto> Login(LoginDto dto)
