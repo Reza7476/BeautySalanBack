@@ -2,6 +2,7 @@
 using BeautySalon.Services.OTPRequests.Contracts;
 using BeautySalon.Services.OTPRequests.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace BeautySalon.infrastructure.Persistence.OtpRequests;
 public class EFOtpRequestRepository : IOtpRequestRepository
@@ -40,7 +41,7 @@ public class EFOtpRequestRepository : IOtpRequestRepository
 
     public async Task<GetOtpRequestForRegisterDto?> GetByIdForResetPassword(string id)
     {
-        return await _otpRequests
+       var a= await _otpRequests
             .Where(_ => _.Id == id && _.Purpose == OtpPurpose.ResetPassword && _.IsUsed == false)
             .Select(_ => new GetOtpRequestForRegisterDto()
             {
@@ -50,5 +51,6 @@ public class EFOtpRequestRepository : IOtpRequestRepository
                 Mobile = _.Mobile,
                 OtpCode = _.OtpCode
             }).FirstOrDefaultAsync();
+        return a;
     }
 }
