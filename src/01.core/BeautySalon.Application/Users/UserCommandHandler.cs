@@ -201,28 +201,46 @@ public class UserCommandHandler : IUserHandle
             RecId = send != null ? send.RecId : 0,
             Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse,
         });
+
+        bool isVerified = false;
+        int verifyCode = 0;
+        string? verifyStatus = null;
+
         if (send != null)
         {
-            var smsStatus = await _smsService.VerifySMS(send.RecId);
-            if (smsStatus != null)
+            var verifySMS = await _smsService.VerifySMS(send.RecId);
+            if (verifySMS != null)
             {
-                if (smsStatus.ResultsAsCode.Contains(1) || smsStatus.Status == "عملیات موفق")
+                int a = verifySMS.ResultsAsCode.FirstOrDefault();
+                verifyStatus = verifySMS.Status;
+                verifyCode = a;
+                if (verifyCode == 1)
                 {
-                    otpRequest = await _otpService.Add(new AddOTPRequestDto()
-                    {
-                        ExpireAt = DateTime.UtcNow.AddSeconds(120),
-                        IsUsed = false,
-                        Mobile = dto.MobileNumber,
-                        OtpCode = otpCode,
-                        Purpose = OtpPurpose.ResetPassword,
-                    });
-                    await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+                    isVerified = true;
                 }
-                response.OtpRequestId = otpRequest;
-                response.VerifyStatus = smsStatus.Status;
-                response.VerifyStatusCode = smsStatus.ResultsAsCode.FirstOrDefault();
             }
         }
+
+        if (isVerified)
+        {
+            otpRequest = await _otpService.Add(new AddOTPRequestDto()
+            {
+                ExpireAt = DateTime.UtcNow.AddSeconds(120),
+                IsUsed = false,
+                Mobile = dto.MobileNumber,
+                OtpCode = otpCode,
+                Purpose = OtpPurpose.ResetPassword,
+            });
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+        }
+        else
+        {
+            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
+        }
+        response.OtpRequestId = otpRequest;
+        response.VerifyStatus = verifyStatus;
+        response.VerifyStatusCode = verifyCode;
+
         return response;
     }
 
