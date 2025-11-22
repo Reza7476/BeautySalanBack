@@ -192,36 +192,17 @@ public class UserCommandHandler : IUserHandle
             Number = dto.MobileNumber
         });
 
-        var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
+       await _smsLogService.Add(new AddSMSLogDto()
         {
             Title = "تغییر رمز عبور",
-            ResponseContent = send != null ? send.Status : "not  valid response",
+            ResponseContent = send != null ? send.Status : "not valid response",
             Content = message,
             ReceiverNumber = dto.MobileNumber,
             RecId = send != null ? send.RecId : 0,
             Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse,
         });
 
-        bool isVerified = false;
-        int verifyCode = 0;
-        string? verifyStatus = null;
-
-        if (send != null)
-        {
-            var verifySMS = await _smsService.VerifySMS(send.RecId);
-            if (verifySMS != null)
-            {
-                int a = verifySMS.ResultsAsCode.FirstOrDefault();
-                verifyStatus = verifySMS.Status;
-                verifyCode = a;
-                if (verifyCode == 1)
-                {
-                    isVerified = true;
-                }
-            }
-        }
-
-        if (isVerified)
+        if (send!=null && send.RecId.ToString().Length > 4)
         {
             otpRequest = await _otpService.Add(new AddOTPRequestDto()
             {
@@ -231,16 +212,17 @@ public class UserCommandHandler : IUserHandle
                 OtpCode = otpCode,
                 Purpose = OtpPurpose.ResetPassword,
             });
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+
+            response.OtpRequestId = otpRequest;
+            response.VerifyStatus = "ارسال موفق بود ";
+            response.VerifyStatusCode = 1;
         }
         else
         {
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
+            response.OtpRequestId = "not set";
+            response.VerifyStatus = "ارسال موفق نبود ";
+            response.VerifyStatusCode = 0;
         }
-        response.OtpRequestId = otpRequest;
-        response.VerifyStatus = verifyStatus;
-        response.VerifyStatusCode = verifyCode;
-
         return response;
     }
 
@@ -266,7 +248,7 @@ public class UserCommandHandler : IUserHandle
         });
 
 
-        var smsLogId = await _smsLogService.Add(new AddSMSLogDto()
+        await _smsLogService.Add(new AddSMSLogDto()
         {
             Title = "ثبت نام کاربر ",
             ResponseContent = send != null ? send.Status : "not response",
@@ -276,27 +258,7 @@ public class UserCommandHandler : IUserHandle
             Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse
         });
 
-
-        bool isVerified = false;
-        int verifyCode = 0;
-        string? verifyStatus = null;
-
-        if (send != null)
-        {
-            var verifySMS = await _smsService.VerifySMS(send.RecId);
-            if (verifySMS != null)
-            {
-                int a = verifySMS.ResultsAsCode.FirstOrDefault();
-                verifyStatus = verifySMS.Status;
-                verifyCode = a;
-                if (verifyCode == 1)
-                {
-                    isVerified = true;
-                }
-            }
-        }
-
-        if (isVerified)
+        if (send != null && send.RecId.ToString().Length >= 4)
         {
             otpRequest = await _otpService.Add(new AddOTPRequestDto()
             {
@@ -306,17 +268,16 @@ public class UserCommandHandler : IUserHandle
                 OtpCode = otpCode,
                 Purpose = OtpPurpose.Register,
             });
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Sent);
+            response.OtpRequestId = otpRequest;
+            response.VerifyStatus = "ارسال موفق بود";
+            response.VerifyStatusCode = 1;
         }
         else
         {
-            await _smsLogService.ChangeStatus(smsLogId, SendSMSStatus.Failed);
+            response.OtpRequestId = "not set";
+            response.VerifyStatus = "ارسال موفق نبود ";
+            response.VerifyStatusCode = 0;
         }
-
-        response.OtpRequestId = otpRequest;
-        response.VerifyStatus = verifyStatus;
-        response.VerifyStatusCode = verifyCode;
-
         return response;
     }
 
