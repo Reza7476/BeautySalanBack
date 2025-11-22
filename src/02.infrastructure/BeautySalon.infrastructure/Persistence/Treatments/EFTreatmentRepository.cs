@@ -133,12 +133,13 @@ public class EFTreatmentRepository : ITreatmentRepository
     {
         return await _treatments
             .Include(_ => _.Images)
-            .Take(10)
             .Select(_ => new GetTreatmentForLandingDto()
             {
                 Description = _.Description,
                 Id = _.Id,
                 Title = _.Title,
+                Rate = (_.Appointments
+                          .Average(a => (double?)a.Review!.Rate) ?? 0),
                 Media = _.Images != null ? _.Images.Select(media => new MediaDto()
                 {
                     Extension = media.Extension,
