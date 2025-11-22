@@ -202,7 +202,7 @@ public class UserCommandHandler : IUserHandle
             Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse,
         });
 
-        if (send!=null && send.RecId > 5)
+        if (send!=null && send.RecId.ToString().Length > 4)
         {
             otpRequest = await _otpService.Add(new AddOTPRequestDto()
             {
@@ -258,7 +258,7 @@ public class UserCommandHandler : IUserHandle
             Status = send != null ? SendSMSStatus.Pending : SendSMSStatus.NotResponse
         });
 
-        if (send != null && send.RecId >= 5)
+        if (send != null && send.RecId.ToString().Length >= 4)
         {
             otpRequest = await _otpService.Add(new AddOTPRequestDto()
             {
