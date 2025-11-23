@@ -193,18 +193,23 @@ public class EFTreatmentRepository : ITreatmentRepository
     public async Task<IPageResult<GetAllTreatmentGalleryImageDto>> 
         GetTreatmentsGalleryForLanding(IPagination? pagination)
     {
-        var query = _treatments.Include(_ => _.Images)
-            .Select(_ => new GetAllTreatmentGalleryImageDto
-            {
-                TreatmentTitle = _.Title,
-                Images = _.Images.Select(img => new ImageDetailsDto()
-                {
-                    Extension = img.Extension,
-                    ImageName = img.ImageName,
-                    UniqueName = img.ImageUniqueName,
-                    URL = img.URL
-                }).ToList()
-            }).AsQueryable();
+        var query = _treatmentImages
+                   .Include(img => img.Treatment)
+                   .OrderBy(img => img.Id) // یا هر ترتیبی که می‌خواهید
+                   .Select(img => new GetAllTreatmentGalleryImageDto
+                   {
+                       TreatmentTitle = img.Treatment.Title,
+                       Images = new List<ImageDetailsDto>
+                       {
+                           new ImageDetailsDto
+                           {
+                               Extension = img.Extension,
+                               ImageName = img.ImageName,
+                               UniqueName = img.ImageUniqueName,
+                               URL = img.URL
+                           }
+                       }
+                   });
 
         return await query.Paginate(pagination ?? new Pagination());
     }
