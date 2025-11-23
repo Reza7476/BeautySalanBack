@@ -32,4 +32,11 @@ public class AppointmentReviewsController : ControllerBase
     {
         return await _service.GetAllCommentsForAdmin(pagination);
     }
+
+    [HttpPatch("change-publish-status")]
+
+    public async Task ChangePublishStatus([FromBody] ChangeReviewPublishStatusDto dto)
+    {
+        await _service.ChangePublishStatus(dto);
+    }
 }

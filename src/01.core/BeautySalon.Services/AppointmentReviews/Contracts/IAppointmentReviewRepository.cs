@@ -8,5 +8,6 @@ public interface IAppointmentReviewRepository : IRepository
 {
     Task Add(AppointmentReview review);
     Task<Appointment?> FindAppointmentById(string appointmentId);
+    Task<AppointmentReview?> FindById(string id);
     Task<IPageResult<GetAllReviewsDto>> GetAllCommentsForAdmin(IPagination? pagination = null);
 }

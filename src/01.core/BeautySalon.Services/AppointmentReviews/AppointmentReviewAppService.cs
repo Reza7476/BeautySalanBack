@@ -56,6 +56,19 @@ public class AppointmentReviewAppService : IAppointmentReviewService
 
     }
 
+    public async Task ChangePublishStatus(ChangeReviewPublishStatusDto dto)
+    {
+        var review = await _repository.FindById(dto.Id);
+        if(review == null)
+        {
+            throw new AppointmentReviewNotFoundException();
+        }
+
+        review.IsPublished = dto.PublishStatus;
+        await _unitOfWork.Complete();
+
+    }
+
     public async Task<IPageResult<GetAllReviewsDto>>
         GetAllCommentsForAdmin(IPagination? pagination = null)
     {
