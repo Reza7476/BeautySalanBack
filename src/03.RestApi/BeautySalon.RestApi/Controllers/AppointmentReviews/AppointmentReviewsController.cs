@@ -34,9 +34,16 @@ public class AppointmentReviewsController : ControllerBase
     }
 
     [HttpPatch("change-publish-status")]
-
+    [Authorize(Roles = SystemRole.Admin)]
     public async Task ChangePublishStatus([FromBody] ChangeReviewPublishStatusDto dto)
     {
         await _service.ChangePublishStatus(dto);
+    }
+
+    [HttpGet("all-published-for-landing")]
+    public async Task<IPageResult<GetAllPublishedReviewsDto>> 
+        GetAllPublished([FromQuery] Pagination? pagination=null)
+    {
+        return await _service.GetAllPublishedForLanding(pagination);
     }
 }

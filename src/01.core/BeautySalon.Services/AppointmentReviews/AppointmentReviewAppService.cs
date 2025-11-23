@@ -74,4 +74,10 @@ public class AppointmentReviewAppService : IAppointmentReviewService
     {
         return await _repository.GetAllCommentsForAdmin(pagination);
     }
+
+    public async Task<IPageResult<GetAllPublishedReviewsDto>> 
+        GetAllPublishedForLanding(IPagination? pagination = null)
+    {
+        return await _repository.GetAllPublishedForLanding(pagination);
+    }
 }

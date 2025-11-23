@@ -42,10 +42,10 @@ public class AppointmentReviewRepository : IAppointmentReviewRepository
 
     public async Task<AppointmentReview?> FindById(string id)
     {
-        return await _appointmentsReviews.FindAsync(id);  
+        return await _appointmentsReviews.FindAsync(id);
     }
 
-    public async Task<IPageResult<GetAllReviewsDto>> 
+    public async Task<IPageResult<GetAllReviewsDto>>
         GetAllCommentsForAdmin(IPagination? pagination = null)
     {
         var query = (from review in _appointmentsReviews
@@ -61,7 +61,31 @@ public class AppointmentReviewRepository : IAppointmentReviewRepository
                          Name = user.Name,
                          Rate = review.Rate,
                          CreatedAt = review.CreatedAt,
-                         Id=review.Id
+                         Id = review.Id
+                     }).AsQueryable();
+
+
+        query = query.OrderByDescending(_ => _.CreatedAt);
+
+        return await query.Paginate(pagination ?? new Pagination());
+    }
+
+    public async Task<IPageResult<GetAllPublishedReviewsDto>>
+        GetAllPublishedForLanding(IPagination? pagination = null)
+    {
+        var query = (from review in _appointmentsReviews
+                     where review.IsPublished
+                     join treatment in _treatments on review.TreatmentId equals treatment.Id
+                     join client in _clients on review.ClientId equals client.Id
+                     join user in _users on client.UserId equals user.Id
+                     select new GetAllPublishedReviewsDto
+                     {
+                         TreatmentTitle = treatment.Title,
+                         Comment = review.Description,
+                         LastName = user.LastName,
+                         Name = user.Name,
+                         Rate = review.Rate,
+                         CreatedAt = review.CreatedAt,
                      }).AsQueryable();
 
 
