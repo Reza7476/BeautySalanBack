@@ -157,4 +157,10 @@ public class TreatmentAppService : ITreatmentService
     {
         return await _repository.GetPopularTreatments();
     }
+
+    public async Task<IPageResult<GetAllTreatmentGalleryImageDto>> 
+        GetTreatmentsGalleryForLanding(IPagination? pagination = null)
+    {
+        return await _repository.GetTreatmentsGalleryForLanding(pagination);
+    }
 }
