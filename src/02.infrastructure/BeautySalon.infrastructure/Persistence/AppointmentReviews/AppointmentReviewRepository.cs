@@ -40,6 +40,11 @@ public class AppointmentReviewRepository : IAppointmentReviewRepository
         return await _appointments.FindAsync(appointmentId);
     }
 
+    public async Task<AppointmentReview?> FindById(string id)
+    {
+        return await _appointmentsReviews.FindAsync(id);  
+    }
+
     public async Task<IPageResult<GetAllReviewsDto>> 
         GetAllCommentsForAdmin(IPagination? pagination = null)
     {
