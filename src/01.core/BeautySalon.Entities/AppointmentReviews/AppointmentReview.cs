@@ -1,7 +1,4 @@
 ﻿using BeautySalon.Entities.Appointments;
-using BeautySalon.Entities.Clients;
-using BeautySalon.Entities.Technicians;
-using BeautySalon.Entities.Treatments;
 
 namespace BeautySalon.Entities.AppointmentReviews;
 public class AppointmentReview

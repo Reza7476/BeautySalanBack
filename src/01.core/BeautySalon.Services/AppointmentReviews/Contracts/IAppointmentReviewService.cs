@@ -5,4 +5,5 @@ namespace BeautySalon.Services.AppointmentReviews.Contracts;
 public interface IAppointmentReviewService : IService
 {
     Task<string> Add(AddAppointmentReviewDto dto);
+    Task<IPageResult<GetAllReviewsDto>> GetAllCommentsForAdmin(IPagination? pagination = null);
 }
