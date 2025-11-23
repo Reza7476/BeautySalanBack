@@ -1,4 +1,6 @@
-﻿using BeautySalon.Services;
+﻿using BeautySalon.Common.Interfaces;
+using BeautySalon.infrastructure.Persistence.Extensions.Paginations;
+using BeautySalon.Services;
 using BeautySalon.Services.AppointmentReviews.Contracts;
 using BeautySalon.Services.AppointmentReviews.Contracts.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -23,4 +25,11 @@ public class AppointmentReviewsController : ControllerBase
         return await _service.Add(dto);
     }
 
+    [HttpGet("all-for-admin")]
+    [Authorize(Roles =SystemRole.Admin)]
+    public async Task<IPageResult<GetAllReviewsDto>> 
+        GetAllComments([FromQuery] Pagination? pagination=null)
+    {
+        return await _service.GetAllCommentsForAdmin(pagination);
+    }
 }
