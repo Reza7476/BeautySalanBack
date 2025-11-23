@@ -55,7 +55,8 @@ public class AppointmentReviewRepository : IAppointmentReviewRepository
                          LastName = user.LastName,
                          Name = user.Name,
                          Rate = review.Rate,
-                         CreatedAt = review.CreatedAt
+                         CreatedAt = review.CreatedAt,
+                         Id=review.Id
                      }).AsQueryable();
 
 
