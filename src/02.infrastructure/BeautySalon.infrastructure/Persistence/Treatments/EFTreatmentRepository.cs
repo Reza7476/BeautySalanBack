@@ -190,6 +190,25 @@ public class EFTreatmentRepository : ITreatmentRepository
         return await _treatmentImages.Where(_ => _.TreatmentId == id).ToListAsync();
     }
 
+    public async Task<IPageResult<GetAllTreatmentGalleryImageDto>> 
+        GetTreatmentsGalleryForLanding(IPagination? pagination)
+    {
+        var query = _treatments.Include(_ => _.Images)
+            .Select(_ => new GetAllTreatmentGalleryImageDto
+            {
+                TreatmentTitle = _.Title,
+                Images = _.Images.Select(img => new ImageDetailsDto()
+                {
+                    Extension = img.Extension,
+                    ImageName = img.ImageName,
+                    UniqueName = img.ImageUniqueName,
+                    URL = img.URL
+                }).ToList()
+            }).AsQueryable();
+
+        return await query.Paginate(pagination ?? new Pagination());
+    }
+
     public async Task<bool> IsExistByTitle(string title)
     {
         return await _treatments.AnyAsync(_ => _.Title == title);

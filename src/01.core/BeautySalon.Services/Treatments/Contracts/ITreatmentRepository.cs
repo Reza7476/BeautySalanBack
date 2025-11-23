@@ -18,6 +18,10 @@ public interface ITreatmentRepository : IRepository
     Task<List<GetTreatmentForLandingDto>> GetForLanding();
     Task<List<GetPopularTreatmentsDto>> GetPopularTreatments();
     Task <List<TreatmentImage>>GetTreatmentImages(long id);
+    
+    Task<IPageResult<GetAllTreatmentGalleryImageDto>> 
+        GetTreatmentsGalleryForLanding(IPagination? pagination);
+    
     Task<bool> IsExistByTitle(string title);
     Task RemoveImage(TreatmentImage treatmentImage);
 }

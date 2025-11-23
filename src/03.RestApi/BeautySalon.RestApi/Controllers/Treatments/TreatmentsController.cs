@@ -105,4 +105,11 @@ public class TreatmentsController : ControllerBase
     {
         return await _service.GetPopularTreatments();
     }
+
+    [HttpGet("all-image-gallery-for-landing")]
+    public async Task<IPageResult<GetAllTreatmentGalleryImageDto>> 
+        GetTreatmentsGallery([FromQuery] Pagination? pagination=null)
+    {
+        return await _service.GetTreatmentsGalleryForLanding(pagination);
+    }
 }
