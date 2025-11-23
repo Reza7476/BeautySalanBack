@@ -8,4 +8,5 @@ public class GetAllReviewsDto
     public string? LastName { get; set; }
     public bool IsPublished { get; set; }
     public byte Rate { get; set; }
+    public string Id { get; set; }
 }
