@@ -12,7 +12,7 @@ public class ClientServiceTests : BusinessIntegrationTest
 
     public ClientServiceTests()
     {
-        _sut = ClientServiceFactory.Generate(SetupContext);
+        _sut = ClientServiceFactory.Generate(DbContext);
     }
 
     [Fact]

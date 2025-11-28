@@ -1,22 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using BeautySalon.infrastructure;
-using System.Transactions;
+﻿using BeautySalon.infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Transactions;
 
 namespace BeautySalon.Test.Tool.Infrastructure.Integration;
 
 public class BusinessIntegrationTest : EFDataContextDatabaseFixture
 {
     protected EFDataContext DbContext { get; set; }
-    protected EFDataContext SetupContext { get; set; }
-    protected EFDataContext ReadContext { get; set; }
 
     public BusinessIntegrationTest()
     {
         DbContext = CreateDataContext();
-        ReadContext = CreateDataContext();
-        SetupContext = CreateDataContext();
     }
+
     protected void Save<T>(params T[] entities)
       where T : class
     {

@@ -13,12 +13,15 @@ public class AppointmentAppService : IAppointmentService
     private readonly IAppointmentRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
 
+    private readonly IDateTimeService _dateTimeService;
     public AppointmentAppService(
         IAppointmentRepository repository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IDateTimeService dateTimeService)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
+        _dateTimeService = dateTimeService;
     }
 
     public async Task<string> Add(AddAppointmentDto dto)

@@ -11,7 +11,7 @@ public class BannerServiceTests : BusinessIntegrationTest
 
     public BannerServiceTests()
     {
-        _sut = BannerServiceFactory.Generate(SetupContext);
+        _sut = BannerServiceFactory.Generate(DbContext);
     }
 
     [Fact]

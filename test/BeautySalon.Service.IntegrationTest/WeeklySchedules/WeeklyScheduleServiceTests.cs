@@ -12,7 +12,7 @@ public class WeeklyScheduleServiceTests : BusinessIntegrationTest
 
     public WeeklyScheduleServiceTests()
     {
-        _sut = WeeklyScheduleServiceFactory.Generate(SetupContext);
+        _sut = WeeklyScheduleServiceFactory.Generate(DbContext);
     }
 
     [Fact]
