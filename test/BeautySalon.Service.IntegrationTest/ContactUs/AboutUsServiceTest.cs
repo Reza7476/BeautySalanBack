@@ -10,7 +10,7 @@ public class AboutUsServiceTest : BusinessIntegrationTest
     private readonly IAboutUsService _sut;
     public AboutUsServiceTest()
     {
-        _sut = AboutUsServiceFactory.Generate(SetupContext);
+        _sut = AboutUsServiceFactory.Generate(DbContext);
     }
 
     [Fact]

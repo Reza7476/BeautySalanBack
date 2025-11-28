@@ -7,7 +7,6 @@ using BeautySalon.Test.Tool.Entities.Treatments;
 using BeautySalon.Test.Tool.Entities.Users;
 using BeautySalon.Test.Tool.Infrastructure.Integration;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Xunit;
 
 namespace BeautySalon.Service.IntegrationTest.Users;
@@ -89,6 +88,7 @@ public class UserServiceTests : BusinessIntegrationTest
         Save(appointment);
 
         var expected = await _sut.GetAllUsers();
+
         expected.Elements.First().Name.Should().Be(user.Name);
         expected.Elements.First().LastName.Should().Be(user.LastName);
         expected.Elements.First().Mobile.Should().Be(user.Mobile);
