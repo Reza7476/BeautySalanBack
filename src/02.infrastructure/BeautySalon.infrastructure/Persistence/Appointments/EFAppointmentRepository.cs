@@ -11,6 +11,7 @@ using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Clients.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace BeautySalon.infrastructure.Persistence.Appointments;
 public class EFAppointmentRepository : IAppointmentRepository
@@ -184,17 +185,22 @@ public class EFAppointmentRepository : IAppointmentRepository
         var query = await _appointments
             .Where(_ => _.AppointmentDate.Date >= startDate &&
                    _.AppointmentDate.Date <= today)
-            .ToListAsync();
-        for (var i = 1; i <= 7; i++)
-        {
-            int count = query.Count(a => (int)a.DayWeek == i);
-            appointment.Add(new GetAppointmentCountPerDayDto
+            .GroupBy(_ => _.DayWeek)
+            .Select(g => new GetAppointmentCountPerDayDto
             {
-                Count = count,
-                DayWeek = (DayWeek)i
-            });
-        }
-        return appointment;
+                Count = g.Count(),
+                DayWeek = g.Key
+            }).ToListAsync();
+        var result = Enumerable.Range(1, 7)
+       .Select(i => query.FirstOrDefault(x => (int)x.DayWeek == i)
+                    ?? new GetAppointmentCountPerDayDto
+                    {
+                        DayWeek = (DayWeek)i,
+                        Count = 0
+                    })
+       .ToList();
+
+        return result;
     }
 
     public async Task<List<GetBookedAppointmentByDayDto>>

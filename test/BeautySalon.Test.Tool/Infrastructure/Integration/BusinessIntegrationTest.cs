@@ -8,7 +8,9 @@ namespace BeautySalon.Test.Tool.Infrastructure.Integration;
 
 public class BusinessIntegrationTest : IDisposable
 {
-    protected EFDataContext DbContext { get;  set; }
+    protected EFDataContext DbContext { get; set; } 
+
+    private IDbContextTransaction _transaction;
 
     public BusinessIntegrationTest()
     {
@@ -16,7 +18,6 @@ public class BusinessIntegrationTest : IDisposable
         BeginTransaction();
     }
 
-    private IDbContextTransaction _transaction;
 
     private void BeginTransaction()
     {
@@ -36,7 +37,9 @@ public class BusinessIntegrationTest : IDisposable
     {
         try
         {
-            _transaction.Rollback(); 
+            _transaction.Rollback();
+            _transaction.Dispose();
+            DbContext.Dispose();
         }
         finally
         {
