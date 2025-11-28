@@ -65,7 +65,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.First().Duration.Should().Be(30);
     }
 
-    [Fact(Skip = "skip")]
+    [Fact]
     public async Task GetAdminAllAppointments_should_return_all_appointment_for_admin_properly()
     {
         var date = DateTime.Now;
@@ -167,7 +167,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.Price.Should().Be(treatment.Price);
     }
 
-    [Fact(Skip ="skip")]
+    [Fact]
     public async Task GetAllToday_should_return_all_today_appointment()
     {
         var user = new UserBuilder()
@@ -214,7 +214,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.Elements.First().AppointmentDate.Should().Be(DateOnly.FromDateTime(appointment.AppointmentDate));
     }
 
-    [Fact(Skip = "skip")]
+    [Fact]
     public async Task GetAppointmentPerDayForChart_should_return_appointment_each_day_properly()
     {
         var user = new UserBuilder()
@@ -248,7 +248,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.First().Count.Should().Be(1);
     }
 
-    [Fact(Skip ="skip")]
+    [Fact]
     public async Task should_return_summary_for_admin_dashboard()
     {
         var user = new UserBuilder()
@@ -280,7 +280,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.TotalTreatments.Should().Be(1);
     }
 
-    [Fact(Skip = "skip")]
+    [Fact]
     public async Task GetNewAppointmentDashboard_should_return_new_appointment_properly()
     {
         var date = DateTime.Now;
@@ -323,7 +323,7 @@ public class AppointmentServiceTests : BusinessIntegrationTest
         expected.First().TreatmentTitle.Should().Be(treatment.Title);
     }
 
-    [Fact(Skip = "skip")]
+    [Fact]
     public async Task GetClientDashboardSummary_should_return_client_appointments()
     {
         var user = new UserBuilder()
