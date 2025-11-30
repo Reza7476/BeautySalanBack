@@ -1,9 +1,11 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure;
+using BeautySalon.RestApi.BackgroundJobs;
 using BeautySalon.RestApi.Configurations.Autofacs;
 using BeautySalon.RestApi.Configurations.ConnectionStrings;
 using BeautySalon.RestApi.Configurations.Exceptions;
+using BeautySalon.RestApi.Configurations.HangfireConfigurations;
 using BeautySalon.RestApi.Configurations.JwtConfigs;
 using BeautySalon.RestApi.Configurations.RegisterAdmin;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
@@ -13,7 +15,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var (configuration, connectionString) = ConnectionStringConfig.LoadConfigAndConnectionString(
+var (configuration, connectionString) = ConnectionStringConfig
+    .LoadConfigAndConnectionString(
     builder.Environment.EnvironmentName,
     builder.Environment.ContentRootPath);
 
@@ -27,15 +30,17 @@ builder.Services.AddDbContext<EFDataContext>(options =>
 builder.Services.AddSingleton<AdminInitializer>();
 builder.Services.AddHostedService<AdminInitializerHostedService>();
 
+builder.Services.HangFireConfigurationService(builder.Environment);
+
 builder.Services.AddSingleton<IJwtSettingService>(sp =>
     new JwtSettingImplementation(
     builder.Environment.EnvironmentName,
     builder.Environment.ContentRootPath));
 
 builder.Services.AddSingleton<ISMSSetting>(sm =>
-   new SMSSettingsImplementation(
-       builder.Environment.EnvironmentName,
-       builder.Environment.ContentRootPath));
+    new SMSSettingsImplementation(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath));
 
 builder.Services.AddJwtAuthentication();
 
@@ -60,9 +65,14 @@ app.MapGet("/", context =>
 });
 
 app.UseStaticFiles();
-app.UseHttpsRedirection();
+app.UseAppHangfire();
+
+app.RegisterHangfireJobs(builder.Environment);
 
 app.UseAuthentication();
+
+app.UseHttpsRedirection();
+
 app.UseAuthorization();
 
 app.MapControllers();

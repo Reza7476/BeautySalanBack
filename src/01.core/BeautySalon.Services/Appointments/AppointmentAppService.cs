@@ -83,6 +83,7 @@ public class AppointmentAppService : IAppointmentService
         await _unitOfWork.Complete();
     }
 
+
     public async Task<IPageResult<GetAllAdminAppointmentsDto>>
         GetAdminAllAppointments(IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null,
