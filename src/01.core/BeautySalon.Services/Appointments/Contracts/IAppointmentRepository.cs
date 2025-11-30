@@ -11,23 +11,23 @@ public interface IAppointmentRepository : IRepository
     Task<bool> CheckStatusForNewAppointment(DateTime appointmentDate);
     Task<Appointment?> FindById(string id);
     Task<Appointment?> FindByIdAndClientId(string appointmentId, string clientId);
-   
-    Task<IPageResult<GetAllAdminAppointmentsDto>> 
+
+    Task<IPageResult<GetAllAdminAppointmentsDto>>
         GetAdminAllAppointments(
         IPagination? pagination,
         AdminAppointmentFilterDto? filter,
         string? search);
-    
+
     Task<GetDashboardAdminSummaryDto?> GetAdminDashboardSummary();
 
     Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
         IPagination? pagination = null,
-        AdminAppointmentFilterDto? filter = null, 
+        AdminAppointmentFilterDto? filter = null,
         string? search = null);
     Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart();
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
-    
+
     Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
         string clientId,
         IPagination? pagination = null,
@@ -38,11 +38,13 @@ public interface IAppointmentRepository : IRepository
     Task<GetAppointmentDetailsDto?> GetDetails(string id);
     Task<List<GetNewAppointmentsDashboardDto>> GetNewAppointmentDashboard();
     
-    Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
-        IPagination? pagination=null,
-        AdminAppointmentFilterDto? filter = null,
-        string? search=null);
+    Task<List<Appointment>> GetOverdueUnfinalizedAppointments();
     
+    Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
+        IPagination? pagination = null,
+        AdminAppointmentFilterDto? filter = null,
+        string? search = null);
+
     Task<string?> GetTechnicianId();
     Task<bool> TreatmentIsExistById(long treatmentId);
 }

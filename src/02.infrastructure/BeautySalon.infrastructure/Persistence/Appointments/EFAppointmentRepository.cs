@@ -360,6 +360,16 @@ public class EFAppointmentRepository : IAppointmentRepository
         return query;
     }
 
+    public async Task<List<Appointment>> GetOverdueUnfinalizedAppointments()
+    {
+        return await _appointments
+        .Where(_ =>
+        _.AppointmentDate < DateTime.UtcNow.AddHours(-5) &&
+        _.Status != AppointmentStatus.Cancelled &&
+        _.Status != AppointmentStatus.Completed &&
+        _.Status != AppointmentStatus.Pending).ToListAsync();
+    }
+
     public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetPendingAppointment(
         IPagination? pagination = null,
         AdminAppointmentFilterDto? filter = null,
