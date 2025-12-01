@@ -23,11 +23,11 @@ public static class Job
 
         recurringManager.AddOrUpdate<AppointmentJobs>("FixAppointmentStatus",
             myJob => myJob.ChangeOverdueStatusByHangFire(),
-            "0 23 * * *");
+            "30 20 * * *");
 
         recurringManager.AddOrUpdate<AppointmentJobs>("SendRemindSMSForClient",
             myJob => myJob.SendRemindSMSForClients(),
-            "0 19 * * *");
+            "30 15 * * *");
 
         recurringManager.AddOrUpdate(
             "HangfireCleanupJob",
