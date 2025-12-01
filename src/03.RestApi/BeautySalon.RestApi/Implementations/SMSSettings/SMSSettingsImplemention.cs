@@ -28,6 +28,7 @@ public class SMSSettingsImplementation : ISMSSetting
             OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
             BaseUrl = config["SMSSettings:BaseUrl"]!,
             RegisterClient = int.Parse(config["SMSSettings:RegisterClient"]!),
+            RemindingAppointment = int.Parse(config["SMSSettings:RemindingAppointment"]!),
         };
     }
 
@@ -50,6 +51,7 @@ public class SMSSettingsImplementation : ISMSSetting
             BaseUrl = config["SMSSettings:BaseUrl"]!,
             OtpBodyIdShared = int.Parse(config["SMSSettings:OtpBodyIdShared"]!),
             RegisterClient = int.Parse(config["SMSSettings:RegisterClient"]!),
+            RemindingAppointment= int.Parse(config["SMSSettings:RemindingAppointment"]!),
         };
 
     }
