@@ -203,6 +203,30 @@ public class EFAppointmentRepository : IAppointmentRepository
         return result;
     }
 
+    public async Task<List<GetAppointmentRequiringSMSDto>> GetAppointmentRequiringSMS()
+    {
+
+        var tomorrow = DateTime.UtcNow.Date.AddDays(1);
+        var dayAfterTomorrow = tomorrow.AddDays(1);
+        var query = await (from appointment in _appointments
+                     join client in _clients on appointment.ClientId equals client.Id
+                     join user in _users on client.UserId equals user.Id
+                     join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                     where appointment.Status == AppointmentStatus.Approved &&
+                           appointment.AppointmentDate.Date >= tomorrow &&
+                           appointment.AppointmentDate.Date <dayAfterTomorrow &&
+                           appointment.RemindSMSSent != true
+                     select new GetAppointmentRequiringSMSDto
+                     {
+                         AppointmentId = appointment.Id,
+                         TreatmentTitle = treatment.Title,
+                         ClientName = user.Name,
+                         ClientLastName = user.LastName,
+                         ClientNumber = user.Mobile
+                     }).ToListAsync();
+        return query;
+    }
+
     public async Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime)
     {
@@ -217,6 +241,13 @@ public class EFAppointmentRepository : IAppointmentRepository
              StartDate = TimeOnly.FromDateTime(a.AppointmentDate),
              EndDate = TimeOnly.FromDateTime(a.EndTime),
          }).ToListAsync();
+    }
+
+    public async Task<List<Appointment>> GetByIds(List<string> listIds)
+    {
+        return await _appointments
+       .Where(x => listIds.Contains(x.Id))
+       .ToListAsync();
     }
 
     public async Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
@@ -364,7 +395,7 @@ public class EFAppointmentRepository : IAppointmentRepository
     {
         return await _appointments
         .Where(_ =>
-        _.AppointmentDate < DateTime.UtcNow.AddHours(-5) &&
+        _.AppointmentDate < DateTime.UtcNow &&
         _.Status != AppointmentStatus.Cancelled &&
         _.Status != AppointmentStatus.Completed &&
         _.Status != AppointmentStatus.Pending).ToListAsync();

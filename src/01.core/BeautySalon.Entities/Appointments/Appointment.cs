@@ -23,6 +23,7 @@ public class Appointment
     public Client Client { get; set; } = default!;
     public Treatment Treatment { get; set; } = default!;
     public Technician Technician { get; set; } = default!;
+    public bool RemindSMSSent { get; set; }
 
     public AppointmentReview? Review { get; set; }
 }
