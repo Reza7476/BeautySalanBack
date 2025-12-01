@@ -11,7 +11,6 @@ using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Clients.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace BeautySalon.infrastructure.Persistence.Appointments;
 public class EFAppointmentRepository : IAppointmentRepository
@@ -209,21 +208,22 @@ public class EFAppointmentRepository : IAppointmentRepository
         var tomorrow = DateTime.UtcNow.Date.AddDays(1);
         var dayAfterTomorrow = tomorrow.AddDays(1);
         var query = await (from appointment in _appointments
-                     join client in _clients on appointment.ClientId equals client.Id
-                     join user in _users on client.UserId equals user.Id
-                     join treatment in _treatments on appointment.TreatmentId equals treatment.Id
-                     where appointment.Status == AppointmentStatus.Approved &&
-                           appointment.AppointmentDate.Date >= tomorrow &&
-                           appointment.AppointmentDate.Date <dayAfterTomorrow &&
-                           appointment.RemindSMSSent != true
-                     select new GetAppointmentRequiringSMSDto
-                     {
-                         AppointmentId = appointment.Id,
-                         TreatmentTitle = treatment.Title,
-                         ClientName = user.Name,
-                         ClientLastName = user.LastName,
-                         ClientNumber = user.Mobile
-                     }).ToListAsync();
+                           join client in _clients on appointment.ClientId equals client.Id
+                           join user in _users on client.UserId equals user.Id
+                           join treatment in _treatments on appointment.TreatmentId equals treatment.Id
+                           where appointment.Status == AppointmentStatus.Approved &&
+                                 appointment.AppointmentDate.Date >= tomorrow &&
+                                 appointment.AppointmentDate.Date < dayAfterTomorrow &&
+                                 appointment.RemindSMSSent != true
+                           select new GetAppointmentRequiringSMSDto
+                           {
+                               AppointmentId = appointment.Id,
+                               TreatmentTitle = treatment.Title,
+                               ClientName = user.Name,
+                               ClientLastName = user.LastName,
+                               ClientNumber = user.Mobile,
+                               AppointmentData = appointment.AppointmentDate
+                           }).ToListAsync();
         return query;
     }
 

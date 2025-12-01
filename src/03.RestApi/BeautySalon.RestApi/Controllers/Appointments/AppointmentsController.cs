@@ -60,7 +60,7 @@ public class AppointmentsController : ControllerBase
     public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllAdminAppointment(
         [FromQuery] Pagination? pagination = null,
         [FromQuery] AdminAppointmentFilterDto? filter = null,
-        [FromQuery]string? search = null)
+        [FromQuery] string? search = null)
     {
         return await _service.GetAdminAllAppointments(pagination, filter, search);
     }
@@ -92,7 +92,7 @@ public class AppointmentsController : ControllerBase
     public async Task<IPageResult<GetAllAdminAppointmentsDto>> GetAllToday(
         [FromQuery] Pagination? pagination = null,
         [FromQuery] AdminAppointmentFilterDto? filter = null,
-        [FromQuery]string? search = null)
+        [FromQuery] string? search = null)
     {
         return await _service.GetAllToday(pagination, filter, search);
     }

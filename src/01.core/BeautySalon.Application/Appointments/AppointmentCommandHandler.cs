@@ -54,7 +54,7 @@ public class AppointmentCommandHandler : IAppointmentHandler
             TechnicianId = technicianId,
             TreatmentId = dto.TreatmentId,
             DayWeek = dto.DayWeek,
-            Status=AppointmentStatus.Approved
+            Status = AppointmentStatus.Approved
         });
 
         return appointmentId;
