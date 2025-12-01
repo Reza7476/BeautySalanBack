@@ -33,6 +33,8 @@ public class AppointmentEntityMap : IEntityTypeConfiguration<Appointment>
 
         _.Property(_ => _.CancelledAt);
 
+        _.Property(_ => _.RemindSMSSent);
+
         _.Property(_ => _.Description).IsRequired(false);
 
         _.HasOne(_ => _.Client)

@@ -25,9 +25,12 @@ public interface IAppointmentRepository : IRepository
         AdminAppointmentFilterDto? filter = null,
         string? search = null);
     Task<List<GetAppointmentCountPerDayDto>> GetAppointmentPerDayForChart();
+    
+    Task<List<GetAppointmentRequiringSMSDto>> GetAppointmentRequiringSMS();
+
     Task<List<GetBookedAppointmentByDayDto>>
         GetBookAppointmentByDay(DateTime dateTime);
-
+    Task<List<Appointment>> GetByIds(List<string> listIds);
     Task<IPageResult<GetAllClientAppointmentsDto>> GetClientAppointments(
         string clientId,
         IPagination? pagination = null,

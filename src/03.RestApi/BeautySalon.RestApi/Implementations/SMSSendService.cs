@@ -110,6 +110,9 @@ public class SMSSendService : ISMSService
             case "RegisterClient":
                 a = _setting.SMSSettings.RegisterClient;
                 break;
+
+            //case "RemindingAppointment":
+            //    a = _setting.SMSSettings.;
             default:
                 a = 0;
                 break;
