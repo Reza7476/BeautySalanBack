@@ -8,6 +8,7 @@ public class User
     public User()
     {
         Roles = new();
+        UserFCMTokens = new();
         RefreshTokens = new();
     }
     public string Id { get; set; } = default!;
@@ -21,8 +22,9 @@ public class User
     public DateTime? BirthDate { get; set; }
     public bool IsActive { get; set; }
     public MediaDocument? Avatar { get; set; }
-    
-    public List<UserRole> Roles { get; set; } 
+
+    public List<UserRole> Roles { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
+    public List<UserFCMToken> UserFCMTokens { get; set; }
 
 }
