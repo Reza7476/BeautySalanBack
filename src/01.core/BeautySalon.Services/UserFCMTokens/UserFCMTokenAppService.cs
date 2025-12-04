@@ -24,21 +24,33 @@ public class UserFCMTokenAppService : IUserFCMTokenService
 
     public async Task Add(AddUserFCMTokenDto dto, string userId)
     {
+        var userRoles = await _repository.GetUserRolesByUserId(userId);
 
-        var oldToken = await _repository.IsExistByFCMTokenAndUserIdAndIsActive(dto.FCMToken, userId);
-        if (!oldToken)
+        List<UserFCMToken> userFCMTokens = new List<UserFCMToken>();
+
+        if (userRoles.Any())
         {
-            var userFCMToken = new UserFCMToken()
+            foreach (var item in userRoles)
             {
-                Id = Guid.NewGuid().ToString(),
-                DeviceInfo = dto.DeviceInfo,
-                CreatedAt = _dateTimeService.Now,
-                FCMToken = dto.FCMToken,
-                IsActive = true,
-                UserId = userId
-            };
+                var oldToken = await _repository.IsExistByFCMTokenAndUserIdAndIsActiveAndRole(dto.FCMToken, userId, item);
 
-            await _repository.Add(userFCMToken);
+                if (!oldToken)
+                {
+                    userFCMTokens.Add(new UserFCMToken()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Role = item,
+                        CreatedAt = _dateTimeService.Now,
+                        FCMToken = dto.FCMToken,
+                        IsActive = true,
+                        UserId = userId
+                    });
+                }
+            }
+            if (userFCMTokens.Any())
+            {
+                await _repository.AddRange(userFCMTokens);
+            }
             await _unitOfWork.Complete();
         }
 
