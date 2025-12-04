@@ -121,7 +121,6 @@ public class AppointmentCommandHandler : IAppointmentHandler
 
     public async Task CancelAppointmentByClient(string appointmentId, string? userId)
     {
-
         if (userId == null)
         {
             throw new YouAreNotAllowedToAccessException();
