@@ -43,7 +43,8 @@ public class EFUserFCMTokenRepository : IUserFCMTokenRepository
             .Where(_ => _.Role == role && _.IsActive)
             .Select(_ => new GetFCMTokenForSendNotificationDto()
             {
-                Token = _.FCMToken
+                Token = _.FCMToken,
+                Id=_.Id
             }).ToListAsync();
     }
 
