@@ -103,7 +103,11 @@ public class AppointmentCommandHandler : IAppointmentHandler
         var fcmTokens = await _userFCMTokenService.GetReciviersFCMToken(SystemRole.Admin);
         foreach (var item in fcmTokens)
         {
-            await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
+           var notif= await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
+            if (!notif)
+            {
+                await _userFCMTokenService.RemoveToken(item.Token);
+            }
         }
 
         return appointmentId;

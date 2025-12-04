@@ -32,6 +32,11 @@ public class EFUserFCMTokenRepository : IUserFCMTokenRepository
         await _userFCMTokens.AddRangeAsync(userFCMTokens);
     }
 
+    public async Task<UserFCMToken?> FindByFCMToken(string fcmToken)
+    {
+        return await _userFCMTokens.FirstOrDefaultAsync(_ => _.FCMToken == fcmToken);
+    }
+
     public async Task<List<GetFCMTokenForSendNotificationDto>> GetReciviersFCMToken(string role)
     {
         return await _userFCMTokens
@@ -60,5 +65,11 @@ public class EFUserFCMTokenRepository : IUserFCMTokenRepository
             _.UserId == userId &&
             _.Role == role &&
             _.IsActive);
+    }
+
+    public async Task Remove(UserFCMToken fcm)
+    {
+        _userFCMTokens.Remove(fcm);
+        await Task.CompletedTask;
     }
 }
