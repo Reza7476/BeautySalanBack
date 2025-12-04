@@ -7,7 +7,9 @@ public interface IUserFCMTokenRepository : IRepository
 {
     Task Add(UserFCMToken userFCMToken);
     Task AddRange(List<UserFCMToken> userFCMTokens);
+    Task<UserFCMToken?> FindByFCMToken(string fcmToken);
     Task<List<GetFCMTokenForSendNotificationDto>> GetReciviersFCMToken(string role);
     Task<List<string>> GetUserRolesByUserId(string userId);
     Task<bool> IsExistByFCMTokenAndUserIdAndIsActiveAndRole(string fCMToken, string userId, string role);
+    Task Remove(UserFCMToken fcm);
 }
