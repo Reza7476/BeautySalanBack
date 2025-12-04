@@ -32,9 +32,10 @@ public class EFUserFCMTokenRepository : IUserFCMTokenRepository
         await _userFCMTokens.AddRangeAsync(userFCMTokens);
     }
 
-    public async Task<UserFCMToken?> FindByFCMToken(string fcmToken)
+    public async Task<UserFCMToken?> FindByFCMToken(string fcmToken, string role)
     {
-        return await _userFCMTokens.FirstOrDefaultAsync(_ => _.FCMToken == fcmToken);
+        return await _userFCMTokens
+            .FirstOrDefaultAsync(_ => _.FCMToken == fcmToken && _.Role == role);
     }
 
     public async Task<List<GetFCMTokenForSendNotificationDto>> GetReciviersFCMToken(string role)

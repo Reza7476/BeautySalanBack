@@ -61,9 +61,9 @@ public class UserFCMTokenAppService : IUserFCMTokenService
         return await _repository.GetReciviersFCMToken(role);
     }
 
-    public async Task RemoveToken(string fcmToken)
+    public async Task RemoveToken(string fcmToken, string role)
     {
-        var fcm = await _repository.FindByFCMToken(fcmToken);
+        var fcm = await _repository.FindByFCMToken(fcmToken,role);
         if (fcm != null)
         {
             await _repository.Remove(fcm);
