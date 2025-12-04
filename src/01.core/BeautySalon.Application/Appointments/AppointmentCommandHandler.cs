@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
+using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
@@ -10,6 +11,7 @@ using BeautySalon.Services.Technicians.Contracts;
 using BeautySalon.Services.Technicians.Exceptions;
 using BeautySalon.Services.Treatments.Contracts;
 using BeautySalon.Services.Treatments.Exceptions;
+using BeautySalon.Services.UserFCMTokens.Contract;
 
 namespace BeautySalon.Application.Appointments;
 public class AppointmentCommandHandler : IAppointmentHandler
@@ -19,16 +21,24 @@ public class AppointmentCommandHandler : IAppointmentHandler
     private readonly IClientService _clientService;
     private readonly ITechnicianService _technicianService;
 
+    private readonly IFireBaseNotificationService _fireBaseNotification;
+    private readonly IUserFCMTokenService _userFCMTokenService;
+
+
     public AppointmentCommandHandler(
         IAppointmentService appointmentService,
         ITreatmentService treatmentService,
         IClientService clientService,
-        ITechnicianService technicianService)
+        ITechnicianService technicianService,
+        IFireBaseNotificationService fireBaseNotification,
+        IUserFCMTokenService userFCMTokenService)
     {
         _appointmentService = appointmentService;
         _treatmentService = treatmentService;
         _clientService = clientService;
         _technicianService = technicianService;
+        _fireBaseNotification = fireBaseNotification;
+        _userFCMTokenService = userFCMTokenService;
     }
 
     public async Task<string> AddAdminAppointment(AddAdminAppointmentHandlerDto dto)
@@ -88,8 +98,19 @@ public class AppointmentCommandHandler : IAppointmentHandler
             DayWeek = dto.DayWeek,
             Status = AppointmentStatus.Pending
         });
+        bool sent = false;
+        string a = "0";
+        var fcmTokens = await _userFCMTokenService.GetAdminsToken();
+        foreach (var item in fcmTokens)
+        {
+            sent = await _fireBaseNotification.SendNotificationAsync(item.Token, "ثبت نوبت جدید", "یک نوبت جدید ثبت شد");
+        }
 
-        return appointmentId;
+        if (sent)
+        {
+            a = "1";
+        }
+        return appointmentId = "+reza" + a;
     }
 
     public async Task CancelAppointmentByClient(string appointmentId, string? userId)

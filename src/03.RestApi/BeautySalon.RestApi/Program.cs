@@ -10,6 +10,8 @@ using BeautySalon.RestApi.Configurations.JwtConfigs;
 using BeautySalon.RestApi.Configurations.RegisterAdmin;
 using BeautySalon.RestApi.Configurations.SwaggerConfigurations;
 using BeautySalon.RestApi.Implementations;
+using BeautySalon.RestApi.Implementations.FireBaseNotification;
+using BeautySalon.RestApi.Implementations.GoogleCeridentials;
 using BeautySalon.RestApi.Implementations.SMSSettings;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +41,17 @@ builder.Services.AddSingleton<IJwtSettingService>(sp =>
 
 builder.Services.AddSingleton<ISMSSetting>(sm =>
     new SMSSettingsImplementation(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath));
+
+
+builder.Services.AddSingleton<IFireBaseSettingInfo>(fb =>
+    new FireBaseSettingInfoImplimention(
+    builder.Environment.EnvironmentName,
+    builder.Environment.ContentRootPath));
+
+builder.Services.AddSingleton<IGoogleCredentialRootPath>(google =>
+    new GoogleCredentialRootPathImplemention(
     builder.Environment.EnvironmentName,
     builder.Environment.ContentRootPath));
 

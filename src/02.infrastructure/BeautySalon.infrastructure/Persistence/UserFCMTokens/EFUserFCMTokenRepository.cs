@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Entities.Users;
 using BeautySalon.Services.UserFCMTokens.Contract;
+using BeautySalon.Services.UserFCMTokens.Contract.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeautySalon.infrastructure.Persistence.UserFCMTokens;
@@ -16,6 +17,14 @@ public class EFUserFCMTokenRepository : IUserFCMTokenRepository
     public async Task Add(UserFCMToken userFCMToken)
     {
         await _userFCMTokens.AddAsync(userFCMToken);
+    }
+
+    public async Task<List<GetFCMTokenForSendNotificationDto>> GetAdminsToken()
+    {
+        return await _userFCMTokens.Select(_ => new GetFCMTokenForSendNotificationDto()
+        {
+            Token = _.FCMToken
+        }).ToListAsync();
     }
 
     public async Task<bool> IsExistByFCMTokenAndUserIdAndIsActive(string fCMToken, string userId)

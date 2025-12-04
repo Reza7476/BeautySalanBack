@@ -43,4 +43,9 @@ public class UserFCMTokenAppService : IUserFCMTokenService
         }
 
     }
+
+    public async Task<List<GetFCMTokenForSendNotificationDto>> GetAdminsToken()
+    {
+        return await _repository.GetAdminsToken();
+    }
 }
