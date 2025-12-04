@@ -15,7 +15,7 @@ public class UserFCMTokenEntityMap : IEntityTypeConfiguration<UserFCMToken>
 
         _.Property(_ => _.FCMToken).IsRequired();
 
-        _.Property(_ => _.DeviceInfo).IsRequired(false);
+        _.Property(_ => _.Role).IsRequired();
 
         _.Property(_ => _.CreatedAt);
 

@@ -6,6 +6,8 @@ namespace BeautySalon.Services.UserFCMTokens.Contract;
 public interface IUserFCMTokenRepository : IRepository
 {
     Task Add(UserFCMToken userFCMToken);
+    Task AddRange(List<UserFCMToken> userFCMTokens);
     Task<List<GetFCMTokenForSendNotificationDto>> GetAdminsToken();
-    Task<bool> IsExistByFCMTokenAndUserIdAndIsActive(string fCMToken, string userId);
+    Task<List<string>> GetUserRolesByUserId(string userId);
+    Task<bool> IsExistByFCMTokenAndUserIdAndIsActiveAndRole(string fCMToken, string userId, string role);
 }

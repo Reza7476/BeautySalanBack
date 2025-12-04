@@ -12,7 +12,7 @@ public class _202512031713_CreateUserFCMTokenTable : Migration
             .WithColumn("Id").AsString().NotNullable().PrimaryKey()
             .WithColumn("UserId").AsString().PrimaryKey()
             .WithColumn("FCMToken").AsString().NotNullable()
-            .WithColumn("DeviceInfo").AsString().Nullable()
+            .WithColumn("Role").AsString().NotNullable()
             .WithColumn("CreatedAt").AsDateTime2()
             .WithColumn("IsActive").AsBoolean();
         Create.ForeignKey("FK_Users_UserFCMTokens")
