@@ -5,6 +5,8 @@ using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.infrastructure.Persistence.Banners;
 using BeautySalon.RestApi.Implementations;
+using BeautySalon.RestApi.Implementations.FireBaseNotification;
+using BeautySalon.RestApi.Implementations.GoogleCeridentials;
 using BeautySalon.RestApi.Implementations.SMSSettings;
 using BeautySalon.Services.Banners;
 using static System.Net.Mime.MediaTypeNames;
@@ -74,6 +76,19 @@ public class AutofacModule : Module
            .SingleInstance()
            .WithParameter("environment", _env)
            .WithParameter("contentRootPath", _contentRootPath);
+
+        builder.RegisterType<FireBaseSettingInfoImplimention>()
+           .As<IFireBaseSettingInfo>()
+           .SingleInstance()
+           .WithParameter("environment", _env)
+           .WithParameter("contentRootPath", _contentRootPath);
+
+
+        builder.RegisterType<GoogleCredentialRootPathImplemention>()
+          .As<IGoogleCredentialRootPath>()
+          .SingleInstance()
+          .WithParameter("environment", _env)
+          .WithParameter("contentRootPath", _contentRootPath);
 
         //try
         //{
