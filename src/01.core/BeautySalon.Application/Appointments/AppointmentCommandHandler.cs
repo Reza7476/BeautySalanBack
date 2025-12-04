@@ -106,7 +106,7 @@ public class AppointmentCommandHandler : IAppointmentHandler
             var notif = await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
             if (!notif)
             {
-                await _userFCMTokenService.RemoveToken(item.Token, SystemRole.Admin);
+                await _userFCMTokenService.RemoveToken(item.Id);
             }
         }
 
