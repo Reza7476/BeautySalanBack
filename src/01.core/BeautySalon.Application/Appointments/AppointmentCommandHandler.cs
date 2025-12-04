@@ -99,14 +99,14 @@ public class AppointmentCommandHandler : IAppointmentHandler
             DayWeek = dto.DayWeek,
             Status = AppointmentStatus.Pending
         });
-      
+
         var fcmTokens = await _userFCMTokenService.GetReciviersFCMToken(SystemRole.Admin);
         foreach (var item in fcmTokens)
         {
-           var notif= await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
+            var notif = await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
             if (!notif)
             {
-                await _userFCMTokenService.RemoveToken(item.Token);
+                await _userFCMTokenService.RemoveToken(item.Id);
             }
         }
 
