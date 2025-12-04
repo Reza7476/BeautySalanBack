@@ -2,6 +2,7 @@
 using BeautySalon.Application.Appointments.Contracts.Dtos;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
+using BeautySalon.Services;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
@@ -98,19 +99,14 @@ public class AppointmentCommandHandler : IAppointmentHandler
             DayWeek = dto.DayWeek,
             Status = AppointmentStatus.Pending
         });
-        bool sent = false;
-        string a = "0";
-        var fcmTokens = await _userFCMTokenService.GetAdminsToken();
+      
+        var fcmTokens = await _userFCMTokenService.GetReciviersFCMToken(SystemRole.Admin);
         foreach (var item in fcmTokens)
         {
-            sent = await _fireBaseNotification.SendNotificationAsync(item.Token, "ثبت نوبت جدید", "یک نوبت جدید ثبت شد");
+            await _fireBaseNotification.SendNotificationAsync(item.Token, "نوبت جدید", "یک نوبت جدید ثبت شد");
         }
 
-        if (sent)
-        {
-            a = "1";
-        }
-        return appointmentId = "+reza" + a;
+        return appointmentId;
     }
 
     public async Task CancelAppointmentByClient(string appointmentId, string? userId)
