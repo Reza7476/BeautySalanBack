@@ -36,7 +36,12 @@ public class FireBaseNotificationService : IFireBaseNotificationService
         return token;
     }
 
-    public async Task<bool> SendNotificationAsync(string fcmToken, string title, string body)
+    public async Task<bool> SendNotificationAsync(
+        string fcmToken, 
+        string title, 
+        string body,
+        string receiver,
+        string type)
     {
 
         var token2 = await GetAccsessTokenAsync();
@@ -51,6 +56,11 @@ public class FireBaseNotificationService : IFireBaseNotificationService
                 {
                     title = title,
                     body = body
+                },
+                data = new
+                {
+                    receiver = receiver, // admin یا client
+                    type = type
                 }
             }
         };
