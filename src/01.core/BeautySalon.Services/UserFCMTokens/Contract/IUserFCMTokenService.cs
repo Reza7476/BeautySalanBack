@@ -5,5 +5,5 @@ namespace BeautySalon.Services.UserFCMTokens.Contract;
 public interface IUserFCMTokenService : IService
 {
     Task Add(AddUserFCMTokenDto dto, string userId);
-    Task<List<GetFCMTokenForSendNotificationDto>> GetAdminsToken();
+    Task<List<GetFCMTokenForSendNotificationDto>> GetReciviersFCMToken(string role);
 }
