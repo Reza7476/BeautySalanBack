@@ -1,9 +1,8 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
-using BeautySalon.Application.Events.Appointments;
+using BeautySalon.Application.Appointments.EventHandlers;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
-using BeautySalon.Services;
 using BeautySalon.Services.Appointments.Contracts;
 using BeautySalon.Services.Appointments.Contracts.Dtos;
 using BeautySalon.Services.Appointments.Exceptions;
@@ -104,7 +103,7 @@ public class AppointmentCommandHandler : IAppointmentHandler
             Status = AppointmentStatus.Pending
         });
 
-       
+
         _eventPublisher.Publish(new NewAppointmentCreatedEvent(appointmentId));
         return appointmentId;
     }
