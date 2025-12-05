@@ -80,7 +80,7 @@ app.MapGet("/", context =>
 app.UseStaticFiles();
 app.UseAppHangfire();
 
-app.RegisterHangfireJobs(builder.Environment);
+app.RegisterHangfireRequirringJobs(builder.Environment);
 
 app.UseAuthentication();
 
