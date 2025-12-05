@@ -1,5 +1,6 @@
 ﻿using BeautySalon.Application.Appointments.Contracts;
 using BeautySalon.Application.Appointments.Contracts.Dtos;
+using BeautySalon.Application.Events.Appointments;
 using BeautySalon.Common.Interfaces;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Services;
@@ -22,7 +23,8 @@ public class AppointmentCommandHandler : IAppointmentHandler
     private readonly IClientService _clientService;
     private readonly ITechnicianService _technicianService;
 
-    private readonly IFireBaseNotificationService _fireBaseNotification;
+    private readonly IEventPublisher _eventPublisher;
+    private readonly IFireBaseAuthService _fireBaseNotification;
     private readonly IUserFCMTokenService _userFCMTokenService;
 
 
@@ -31,8 +33,9 @@ public class AppointmentCommandHandler : IAppointmentHandler
         ITreatmentService treatmentService,
         IClientService clientService,
         ITechnicianService technicianService,
-        IFireBaseNotificationService fireBaseNotification,
-        IUserFCMTokenService userFCMTokenService)
+        IFireBaseAuthService fireBaseNotification,
+        IUserFCMTokenService userFCMTokenService,
+        IEventPublisher eventPublisher)
     {
         _appointmentService = appointmentService;
         _treatmentService = treatmentService;
@@ -40,6 +43,7 @@ public class AppointmentCommandHandler : IAppointmentHandler
         _technicianService = technicianService;
         _fireBaseNotification = fireBaseNotification;
         _userFCMTokenService = userFCMTokenService;
+        _eventPublisher = eventPublisher;
     }
 
     public async Task<string> AddAdminAppointment(AddAdminAppointmentHandlerDto dto)
@@ -100,22 +104,8 @@ public class AppointmentCommandHandler : IAppointmentHandler
             Status = AppointmentStatus.Pending
         });
 
-        var fcmTokens = await _userFCMTokenService.GetReciviersFCMToken(SystemRole.Admin);
-        foreach (var item in fcmTokens)
-        {
-            var notif = await _fireBaseNotification
-                .SendNotificationAsync(
-                item.Token,
-                "نوبت جدید",
-                "یک نوبت جدید ثبت شد",
-                SystemRole.Admin,
-                "NewAppointment");
-            if (!notif)
-            {
-                await _userFCMTokenService.RemoveToken(item.Id);
-            }
-        }
-
+       
+        _eventPublisher.Publish(new NewAppointmentCreatedEvent(appointmentId));
         return appointmentId;
     }
 
