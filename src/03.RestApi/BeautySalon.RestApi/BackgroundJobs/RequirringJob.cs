@@ -6,9 +6,9 @@ using Microsoft.Data.SqlClient;
 
 namespace BeautySalon.RestApi.BackgroundJobs;
 
-public static class Job
+public static class RequirringJob
 {
-    public static void RegisterHangfireJobs(
+    public static void RegisterHangfireRequirringJobs(
         this IApplicationBuilder app,
         IWebHostEnvironment env)
     {
