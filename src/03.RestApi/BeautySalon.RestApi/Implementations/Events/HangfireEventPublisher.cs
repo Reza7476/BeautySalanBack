@@ -1,4 +1,4 @@
-﻿using BeautySalon.Application.Events.Appointments;
+﻿using BeautySalon.Application.Appointments.EventHandlers;
 using BeautySalon.Common.Interfaces;
 using Hangfire;
 

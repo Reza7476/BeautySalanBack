@@ -1,8 +1,8 @@
 ﻿using BeautySalon.Common.Dtos;
 using BeautySalon.Common.Interfaces;
+using BeautySalon.Common.Utilities;
 using BeautySalon.Entities.Appointments;
 using BeautySalon.Services.Appointments.Contracts;
-using BeautySalon.Utilities;
 
 namespace BeautySalon.Services.Appointments.Jobs;
 public class AppointmentJobs

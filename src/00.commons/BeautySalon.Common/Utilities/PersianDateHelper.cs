@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace BeautySalon.Utilities;
+namespace BeautySalon.Common.Utilities;
 
 public static class PersianDateHelper
 {

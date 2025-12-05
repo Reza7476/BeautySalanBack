@@ -1,4 +1,4 @@
-﻿namespace BeautySalon.Application.Events.Appointments;
+﻿namespace BeautySalon.Application.Appointments.EventHandlers;
 public class NewAppointmentCreatedEvent
 {
     public string AppointmentId { get; }
